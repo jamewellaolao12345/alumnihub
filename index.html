@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AlumniHub for CTU alumni</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@500;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#fffaf7;--surface:#ffffff;--ink:#241a1d;--muted:#6a5d61;--line:#e6dfdc;
+  --maroon:#7a1f2e;--maroon-ink:#ffffff;--gold:#e0a82a;--gold-ink:#2a1d00;
+  --head:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1rem/1.6 var(--body)}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;padding:.9rem clamp(1rem,4vw,3rem);background:var(--surface);border-bottom:1px solid var(--line)}
+.brand{font:800 1.35rem/1 var(--head);text-decoration:none;display:flex;align-items:center;gap:.6rem}
+.brand i{width:1.9rem;height:1.9rem;border-radius:50%;background:var(--maroon);display:grid;place-items:center;color:var(--gold);font:800 .95rem var(--head);font-style:normal}
+nav{display:flex;flex-wrap:wrap;gap:.25rem}
+nav a{padding:.5rem .9rem;border-radius:999px;text-decoration:none;font-weight:600;color:var(--muted)}
+nav a:hover{color:var(--ink)}
+nav a[aria-current="page"]{background:var(--maroon);color:var(--maroon-ink)}
+main{min-height:60vh}
+[hidden]{display:none!important}
+
+/* Home */
+.hero{position:relative;min-height:min(78vh,720px);display:flex;align-items:flex-end;overflow:hidden;background:#2b1a22}
+.hero svg,.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(to top right,rgba(20,8,12,.88) 0%,rgba(20,8,12,.55) 40%,rgba(20,8,12,0) 75%)}
+.hero-text{position:relative;z-index:1;color:#fff;padding:clamp(1.25rem,5vw,3.5rem);max-width:38rem}
+.hero-text h1{font:800 clamp(2.4rem,7vw,4.6rem)/1.02 var(--head);margin:0 0 .8rem;letter-spacing:-.02em}
+.hero-text p{margin:0 0 1.4rem;font-size:1.1rem;color:#f1e6e8}
+.btn{border-radius:999px;display:inline-block;border:0;cursor:pointer;font:600 1rem var(--body);padding:.75rem 1.3rem;border-radius:.6rem;background:var(--gold);color:var(--gold-ink);text-decoration:none}
+.btn.alt{background:transparent;color:inherit;border:1.5px solid currentColor;margin-left:.5rem}
+.btn:hover{filter:brightness(1.07)}
+.photo-btn{position:absolute;z-index:2;top:.8rem;right:.8rem;font:500 .8rem var(--body);background:rgba(0,0,0,.55);color:#fff;border:1px solid rgba(255,255,255,.4);padding:.4rem .7rem;border-radius:.5rem;cursor:pointer}
+.wrap{max-width:62rem;margin:0 auto;padding:clamp(1.5rem,4vw,3rem) clamp(1rem,4vw,2rem)}
+h2{font:700 1.7rem/1.15 var(--head);margin:0 0 1.2rem;letter-spacing:-.01em}
+.ann{list-style:none;margin:0;padding:0;display:grid;gap:.9rem}
+.ann li{display:grid;grid-template-columns:5.5rem 1fr;gap:1.2rem;background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:.5rem;padding:1rem 1.2rem}
+.ann time{font:700 .95rem/1.25 var(--head);color:var(--maroon)}
+.ann h3{margin:0 0 .2rem;font:600 1.08rem var(--body)}
+.ann p{margin:0;color:var(--muted)}
+@media(max-width:520px){.ann li{grid-template-columns:1fr;gap:.3rem}}
+
+/* Events feed */
+.lead{color:var(--muted);margin:-.6rem 0 1.6rem;max-width:40rem}
+.feed{display:grid;grid-template-columns:repeat(auto-fill,minmax(17rem,1fr));gap:1.2rem}
+.post{background:var(--surface);border:1px solid var(--line);border-radius:.8rem;overflow:hidden;display:flex;flex-direction:column}
+.post img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:var(--line)}
+.post .body{padding:.9rem 1rem 1rem}
+.who{display:flex;align-items:center;gap:.6rem;margin-bottom:.5rem}
+.av{width:2.1rem;height:2.1rem;border-radius:50%;background:var(--maroon);color:var(--maroon-ink);display:grid;place-items:center;font:700 .9rem var(--head);flex:none}
+.who b{display:block;line-height:1.2}
+.who small{color:var(--muted)}
+.post p{margin:0;overflow-wrap:anywhere}
+
+/* Post form */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:.8rem;padding:clamp(1rem,3vw,1.8rem);max-width:36rem}
+label{display:block;font-weight:600;margin:0 0 .9rem}
+input[type=text],input[type=date],textarea{display:block;width:100%;margin-top:.3rem;font:400 1rem var(--body);padding:.65rem .75rem;border:1px solid var(--line);border-radius:.5rem;background:var(--bg);color:var(--ink)}
+textarea{min-height:5.5rem;resize:vertical}
+input[type=file]{display:block;margin-top:.4rem;max-width:100%}
+.preview{display:block;width:100%;max-height:18rem;object-fit:cover;border-radius:.5rem;margin:0 0 1rem}
+.msg{margin:.8rem 0 0;font-weight:500;min-height:1.4em}
+.msg.err{color:#b3261e}
+.thread{border-top:1px solid var(--line);margin-top:.8rem;padding-top:.6rem}
+.cm{font-size:.92rem;margin:.3rem 0!important}
+.cf{display:flex;gap:.4rem;margin-top:.6rem}
+.cf input{flex:1;min-width:0;font:400 .92rem var(--body);padding:.5rem .6rem;border:1px solid var(--line);border-radius:.5rem;background:var(--bg);color:var(--ink)}
+.cf .btn{padding:.5rem .8rem;font-size:.9rem}
+.btn.m{background:var(--maroon);color:var(--maroon-ink)}
+.lg{display:inline-block;margin-top:.5rem;font-size:.92rem;font-weight:600;color:var(--maroon)}
+.who-line{margin:0 0 1rem;font-weight:600}
+select{display:block;width:100%;margin-top:.3rem;font:inherit;padding:.65rem .75rem;border:1px solid var(--line);border-radius:.5rem;background:var(--bg);color:var(--ink)}
+.card h3{margin:0 0 .8rem;font:700 1.1rem var(--head)}
+.av{overflow:hidden}.av img{width:100%;height:100%;object-fit:cover;display:block}
+#navAcc img{width:1.7rem;height:1.7rem;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:.45rem}
+.aimg{display:block;width:100%;max-height:14rem;object-fit:cover;border-radius:.5rem;margin-top:.6rem}
+#annList{grid-template-columns:repeat(auto-fill,minmax(18rem,24rem))}
+#annList li{display:flex;flex-direction:column;padding:0;overflow:hidden;border-left:1px solid var(--line);border-top:5px solid var(--gold);box-shadow:0 2px 10px rgba(0,0,0,.12)}
+#annList li>div{display:contents}
+#annList .aimg{order:0;width:100%;max-height:none;aspect-ratio:16/9;object-fit:cover;margin:0;border-radius:0;cursor:zoom-in}
+#annList time{order:1;padding:1rem 1.2rem 0}
+#annList h3{order:2;padding:.2rem 1.2rem 0;font-size:1.15rem}
+#annList p{order:3;padding:.3rem 1.2rem 0;flex:1}
+.abar{order:4;padding:.2rem 1.2rem 1rem}
+.newsh{text-align:center;text-transform:uppercase;font-weight:500;color:var(--maroon);letter-spacing:.02em}
+.newsh::after{content:"";display:block;width:12rem;height:3px;background:var(--maroon);margin:.7rem auto 1.6rem}
+#annList{grid-template-columns:repeat(auto-fill,minmax(17rem,22rem));justify-content:center}
+#annList li{border:1px solid var(--line);box-shadow:none;background:var(--surface)}
+#annList .aimg{aspect-ratio:16/10}
+#annList h3{order:1;padding:1rem 1.2rem .2rem;font-size:1.2rem;font-weight:400;color:var(--maroon)}
+#annList time{order:2;padding:0 1.2rem;font:400 .8rem var(--body);color:var(--muted)}
+#annList p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;padding:.4rem 1.2rem 1rem}
+#annList .rm{order:5;border-radius:0;width:100%;margin:0;padding:.9rem;background:var(--maroon);color:#fff;font-size:.95rem}
+#rmod{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.6);display:grid;place-items:center;padding:1rem;overflow:auto}
+.rmc{background:var(--surface);border-radius:.8rem;max-width:40rem;width:100%;max-height:92vh;overflow:auto;padding:1.4rem;position:relative}
+.rmc img{width:100%;border-radius:.5rem;margin-bottom:1rem}
+#rmx{position:absolute;top:.4rem;right:.7rem;border:0;background:none;font-size:1.8rem;cursor:pointer;color:var(--ink);z-index:1}
+#rmt{color:var(--maroon);font-weight:500;margin:0 0 .3rem}#rmb{white-space:pre-wrap}
+.rmc img{max-height:62vh;object-fit:contain;background:rgba(0,0,0,.06)}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes pop{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+#rmod:not([hidden]),#lb:not([hidden]){animation:fadeIn .25s ease}
+#rmod:not([hidden]) .rmc{animation:pop .35s cubic-bezier(.2,.8,.2,1)}
+main>section{animation:fadeIn .35s ease}
+.post,#annList li,.tc,.hj{transition:transform .25s ease,box-shadow .25s ease}
+.post:hover,#annList li:hover,.tc:hover,.hj:hover{transform:translateY(-4px);box-shadow:0 10px 24px rgba(0,0,0,.14)}
+.post>img,#annList .aimg{transition:transform .5s ease}
+.post:hover>img,#annList li:hover .aimg{transform:scale(1.04)}
+.hj{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:.8rem;overflow:hidden}
+.hj h3{margin:0;padding:1.1rem 1.2rem .2rem;font:500 1.2rem var(--head);color:var(--maroon)}
+.hj .meta{margin:0;padding:0 1.2rem;color:var(--muted);font-size:.85rem}
+.hj .ex{margin:0;padding:.5rem 1.2rem 1rem;flex:1;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.hj button{border:0;background:var(--maroon);color:#fff;padding:.9rem;font:600 .95rem var(--body);cursor:pointer}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.tabs{display:flex;flex-wrap:wrap;gap:.4rem;margin:0 0 1.2rem}
+.tabs button{border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:.5rem 1rem;border-radius:999px;font:600 .9rem var(--body);cursor:pointer}
+.tabs button[aria-current="true"]{background:var(--maroon);color:#fff;border-color:var(--maroon)}
+.sp img{aspect-ratio:4/5}
+#lb{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.88);display:grid;place-items:center;padding:1rem;cursor:zoom-out}
+#lb img{max-width:100%;max-height:100%;object-fit:contain;border-radius:.5rem}
+.statlead{font:500 1.5rem/1.3 var(--head);max-width:36rem;margin:0 0 1.4rem}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(9rem,1fr));gap:1.2rem}
+.stats>div{border-top:2px solid var(--ink);padding-top:.5rem}
+.stats b{display:block;font:500 clamp(2.2rem,5vw,3.2rem)/1 var(--head)}
+.stats span{font-size:.82rem;color:var(--muted)}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;align-items:center}
+.art{min-height:15rem;border-radius:.8rem;background:radial-gradient(circle at 75% 30%,rgba(255,255,255,.35) 0 3rem,transparent 3.1rem),linear-gradient(135deg,var(--maroon),#c68a14)}
+.msg-panel{display:grid;grid-template-columns:1fr 1.3fr;border-radius:.8rem;overflow:hidden;background:var(--maroon);color:#fff}
+.msg-panel .art2{min-height:14rem;background:linear-gradient(160deg,#b24a5a,#3a0f18)}
+.mp{padding:clamp(1.2rem,4vw,2.2rem)}.mp h2{color:#fff}.mp p{margin:0 0 1rem;line-height:1.6;color:#f6e9ec}
+.tri{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:1rem}
+.tc{display:flex;flex-direction:column;justify-content:flex-end;min-height:14rem;padding:1.2rem;border-radius:.8rem;color:#fff;text-decoration:none}
+.tc b{font:600 1.35rem var(--head)}.tc span{font-size:.9rem;border-top:1px solid rgba(255,255,255,.6);margin-top:.5rem;padding-top:.5rem}
+.t1{background:linear-gradient(160deg,#9b2d3e,#3a0f18)}.t2{background:linear-gradient(160deg,#c68a14,#6b4a05)}.t3{background:linear-gradient(160deg,#2f5d62,#14292c)}
+.fwrap{display:flex;justify-content:space-between;gap:2rem;flex-wrap:wrap;max-width:62rem;margin:0 auto;text-align:left}
+.fbrand{display:flex;align-items:center;gap:.8rem}.fbrand i{width:2.6rem;height:2.6rem;border-radius:50%;background:var(--maroon);color:var(--gold);display:grid;place-items:center;font:700 1.2rem var(--head);font-style:normal}
+.fbrand b{display:block;font:700 1.2rem var(--head);color:var(--ink)}
+.flinks{display:grid;grid-template-columns:repeat(2,auto);gap:.4rem 2.5rem}.flinks a{text-decoration:none}.flinks a:hover{text-decoration:underline}
+@media(max-width:700px){.split,.msg-panel{grid-template-columns:1fr}}
+.post .cav{display:inline-block;width:1.5rem;height:1.5rem;aspect-ratio:1/1;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:.4rem}
+.card+.card{margin-top:1rem}
+footer details{max-width:40rem;margin:.8rem auto 0;text-align:left}footer summary{cursor:pointer;text-align:center}
+footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;border-top:1px solid var(--line)}
+@media (prefers-reduced-motion:no-preference){.hero-text{animation:rise .7s ease-out both}@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="#home"><i>A</i>AlumniHub</a>
+  <nav aria-label="Main">
+    <a href="#home" data-p="home">Home</a>
+    <a href="#events" data-p="events">Events</a>
+    <a href="#post" data-p="post">Post a photo</a>
+    <a href="#requests" data-p="requests" id="navReq">Requests</a>
+    <a href="#verify" data-p="verify">Verify</a>
+    <a href="#directory" data-p="directory">Directory</a>
+    <a href="#contact" data-p="contact" id="navCt">Contact</a>
+    <a href="#survey" data-p="survey" id="navSv">Survey</a>
+    <a href="#jobs" data-p="jobs">Jobs</a>
+    <a href="#admin" data-p="admin" id="navAdm" hidden>Admin</a>
+    <a href="#account" data-p="account" id="navAcc">Log in</a>
+  </nav>
+</header>
+
+<main>
+<!-- HOME -->
+<section id="home">
+  <div class="hero" id="hero">
+    <svg viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Illustration of the CTU campus building at dusk" id="heroArt">
+      <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a1f4a"/><stop offset=".6" stop-color="#b8485a"/><stop offset="1" stop-color="#f1a65a"/></linearGradient></defs>
+      <rect width="1200" height="700" fill="url(#sky)"/>
+      <circle cx="930" cy="250" r="60" fill="#ffd98a" opacity=".85"/>
+      <rect y="560" width="1200" height="140" fill="#2d2a22"/>
+      <g fill="#e9dccd"><rect x="330" y="330" width="540" height="230"/><rect x="250" y="400" width="100" height="160"/><rect x="850" y="400" width="100" height="160"/><polygon points="500,330 600,250 700,330"/></g>
+      <g fill="#7a1f2e"><rect x="330" y="322" width="540" height="12"/><rect x="250" y="394" width="100" height="10"/><rect x="850" y="394" width="100" height="10"/></g>
+      <g fill="#d6c5b3"><rect x="520" y="350" width="22" height="210"/><rect x="570" y="350" width="22" height="210"/><rect x="620" y="350" width="22" height="210"/><rect x="670" y="350" width="22" height="210"/></g>
+      <g fill="#ffcf6b"><rect x="370" y="380" width="34" height="46"/><rect x="430" y="380" width="34" height="46"/><rect x="740" y="380" width="34" height="46"/><rect x="800" y="380" width="34" height="46"/><rect x="370" y="470" width="34" height="46"/><rect x="430" y="470" width="34" height="46"/><rect x="740" y="470" width="34" height="46"/><rect x="800" y="470" width="34" height="46"/><rect x="274" y="440" width="22" height="34"/><rect x="304" y="440" width="22" height="34"/><rect x="874" y="440" width="22" height="34"/><rect x="904" y="440" width="22" height="34"/></g>
+      <rect x="480" y="545" width="240" height="15" fill="#cdbba8"/><rect x="460" y="558" width="280" height="14" fill="#bfae9b"/>
+      <rect x="598" y="190" width="4" height="62" fill="#ddd"/><polygon points="602,192 650,205 602,218" fill="#e0a82a"/>
+      <g fill="#1f3a28"><circle cx="150" cy="520" r="70"/><circle cx="1050" cy="520" r="78"/><circle cx="60" cy="560" r="60"/><circle cx="1140" cy="565" r="60"/></g>
+    </svg>
+    <button class="photo-btn" id="heroBtn" type="button" hidden>Replace background picture</button>
+    <input type="file" id="heroFile" accept="image/*" hidden>
+    <div class="hero-text">
+      <h1>Welcome back to CTU</h1>
+      <p>AlumniHub is where Cebu Technological University graduates share news, catch up at events, and post photos from wherever life took them.</p>
+      <a class="btn" href="#post">Post a photo</a><a class="btn alt" href="#events">See events</a>
+    </div>
+  </div>
+  <div class="wrap">
+    <p class="statlead">One community for every CTU graduate, wherever life took them.</p>
+    <div class="stats">
+      <div><b id="s1">0</b><span>Alumni posts</span></div>
+      <div><b id="s2">0</b><span>Announcements</span></div>
+      <div><b id="s3">0</b><span>Comments</span></div>
+      <div><b>Online</b><span>Document requests</span></div>
+    </div>
+  </div>
+  <div class="wrap split">
+    <div class="art" role="img" aria-label="Decorative graphic"></div>
+    <div><h2>Join your alumni community</h2>
+      <p>Share photos from reunions, comment on posts, and find classmates in the alumni directory. It takes one click with your Google account.</p>
+      <a class="btn m" href="#account">Log in with Google</a></div>
+  </div>
+  <div class="wrap">
+    <div class="msg-panel"><div class="art2" aria-hidden="true"></div>
+      <div class="mp"><h2>Message from the Alumni Office</h2>
+        <p id="msgT">Welcome, CTU alumni. This is your space to stay in touch with the school and with each other. Check the announcements, share your news, and request your documents online.</p>
+        <button class="btn" id="msgBtn" type="button" hidden>Edit message</button></div></div>
+  </div>
+  <div class="wrap">
+    <h2>Strengthen the legacy</h2>
+    <div class="tri">
+      <a class="tc t1" href="#directory"><b>Alumni Directory</b><span>Find classmates and connect</span></a>
+      <a class="tc t2" href="#requests"><b>Document Requests</b><span>Request your COR or diploma online</span></a>
+      <a class="tc t3" href="#verify"><b>Verify a Certificate</b><span>Check that a certificate is genuine</span></a>
+    </div>
+  </div>
+  <div class="wrap" id="spWrap" hidden>
+    <h2 class="newsh">Alumni Spotlight</h2>
+    <div class="feed" id="spList"></div>
+  </div>
+  <div class="wrap">
+    <h2 class="newsh">News &amp; Announcements</h2>
+    <ul class="ann" id="annList">
+      <li><time>Dec 12, 2026</time><div><h3>Alumni Homecoming</h3><p>Reunion lunch, campus tour, and batch photos. Bring a classmate you haven’t seen in years.</p></div></li>
+      <li><time>Nov 20, 2026</time><div><h3>Update your alumni record</h3><p>Confirm your batch, course, and contact details so we can reach you about batch reunions.</p></div></li>
+      <li><time>Nov 5, 2026</time><div><h3>Scholarship fund drive</h3><p>Help a current CTU student cover tuition. Every contribution from alumni counts.</p></div></li>
+    </ul>
+  </div>
+  <div class="wrap" id="hjWrap" hidden>
+    <h2 class="newsh">Latest Job Openings</h2>
+    <div class="tri" id="hjList"></div>
+    <p style="text-align:center;margin-top:1.4rem"><a class="btn m" href="#jobs">See all job openings</a></p>
+  </div>
+</section>
+
+<!-- EVENTS -->
+<section id="events" hidden>
+  <div class="wrap">
+    <h2>Events and alumni posts</h2>
+    <p class="lead">Photos and updates shared by CTU alumni. Newest first.</p>
+    <div class="feed" id="feed"></div>
+  </div>
+</section>
+
+<!-- POST -->
+<section id="post" hidden>
+  <div class="wrap">
+    <h2>Post a photo</h2>
+    <p class="lead">Share a photo with fellow alumni. It will appear on the Events page.</p>
+    <div class="card" id="gate" hidden><p>Log in or register to post photos and comment.</p><a class="btn m" href="#account">Log in or register</a></div>
+    <form class="card" id="form" novalidate hidden>
+      <p class="who-line" id="whoPost"></p>
+      <label>Photo<input type="file" id="file" accept="image/*" required></label>
+      <img class="preview" id="preview" alt="Preview of your photo" hidden>
+      <label>Caption<textarea id="cap" maxlength="280" placeholder="What’s happening in this photo?"></textarea></label>
+      <button class="btn" type="submit" style="background:var(--maroon);color:var(--maroon-ink)">Publish post</button>
+      <p class="msg" id="msg" role="status"></p>
+    </form>
+  </div>
+</section>
+<!-- REQUESTS -->
+<section id="requests" hidden>
+  <div class="wrap">
+    <h2>Request a document</h2>
+    <div class="card" id="rqGate" hidden><p>Log in to request your documents.</p><a class="btn m" href="#account">Log in</a></div>
+    <div class="card" id="rqAdm" hidden><p>You’re logged in as an admin, so you review student requests instead of sending them.</p><a class="btn m" href="#admin">Open the Admin page</a></div>
+    <form class="card" id="rqForm" novalidate hidden>
+      <label>Full name<input type="text" id="qn" maxlength="80"></label>
+      <label>Student number<input type="text" id="qs" maxlength="30"></label>
+      <label>Course<input type="text" id="qc" maxlength="60"></label>
+      <label>School year or year graduated<input type="text" id="qy" maxlength="20" placeholder="2019"></label>
+      <label>Document<select id="qd"><option value="cor">Certificate of Registration (COR)</option><option value="dip">Diploma (certified copy)</option><option value="gm">Certificate of Good Moral Character</option><option value="tor">Transcript of Records (request slip)</option></select></label>
+      <label>Purpose<input type="text" id="qp" maxlength="100" placeholder="Employment, scholarship, etc."></label>
+      <button class="btn m" type="submit">Send request</button>
+      <p class="msg" id="qm" role="status"></p>
+    </form>
+    <h2 style="margin-top:2rem">Your requests</h2>
+    <ul class="ann" id="myReq"></ul>
+  </div>
+</section>
+
+<!-- ADMIN -->
+<section id="admin" hidden>
+  <div class="wrap">
+    <h2 id="admT">Admin</h2>
+    <div id="atabs" class="tabs" role="tablist">
+      <button type="button" data-t="ov">Overview</button><button type="button" data-t="an">Announcements</button><button type="button" data-t="sp">Spotlight</button><button type="button" data-t="rq">Requests</button><button type="button" data-t="ms">Messages</button><button type="button" data-t="ce">Register certificate</button>
+    </div>
+    <div class="card" id="dash" data-tab="ov"><h3>Overview</h3><p id="dashT"></p>
+      <button class="btn m" type="button" id="exReq">Download requests (CSV)</button> <button class="btn m" type="button" id="exDir">Download directory (CSV)</button> <button class="btn m" type="button" id="exTr">Download survey (CSV)</button></div>
+    <form class="card" id="anF" data-tab="an" novalidate><h3>Post an announcement</h3>
+      <label>Title<input type="text" id="at" maxlength="100"></label>
+      <label>Date<input type="date" id="ad"></label>
+      <label>Details<textarea id="ax" maxlength="400"></textarea></label>
+      <label style="font-weight:400"><input type="checkbox" id="arsvp"> Let alumni RSVP with &ldquo;I’m going&rdquo;</label>
+      <label>Picture (optional)<input type="file" id="aimgf" accept="image/*"></label>
+      <button class="btn m" type="submit">Post announcement</button><p class="msg" id="am" role="status"></p></form>
+    <form class="card" id="cF" data-tab="ce" novalidate><h3>Register a certificate</h3>
+      <label>Reference number (leave empty to create one)<input type="text" id="cr" maxlength="40" autocomplete="off"></label>
+      <label>Student name<input type="text" id="cn" maxlength="80"></label>
+      <label>Course<input type="text" id="cc" maxlength="60"></label>
+      <label>Year<input type="text" id="cy" maxlength="20"></label>
+      <label>Document<select id="cd"><option value="cor">Certificate of Registration (COR)</option><option value="dip">Diploma (certified copy)</option><option value="gm">Certificate of Good Moral Character</option><option value="tor">Transcript of Records (request slip)</option></select></label>
+      <button class="btn m" type="submit">Save record</button><p class="msg" id="cm" role="status"></p></form>
+    <form class="card" id="spF" data-tab="sp" novalidate><h3>Add an alumni spotlight</h3>
+      <label>Name<input type="text" id="sn" maxlength="80"></label>
+      <label>Course and batch<input type="text" id="sb" maxlength="40"></label>
+      <label>Story<textarea id="ss" maxlength="400"></textarea></label>
+      <label>Portrait (optional)<input type="file" id="sf" accept="image/*"></label>
+      <button class="btn m" type="submit">Post spotlight</button><p class="msg" id="sm" role="status"></p></form>
+    <h2 data-tab="rq" style="margin-top:0">Student requests</h2>
+    <ul class="ann" id="admReq" data-tab="rq"></ul>
+    <h2 data-tab="ms" style="margin-top:0">Messages</h2>
+    <ul class="ann" id="admMsg" data-tab="ms"></ul>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" hidden>
+  <div class="wrap">
+    <h2>Contact us</h2>
+    <p class="lead">Send a question or concern to the AlumniHub admin.</p>
+    <div class="card" id="ctGate" hidden><p>Log in to send a message.</p><a class="btn m" href="#account">Log in</a></div>
+    <div class="card" id="ctAdm" hidden><p>You are an admin, so you read and reply to messages on the Admin page.</p><a class="btn m" href="#admin-messages">Open Admin: Messages</a></div>
+    <form class="card" id="ctF" novalidate hidden>
+      <label>Message<textarea id="ctx" maxlength="600"></textarea></label>
+      <button class="btn m" type="submit">Send message</button><p class="msg" id="ctm" role="status"></p>
+    </form>
+    <h2 id="myH" style="margin-top:2rem">Your messages</h2>
+    <ul class="ann" id="myMsg"></ul>
+  </div>
+</section>
+
+<!-- JOBS -->
+<section id="jobs" hidden>
+  <div class="wrap">
+    <h2>Job board</h2>
+    <p class="lead">Openings shared by alumni and employers. Always check an employer yourself before sharing personal details or paying anything.</p>
+    <div class="card" id="jbGate" hidden><p>Log in to post a job opening.</p><a class="btn m" href="#account">Log in</a></div>
+    <form class="card" id="jbF" novalidate hidden><h3>Post a job opening</h3>
+      <label>Job title<input type="text" id="jt" maxlength="100"></label>
+      <label>Company<input type="text" id="jc" maxlength="80"></label>
+      <label>Location<input type="text" id="jl" maxlength="80"></label>
+      <label>Description<textarea id="jd" maxlength="600"></textarea></label>
+      <label>How to apply (email, phone or website)<input type="text" id="ja" maxlength="150"></label>
+      <button class="btn m" type="submit">Post job</button><p class="msg" id="jm" role="status"></p>
+    </form>
+    <ul class="ann" id="jbList" style="margin-top:1.5rem"></ul>
+  </div>
+</section>
+
+<!-- SURVEY -->
+<section id="survey" hidden>
+  <div class="wrap">
+    <h2>Graduate tracer survey</h2>
+    <p class="lead">A short survey that helps the school track where its graduates are. You can update your answer any time.</p>
+    <div class="card" id="svGate" hidden><p>Log in to answer the survey.</p><a class="btn m" href="#account">Log in</a></div>
+    <form class="card" id="svF" novalidate hidden>
+      <label>Current status<select id="svs"><option>Employed</option><option>Self-employed</option><option>Looking for work</option><option>Studying</option><option>Other</option></select></label>
+      <label>Job title and company (optional)<input type="text" id="svw" maxlength="100"></label>
+      <label>Is your work related to your course?<select id="svr"><option>Yes</option><option>Somewhat</option><option>No</option></select></label>
+      <button class="btn m" type="submit">Save my answer</button><p class="msg" id="svm" role="status"></p>
+    </form>
+  </div>
+</section>
+
+<!-- DIRECTORY -->
+<section id="directory" hidden>
+  <div class="wrap">
+    <h2>Alumni directory</h2>
+    <p class="lead">Alumni who chose to be listed. Only logged-in alumni can see it.</p>
+    <div class="card" id="dirOut"><p>Log in to see and join the directory.</p><a class="btn m" href="#account">Log in</a></div>
+    <div id="dirMe" hidden>
+      <div class="card"><h3>Your listing</h3>
+        <label>Where do you work? (optional)<input type="text" id="dw" maxlength="80"></label>
+        <button class="btn m" type="button" id="dirAdd">Add or update my listing</button> <button class="btn m" type="button" id="dirDel">Remove me</button></div>
+      <label style="margin-top:1rem">Search<input type="text" id="ds" placeholder="Name, batch or workplace"></label>
+      <ul class="ann" id="dirList"></ul>
+    </div>
+  </div>
+</section>
+
+<!-- VERIFY -->
+<section id="verify" hidden>
+  <div class="wrap">
+    <h2>Verify a certificate</h2>
+    <p class="lead">Enter the reference number printed on a certificate to check that it was really issued through AlumniHub.</p>
+    <form class="card" id="vF" novalidate>
+      <label>Reference number<input type="text" id="vi" maxlength="40" autocomplete="off"></label>
+      <button class="btn m" type="submit">Check</button>
+      <p class="msg" id="vm" role="status"></p>
+    </form>
+  </div>
+</section>
+
+<!-- ACCOUNT -->
+<section id="account" hidden>
+  <div class="wrap">
+    <h2 id="accT">Account</h2>
+    <div class="card" id="accIn" hidden><p id="accHi"></p><button class="btn m" id="outBtn" type="button">Log out</button></div>
+    <div class="card" id="accBack" hidden><p id="accBackT"></p><button class="btn m" id="inBtn" type="button">Log in</button> <button class="btn m" id="admBtn" type="button">Admin login</button><p class="msg err" id="amsg"></p></div>
+    <form class="card" id="reg" novalidate hidden>
+      <label>Your name<input type="text" id="rname" maxlength="60" autocomplete="name"></label>
+      <label>Course and batch<input type="text" id="rbatch" maxlength="40" placeholder="BSIT, 2019"></label>
+      <button class="btn m" type="submit">Save profile</button>
+      <p class="msg" id="rmsg" role="status"></p>
+    </form>
+    <p class="lead" id="mode" style="margin-top:1rem"></p>
+  </div>
+</section>
+</main>
+<div id="rmod" hidden><div class="rmc"><button type="button" id="rmx" aria-label="Close">×</button><img id="rmi" alt="" hidden><h2 id="rmt"></h2><p id="rmd" class="lead" style="margin:0 0 1rem"></p><p id="rmb"></p></div></div>
+<div id="lb" hidden><img id="lbi" alt="Announcement picture"></div>
+<footer>
+  <div class="fwrap">
+    <div class="fbrand"><i>A</i><div><b>AlumniHub</b><span>Cebu Technological University alumni</span></div></div>
+    <div class="flinks"><a href="#home">Home</a><a href="#requests">Document requests</a><a href="#events">Events</a><a href="#verify">Verify a certificate</a><a href="#post">Post a photo</a><a href="#directory">Alumni directory</a><a href="#contact">Contact us</a></div>
+  </div>
+  <details><summary>Privacy notice</summary>
+  <p>AlumniHub stores your name, course and batch, Google email and profile picture, your posts and comments, and the details you give in document requests (student number, course, year and purpose). It is used only to run the alumni community and to process your requests. Posts, comments and announcements are public. Document requests can be seen only by you and the admins. To correct or remove your information, contact the AlumniHub admin.</p></details></footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script>
+(function(){
+  var KEY='alumnihub-posts', HKEY='alumnihub-hero';
+  function art(a,b,c){
+    var s='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+a+'"/><stop offset="1" stop-color="'+b+'"/></linearGradient></defs><rect width="400" height="300" fill="url(#g)"/><circle cx="300" cy="90" r="46" fill="'+c+'" opacity=".8"/><rect y="210" width="400" height="90" fill="#000" opacity=".25"/></svg>';
+    return 'data:image/svg+xml;utf8,'+encodeURIComponent(s);
+  }
+  var seeds=[];
+  function load(){try{var r=localStorage.getItem(KEY);return r?JSON.parse(r):[]}catch(e){return []}}
+  function save(a){try{localStorage.setItem(KEY,JSON.stringify(a));return true}catch(e){return false}}
+
+  function render(){
+    var feed=document.getElementById('feed'),ae=document.activeElement;if(ae&&ae.tagName==='INPUT'&&ae.value&&feed.contains(ae)){held=true;return}feed.textContent='';
+    if(!posts.length&&!seeds.length){var em=document.createElement('p');em.className='lead';em.textContent='No posts yet. Be the first to share a photo.';feed.appendChild(em)}
+    posts.concat(seeds).forEach(function(p){
+      var c=document.createElement('article');c.className='post';
+      var im=document.createElement('img');im.src=p.img;im.alt='Photo posted by '+p.name;im.loading='lazy';im.style.cursor='zoom-in';im.onclick=function(){openPost(p)};
+      var b=document.createElement('div');b.className='body';
+      var w=document.createElement('div');w.className='who';
+      var av=document.createElement('span'),L=(p.name||'?').trim().charAt(0).toUpperCase();av.className='av';av.textContent=L;
+      if(p.photo){var ph=document.createElement('img');ph.referrerPolicy='no-referrer';ph.alt='';ph.onerror=function(){av.textContent=L};ph.src=p.photo;av.textContent='';av.appendChild(ph)}
+      var t=document.createElement('div');var n=document.createElement('b');n.textContent=p.name;
+      var s=document.createElement('small');s.textContent=(p.batch?p.batch+' • ':'')+p.date;
+      t.appendChild(n);t.appendChild(s);w.appendChild(av);w.appendChild(t);b.appendChild(w);
+      if(p.cap){var q=document.createElement('p');q.textContent=p.cap;b.appendChild(q)}
+      mb(b,'View details',function(){openPost(p)});
+      if(adm()||(logged&&p.uid===uid))mb(b,'Delete post',function(){if(confirm('Delete this post?'))fs.doc('posts/'+p.id).delete()});
+      b.appendChild(thread(p));c.appendChild(im);c.appendChild(b);feed.appendChild(c);
+    });
+  }
+
+  function route(){
+    var h=location.hash.slice(1),vp=h.indexOf('verify-')===0?decodeURIComponent(h.slice(7)):'';if(vp)h='verify';var at='';if(h.indexOf('admin')===0){at={'admin':'ov','admin-announcements':'an','admin-spotlight':'sp','admin-requests':'rq','admin-messages':'ms','admin-certificates':'ce'}[h]||'ov';h='admin'}if(['home','events','post','account','requests','admin','verify','directory','contact','survey','jobs'].indexOf(h)<0)h='home';
+    ['home','events','post','account','requests','admin','verify','directory','contact','survey','jobs'].forEach(function(id){document.getElementById(id).hidden=(id!==h)});
+    document.querySelectorAll('nav a').forEach(function(a){
+      if(a.dataset.p===h)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');
+    });
+    if(vp){$('vi').value=vp;if(fs)$('vF').querySelector('button').click()}
+    if(h==='admin')adminTab(at||'ov');
+    if(h==='events')render();
+    if(h==='post'||h==='account'||h==='requests'||h==='admin'||h==='directory'||h==='contact'||h==='survey'||h==='jobs')acct();
+    window.scrollTo(0,0);
+  }
+  window.addEventListener('hashchange',route);
+
+  function shrink(file,max,done,q){
+    var fr=new FileReader();
+    fr.onload=function(){
+      var im=new Image();
+      im.onload=function(){
+        var k=Math.min(1,max/Math.max(im.width,im.height));
+        var cv=document.createElement('canvas');cv.width=Math.round(im.width*k);cv.height=Math.round(im.height*k);
+        cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);
+        done(cv.toDataURL('image/jpeg',q||0.8));
+      };
+      im.onerror=function(){done(null)};
+      im.src=fr.result;
+    };
+    fr.onerror=function(){done(null)};
+    fr.readAsDataURL(file);
+  }
+
+  /* Hero photo */
+  function setHero(url){
+    var old=document.getElementById('heroImg');if(old)old.remove();
+    var im=document.createElement('img');im.id='heroImg';im.src=url;im.alt='Photo of CTU';
+    document.getElementById('heroArt').after(im);
+  }
+  
+  var hf=document.getElementById('heroFile');
+  document.getElementById('heroBtn').addEventListener('click',function(){hf.click()});
+  hf.addEventListener('change',function(){
+    if(!hf.files[0])return;
+    shrink(hf.files[0],1400,function(u){if(!u||!adm())return;fs.doc('site/hero').set({img:u}).catch(function(){alert('Couldn\u2019t save the picture. Try a smaller one.')})},0.7);
+  });
+
+  /* Post form */
+  var file=document.getElementById('file'),prev=document.getElementById('preview'),msg=document.getElementById('msg'),data=null;
+  function say(t,err){msg.textContent=t;msg.className='msg'+(err?' err':'')}
+  file.addEventListener('change',function(){
+    data=null;prev.hidden=true;say('');
+    if(!file.files[0])return;
+    shrink(file.files[0],640,function(u){
+      if(!u){say('That file couldn’t be read as an image. Choose a JPG or PNG.',true);return}
+      data=u;prev.src=u;prev.hidden=false;
+    },0.62);
+  });
+  document.getElementById('form').addEventListener('submit',function(e){
+    e.preventDefault();
+    if(!logged||!me){say('Log in before posting.',true);return}
+    if(!data){say('Choose an image to post.',true);return}
+    var post={uid:uid,photo:(user&&user.photoURL)||'',name:me.name,batch:me.batch||'',cap:document.getElementById('cap').value.trim(),img:data,ts:Date.now(),
+      date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})};
+    post.id='l'+post.ts;
+    addPost(post,function(ok){
+      if(!ok){say('Couldn’t publish. Try a smaller image, or ask the page owner for contributor access.',true);return}
+      document.getElementById('form').reset();data=null;prev.hidden=true;say('');location.hash='events';
+    });
+  });
+  /* ====== PASTE YOUR FIREBASE SETTINGS HERE (Firebase console > Project settings > Your apps > Web) ====== */
+  var CFG={apiKey:"AIzaSyAjeI9g35ff9uvDYd8H2YM9RWjFevHFu4E",authDomain:"jamewel.firebaseapp.com",projectId:"jamewel",appId:"1:840377024661:web:1d787483aeba8bfee9db9c"};
+  /* ================================================================================================== */
+  var user=null,uid='',me=null,logged=false,posts=[],coms=[],held=false,fs=null,auth=null,unMe=null;
+  var SETUP=CFG.apiKey==='YOUR_API_KEY';
+  seeds.forEach(function(s,i){s.id='s'+(i+1)});
+  function $(i){return document.getElementById(i)}
+  function acct(){
+    var on=!!(user&&me);logged=on;
+    var nv=$('navAcc');nv.textContent='';
+    if(on&&user.photoURL){var pi=document.createElement('img');pi.referrerPolicy='no-referrer';pi.alt='';pi.src=user.photoURL;nv.appendChild(pi)}
+    nv.appendChild(document.createTextNode(on?me.name.split(' ')[0]:'Log in'));
+    $('gate').hidden=on;$('form').hidden=!on;$('rqGate').hidden=on;$('dirMe').hidden=!on;$('dirOut').hidden=on;$('ctGate').hidden=on;$('ctF').hidden=!on||adm();$('ctAdm').hidden=!(on&&adm());$('myH').hidden=$('myMsg').hidden=!!(on&&adm());$('navCt').hidden=!!(on&&adm());$('svGate').hidden=on;$('svF').hidden=!on;$('jbGate').hidden=on;$('jbF').hidden=!on;$('rqForm').hidden=!on||adm();$('rqAdm').hidden=!(on&&adm());$('navAdm').hidden=!(on&&adm());$('navReq').hidden=!!(on&&adm());$('navSv').hidden=!!(on&&adm());$('heroBtn').hidden=!(on&&adm());$('msgBtn').hidden=!(on&&adm());showSp();showJobs();showAnn();
+    if(on&&!$('qn').value)$('qn').value=me.name;
+    if(on)$('whoPost').textContent='Posting as '+me.name+(me.batch?' ('+me.batch+')':'');
+    $('accIn').hidden=!on;$('accBack').hidden=!!user;$('reg').hidden=!(user&&!me);
+    if(on)$('accHi').textContent='You’re logged in as '+me.name+'.';
+    $('accBackT').textContent='Sign in with your Google account to post photos and comment.';
+    $('accT').textContent=on?'Your account':(user?'Finish your profile':'Log in or register');
+    $('mode').textContent=SETUP?'Setup needed: add your Firebase settings near the top of the script.':'Posts and comments are shared with all CTU alumni.';
+  }
+  $('inBtn').textContent='Student login with Google';$('admBtn').textContent='Admin login with Google';
+  function go(m){
+    if(!auth)return;mode=m;$('amsg').textContent='';try{localStorage.setItem('ah-mode',m)}catch(e){}
+    auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(function(e){$('amsg').textContent='Sign-in failed: '+(e.code||e.message)});
+  }
+  $('inBtn').onclick=function(){go('student')};
+  $('admBtn').onclick=function(){go('admin')};
+  $('outBtn').onclick=function(){if(auth)auth.signOut()};
+  $('reg').addEventListener('submit',function(e){
+    e.preventDefault();var n=$('rname').value.trim(),m=$('rmsg');
+    if(!n){m.textContent='Enter your name.';m.className='msg err';return}
+    fs.doc('users/'+uid).set({name:n,batch:$('rbatch').value.trim()}).then(function(){location.hash='events'},
+      function(){m.textContent='Couldn’t save your profile. Try again.';m.className='msg err'});
+  });
+  function addPost(p,cb){fs.collection('posts').add(p).then(function(){cb(true)},function(){cb(false)})}
+  function addCom(c,cb){fs.collection('comments').add(c).then(function(){cb(true)},function(){cb(false)})}
+  function thread(p){
+    var t=document.createElement('div');t.className='thread';
+    coms.filter(function(c){return c.postId===p.id}).forEach(function(c){
+      var r=document.createElement('p');r.className='cm';var b=document.createElement('b');b.textContent=c.name;
+      if(c.photo){var ci=document.createElement('img');ci.className='cav';ci.referrerPolicy='no-referrer';ci.alt='';ci.onerror=function(){ci.remove()};ci.src=c.photo;r.appendChild(ci)}
+      r.appendChild(b);r.appendChild(document.createTextNode(' '+c.text));
+      if(adm()||(logged&&c.uid===uid))mb(r,'Delete',function(){fs.doc('comments/'+c.id).delete()});t.appendChild(r);
+    });
+    if(logged&&me){
+      var f=document.createElement('form'),i=document.createElement('input'),bt=document.createElement('button');
+      f.className='cf';i.type='text';i.maxLength=200;i.placeholder='Write a comment';i.setAttribute('aria-label','Comment on '+p.name+'’s post');
+      bt.type='submit';bt.className='btn m';bt.textContent='Comment';f.appendChild(i);f.appendChild(bt);
+      f.addEventListener('submit',function(e){
+        e.preventDefault();var v=i.value.trim();if(!v)return;i.value='';
+        addCom({postId:p.id,uid:uid,photo:(user&&user.photoURL)||'',name:me.name,text:v,ts:Date.now()},function(ok){if(!ok){i.value=v;i.placeholder='Couldn’t send. Try again.'}});
+      });
+      t.appendChild(f);
+    }else{var a=document.createElement('a');a.href='#account';a.className='lg';a.textContent='Log in to comment';t.appendChild(a)}
+    return t;
+  }
+  $('feed').addEventListener('focusout',function(){if(held){held=false;setTimeout(render,0)}});
+  function rows(s){return s.docs.map(function(d){var x=d.data();x.id=d.id;return x})}
+  function init(){
+    showAnn();
+    if(SETUP){acct();render();return}
+    firebase.initializeApp(CFG);auth=firebase.auth();fs=firebase.firestore();
+    if($('vi').value)setTimeout(function(){$('vF').querySelector('button').click()},0);
+    fs.collection('posts').orderBy('ts','desc').limit(60).onSnapshot(function(s){posts=rows(s);render();dash()},function(){});
+    fs.collection('comments').orderBy('ts','asc').limit(500).onSnapshot(function(s){coms=rows(s);render();dash()},function(){});
+    fs.collection('announcements').orderBy('ts','desc').limit(20).onSnapshot(function(sn){anns=rows(sn);showAnn();dash()},function(){});
+    fs.collection('spotlight').orderBy('ts','desc').limit(12).onSnapshot(function(sn){sps=rows(sn);showSp()},function(){});
+    fs.collection('jobs').orderBy('ts','desc').limit(100).onSnapshot(function(sn){jobs=rows(sn);showJobs();showHJ()},function(){});
+    fs.doc('site/msg').onSnapshot(function(d){if(d.exists&&d.data().text)$('msgT').textContent=d.data().text},function(){});
+    fs.doc('site/hero').onSnapshot(function(d){if(d.exists&&d.data().img)setHero(d.data().img)},function(){});
+    auth.onAuthStateChanged(function(u){
+      user=u;uid=u?u.uid:'';me=null;isAdm=false;reqs=[];if(unR){unR();unR=null}showReq();
+      if(unD){unD();unD=null}dirs=[];showDir();
+      if(unM){unM();unM=null}msgs=[];showMsg();if(unT){unT();unT=null}trs=[];
+      if(unQ){unQ();unQ=null}mine=[];showMine();
+      if(u)unQ=fs.collection('messages').where('uid','==',uid).onSnapshot(function(sn){mine=rows(sn).sort(function(a,b){return b.ts-a.ts});showMine()},function(){});if(unS){unS();unS=null}rs=[];
+      if(u)unS=fs.collection('rsvps').limit(1000).onSnapshot(function(sn){rs=rows(sn);showAnn()},function(){});
+      if(u)unD=fs.collection('directory').limit(500).onSnapshot(function(sn){dirs=rows(sn);showDir();dash()},function(){});
+      if(u)fs.doc('admins/'+uid).get().then(function(d){isAdm=d.exists},function(e){aErr=e.code||'error'}).then(function(){
+        if(mode==='admin'&&!isAdm){$('amsg').textContent='Not an admin. Your User UID is '+uid+(aErr==='permission-denied'?' . Firebase blocked the check, so publish the latest Firestore rules.':' . Add this exact UID as a document ID in the admins collection.');mode='student';auth.signOut();return}
+        if(adm())fs.doc('users/'+uid).get().then(function(d){if(!d.exists)fs.doc('users/'+uid).set({name:user.displayName||'Administrator',batch:'Administrator'})},function(){});
+        if(adm())unM=fs.collection('messages').orderBy('ts','desc').limit(100).onSnapshot(function(sn){msgs=rows(sn);showMsg()},function(){});
+        if(adm())unT=fs.collection('tracer').limit(1000).onSnapshot(function(sn){trs=rows(sn);dash()},function(){});
+        var q=adm()?fs.collection('requests').orderBy('ts','desc').limit(100):fs.collection('requests').where('uid','==',uid);
+        unR=q.onSnapshot(function(sn){reqs=rows(sn).sort(function(a,b){return b.ts-a.ts});showReq();acct();render();dash()},function(){});acct();render();
+      });
+      if(unMe){unMe();unMe=null}
+      if(u){$('rname').value=u.displayName||'';unMe=fs.doc('users/'+uid).onSnapshot(function(s){me=s.exists?s.data():null;acct();render()},function(){acct()})}
+      acct();render();
+    });
+  }
+  var mine=[],unQ=null,dirs=[],jobs=[],trs=[],unT=null,sps=[],msgs=[],rs=[],unD=null,unM=null,unS=null,isAdm=false,aErr='',mode='student',anns=[],evs=[],reqs=[],unR=null;
+  try{mode=localStorage.getItem('ah-mode')||'student'}catch(e){}
+  function adm(){return isAdm&&mode==='admin'&&!!user}
+  function mb(d,txt,fn){var x=document.createElement('button');x.type='button';x.className='btn m';x.style.cssText='margin:.6rem .4rem 0 0;padding:.35rem .7rem;font-size:.85rem';x.textContent=txt;x.onclick=fn;d.appendChild(x)}
+  function tools(col,x){return function(d){
+    if(x.img){var im=document.createElement('img');im.src=x.img;im.alt='';im.className='aimg';im.onclick=function(){$('lbi').src=x.img;$('lb').hidden=false};d.appendChild(im)}
+    if(col==='announcements'){var rb=document.createElement('button');rb.type='button';rb.className='btn rm';rb.textContent='Read More';rb.onclick=function(){openAnn(x)};d.appendChild(rb)}
+    if(col==='announcements'&&x.rsvp&&logged&&me){
+      var n=rs.filter(function(r){return r.a===x.id}).length,mine=rs.some(function(r){return r.a===x.id&&r.uid===uid}),rv=document.createElement('div');
+      rv.className='abar';
+      mb(rv,mine?'Going \u2713 ('+n+')':'I\u2019m going ('+n+')',function(){var ref=fs.doc('rsvps/'+x.id+'_'+uid);if(mine)ref.delete();else ref.set({a:x.id,uid:uid,name:me.name})});
+      d.appendChild(rv);
+    }
+    if(adm()){var bar=document.createElement('div');bar.className='abar';d.appendChild(bar);
+      mb(bar,'Edit',function(){var t=prompt('Title',x.title);if(t===null)return;var tx=prompt('Details',x.text||'');if(tx===null)return;fs.doc(col+'/'+x.id).update({title:t.trim()||x.title,text:tx.trim()})});
+      mb(bar,'Delete',function(){if(confirm('Delete this?'))fs.doc(col+'/'+x.id).delete()});
+    }
+  }}
+  function esc(x){return String(x==null?'':x).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+  function fill(list,items,mk){
+    list.textContent='';
+    if(!items.length){var e=document.createElement('li');e.style.cssText='display:block;padding:1rem 1.2rem';e.textContent='Nothing here yet.';list.appendChild(e);return}
+    items.forEach(function(x){list.appendChild(mk(x))});
+  }
+  function item(date,title,text,extra){
+    var l=document.createElement('li'),t=document.createElement('time'),d=document.createElement('div'),h=document.createElement('h3'),p=document.createElement('p');
+    t.textContent=date||'';h.textContent=title;p.textContent=text||'';d.appendChild(h);d.appendChild(p);
+    if(extra)extra(d);
+    l.appendChild(t);l.appendChild(d);return l;
+  }
+  function dash(){$('s1').textContent=posts.length;$('s2').textContent=anns.length;$('s3').textContent=coms.length;var e=$('dashT');if(!e)return;var p=reqs.filter(function(r){return r.status==='pending'}).length,a=reqs.filter(function(r){return r.status==='approved'}).length;e.textContent='Pending requests: '+p+'  \u2022  Approved certificates: '+a+'  \u2022  Alumni posts: '+posts.length+'  \u2022  Comments: '+coms.length+'  \u2022  Announcements: '+anns.length+'  \u2022  Directory listings: '+dirs.length+'  \u2022  Survey responses: '+trs.length}
+  function showDir(){
+    var q=($('ds').value||'').toLowerCase();
+    fill($('dirList'),dirs.filter(function(x){return (x.name+' '+x.batch+' '+(x.work||'')).toLowerCase().indexOf(q)>=0}).sort(function(a,b){return a.name<b.name?-1:1}),function(x){return item(x.batch,x.name,x.work)});
+  }
+  function openAnn(x){var i=$('rmi');if(x.img){i.src=x.img;i.hidden=false}else i.hidden=true;$('rmt').textContent=x.title;$('rmd').textContent=x.date||'';$('rmb').textContent=x.text||'';$('rmod').hidden=false}
+  function showSp(){
+    var w=$('spWrap'),l=$('spList');l.textContent='';w.hidden=!sps.length;
+    sps.forEach(function(x){
+      var c=document.createElement('article'),d=document.createElement('div'),h=document.createElement('h3'),p=document.createElement('p');
+      c.className='post sp';
+      if(x.img){var im=document.createElement('img');im.src=x.img;im.alt=x.name;c.appendChild(im)}
+      d.className='body';h.textContent=x.name;h.style.cssText='margin:0 0 .3rem;font:600 1.15rem var(--head)';
+      p.textContent=(x.batch?x.batch+'. ':'')+(x.story||'');d.appendChild(h);d.appendChild(p);
+      if(adm())mb(d,'Delete',function(){if(confirm('Delete this?'))fs.doc('spotlight/'+x.id).delete()});
+      c.appendChild(d);l.appendChild(c);
+    });
+  }
+  function showMsg(){
+    fill($('admMsg'),msgs,function(m){
+      return item(new Date(m.ts).toLocaleDateString('en-US',{month:'short',day:'numeric'}),m.name+(m.email?' ('+m.email+')':'')+(m.reply?' \u2713 replied':''),m.text,function(d){
+        if(m.reply){var p=document.createElement('p');p.style.cssText='margin-top:.4rem;font-size:.9rem';p.textContent='Your reply: '+m.reply;d.appendChild(p)}
+        mb(d,m.reply?'Edit reply':'Reply',function(){
+          var t=prompt('Reply to '+m.name+' (they will see it on the Contact page):',m.reply||'');if(t===null||!t.trim())return;
+          fs.doc('messages/'+m.id).update({reply:t.trim(),repliedBy:me.name,repAt:Date.now()}).catch(function(){alert('Couldn\u2019t save the reply.')});
+        });
+        if(m.email)mb(d,'Reply by email',function(){location.href='mailto:'+m.email+'?subject='+encodeURIComponent('Re: your message to AlumniHub')+'&body='+encodeURIComponent('Hello '+m.name+',\n\n')});
+        mb(d,'Delete',function(){fs.doc('messages/'+m.id).delete()});
+      });
+    });
+  }
+  function showMine(){
+    fill($('myMsg'),mine,function(m){
+      return item(m.ts?new Date(m.ts).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'','You',m.text,function(d){
+        var p=document.createElement('p');p.style.cssText='margin-top:.4rem;font-size:.9rem';
+        p.textContent=m.reply?'Reply from AlumniHub: '+m.reply:'Waiting for a reply.';d.appendChild(p);
+      });
+    });
+  }
+  var DN={cor:'Certificate of Registration',dip:'Diploma (certified copy)',gm:'Certificate of Good Moral Character',tor:'Transcript of Records'};
+  function prog(r){var t=r.status;return 'Received \u2713 \u2192 '+(t==='pending'?'Under review':'Under review \u2713')+' \u2192 '+(t==='approved'?'Approved \u2713':t==='rejected'?'Rejected':'Decision')}
+  function csv(name,rows){
+    var t=rows.map(function(r){return r.map(function(c){c=String(c==null?'':c);if(/^[=+\-@]/.test(c))c="'"+c;return /[",\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c}).join(',')}).join('\r\n');
+    var a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+t],{type:'text/csv'}));a.download=name;a.click();
+  }
+  function showModal(img,t,m,b){var i=$('rmi');if(img){i.src=img;i.hidden=false}else i.hidden=true;$('rmt').textContent=t;$('rmd').textContent=m||'';$('rmb').textContent=b||'';$('rmod').hidden=false;$('rmod').scrollTop=0}
+  function openPost(p){var cm=coms.filter(function(c){return c.postId===p.id}).map(function(c){return c.name+': '+c.text}).join('\n');showModal(p.img,p.name,(p.batch?p.batch+' \u2022 ':'')+(p.date||''),(p.cap||'')+(cm?'\n\nComments\n'+cm:''))}
+  function openJob(j){showModal('',j.title,(j.company||'')+(j.place?' \u2022 '+j.place:''),(j.text||'')+(j.apply?'\n\nHow to apply: '+j.apply:'')+'\n\nPosted by '+j.name)}
+  function showHJ(){
+    var w=$('hjWrap'),l=$('hjList'),a=jobs.slice(0,3);l.textContent='';w.hidden=!a.length;
+    a.forEach(function(j){
+      var c=document.createElement('article'),h=document.createElement('h3'),m=document.createElement('p'),e=document.createElement('p'),b=document.createElement('button');
+      c.className='hj';h.textContent=j.title;m.className='meta';m.textContent=(j.company||'')+(j.place?' \u2022 '+j.place:'');
+      e.className='ex';e.textContent=j.text||'';b.type='button';b.textContent='View details';b.onclick=function(){openJob(j)};
+      c.appendChild(h);c.appendChild(m);c.appendChild(e);c.appendChild(b);l.appendChild(c);
+    });
+  }
+  function showJobs(){
+    fill($('jbList'),jobs,function(j){
+      return item(j.ts?new Date(j.ts).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'',j.title,(j.company||'')+(j.place?' \u2022 '+j.place:''),function(d){
+        function line(t,sm){var p=document.createElement('p');p.textContent=t;if(sm)p.style.cssText='font-size:.85rem;margin-top:.4rem';d.appendChild(p)}
+        if(j.text)line(j.text);if(j.apply)line('How to apply: '+j.apply);line('Posted by '+j.name,1);
+        if(adm()||(logged&&j.uid===uid))mb(d,'Delete',function(){if(confirm('Delete this job?'))fs.doc('jobs/'+j.id).delete()});
+      });
+    });
+  }
+  function showAnn(){fill($('annList'),anns,function(x){return item(x.date,x.title,x.text,tools('announcements',x))})}
+  function row(r,adm){
+    function b(d,txt,fn){var x=document.createElement('button');x.type='button';x.className='btn m';x.style.margin='.6rem .4rem 0 0';x.textContent=txt;x.onclick=fn;d.appendChild(x)}
+    return item({pending:'Pending',review:'Under review',approved:'Approved',rejected:'Rejected'}[r.status]||r.status,(DN[r.doc]||r.doc)+(adm?' for '+r.name:''),'Student no. '+r.sno+' • '+r.course+', '+r.year+'. Purpose: '+r.purpose+(adm&&r.email?'. Google account: '+r.email:'')+(r.ts?'. Requested '+new Date(r.ts).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'')+(r.status==='rejected'&&r.reason?'. Reason: '+r.reason:'')+(r.status==='approved'&&r.ref?'. Reference: '+r.ref:'')+(r.status==='approved'&&!adm?'. You can print your certificate now.':'')+(adm?'':'. Progress: '+prog(r)),function(d){
+      if(adm&&(r.status==='pending'||r.status==='review')){if(r.status==='pending')b(d,'Start review',function(){setSt(r,'review')});b(d,'Approve',function(){setSt(r,'approved')});b(d,'Reject',function(){setSt(r,'rejected')})}
+      if(r.status==='approved')b(d,'Print certificate',function(){printDoc(r)});
+      if(adm&&r.status==='approved'&&!r.ref)b(d,'Create verification code',function(){var ref=mkRef();fs.doc('requests/'+r.id).update({ref:ref}).then(function(){return fs.doc('issued/'+ref).set({name:r.name,doc:r.doc,course:r.course,year:r.year,by:r.by||me.name,at:r.at||Date.now()})}).then(function(){alert('Done. The new verification code is '+ref)},function(){alert('Couldn\u2019t save. Try again.')})});
+      if(r.status==='approved')b(d,'Copy reference number',function(){if(navigator.clipboard)navigator.clipboard.writeText(r.ref||r.id).then(function(){alert('Copied. Paste it on the Verify page.')},function(){prompt('Copy this reference number:',r.ref||r.id)});else prompt('Copy this reference number:',r.ref||r.id)});
+    });
+  }
+  function mkRef(){var a='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',t='CTU-',i,b=new Uint32Array(8);crypto.getRandomValues(b);for(i=0;i<8;i++){t+=a[b[i]%32];if(i===3)t+='-'}return t}
+  function setSt(r,st){
+    var o={status:st,by:me.name,at:Date.now()};if(st==='approved')o.ref=mkRef();
+    if(st==='rejected'){var w=prompt('Reason for rejecting (the student will see this):');if(w===null)return;o.reason=w.trim()}
+    fs.doc('requests/'+r.id).update(o).then(function(){if(st==='approved')fs.doc('issued/'+o.ref).set({name:r.name,doc:r.doc,course:r.course,year:r.year,by:me.name,at:o.at})},function(){alert('Couldn\u2019t save. Try again.')});
+  }
+  function showReq(){
+    fill($('myReq'),reqs.filter(function(r){return r.uid===uid}),function(r){return row(r,false)});
+    if(adm())fill($('admReq'),reqs.slice().sort(function(a,b){return (a.status==='pending'?0:1)-(b.status==='pending'?0:1)}),function(r){return row(r,true)});
+  }
+  function printDoc(r){
+    var w=window.open('','_blank');if(!w){alert('Allow popups to print your certificate.');return}
+    var T={cor:'Certificate of Registration',dip:'Certificate of Graduation',gm:'Certificate of Good Moral Character',tor:'Transcript of Records Request Slip'}[r.doc]||'Certificate',
+    C='<b>'+esc(r.course)+'</b>',Y='<b>'+esc(r.year)+'</b>',
+    body={cor:'is officially registered as a student of '+C+' for school year '+Y+'.',dip:'has completed the requirements for '+C+' and graduated in '+Y+'.',gm:'is a student or graduate of '+C+' ('+Y+') and has no derogatory record on file at the time of issue.',tor:'has requested a copy of the Transcript of Records for '+C+' ('+Y+'). Please claim it at the Registrar\u2019s Office with this slip and a valid ID.'}[r.doc]||'';
+    var qr='';try{var q=qrcode(0,'M');q.addData(location.origin+location.pathname+'#verify-'+(r.ref||r.id));q.make();qr='<img src="'+q.createDataURL(4,2)+'" width="110" height="110" alt="QR code to verify">'}catch(e){}
+    w.document.write('<title>'+T+'</title><body style="font:18px Georgia,serif;text-align:center;padding:50px;border:8px double #7a1f2e;margin:20px"><h2>Cebu Technological University</h2><h1>'+T+'</h1><p>This certifies that</p><h2>'+esc(r.name)+'</h2><p>Student no. '+esc(r.sno)+'</p><p>'+body+'</p><p>Issued upon request for: '+esc(r.purpose)+'</p><br><br><p>______________________<br>Registrar</p>'+qr+'<p style="font-size:13px;color:#555">Reference '+esc(r.ref||r.id)+'. Verify at '+esc(location.origin+location.pathname)+'#verify. Approved by '+esc(r.by||'')+' through AlumniHub. Valid only with the registrar\u2019s signature and school seal.</p>');
+    w.document.close();w.print();
+  }
+  function send(form,msgId,col,data){
+    var m=$(msgId);m.className='msg';m.textContent='';
+    fs.collection(col).add(data).then(function(){$(form).reset();m.textContent='Done.'},function(){m.className='msg err';m.textContent='Couldn\u2019t save. Check that you are allowed to do this.'});
+  }
+  function fmt(v){if(!v)return'';var p=v.split('-'),d=new Date(+p[0],+p[1]-1,+p[2]);return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}
+  (function(){var n=new Date(),z=function(x){return(x<10?'0':'')+x};$('ad').defaultValue=$('ad').value=n.getFullYear()+'-'+z(n.getMonth()+1)+'-'+z(n.getDate())})();
+  $('anF').addEventListener('submit',function(e){
+    e.preventDefault();var t=$('at').value.trim();if(!t||!adm())return;
+    function put(img){var o={title:t,date:fmt($('ad').value),text:$('ax').value.trim(),ts:Date.now()};if($('arsvp').checked)o.rsvp=true;if(img)o.img=img;send('anF','am','announcements',o)}
+    var f=$('aimgf').files[0];if(f)shrink(f,800,put,0.7);else put();
+  });
+  $('rqForm').addEventListener('submit',function(e){
+    e.preventDefault();var n=$('qn').value.trim(),sn=$('qs').value.trim(),c=$('qc').value.trim(),y=$('qy').value.trim(),p=$('qp').value.trim();
+    if(!n||!sn||!c||!y||!p){$('qm').className='msg err';$('qm').textContent='Fill in every field.';return}
+    send('rqForm','qm','requests',{uid:uid,email:(user&&user.email)||'',name:n,sno:sn,course:c,year:y,doc:$('qd').value,purpose:p,status:'pending',ts:Date.now()});
+  });
+  $('lb').onclick=function(){this.hidden=true};
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'){$('lb').hidden=true;$('rmod').hidden=true}});
+  $('vF').addEventListener('submit',function(e){
+    e.preventDefault();var raw=$('vi').value.trim().replace(/\s+/g,''),id=/^ctu-/i.test(raw)?raw.toUpperCase():raw,m=$('vm');m.className='msg';m.textContent='';
+    if(!id||id.indexOf('/')>=0)return;
+    fs.doc('issued/'+id).get().then(function(d){
+      if(!d.exists){m.className='msg err';m.textContent='No certificate was issued with this reference number.';return}
+      var x=d.data();m.textContent='Valid. '+(DN[x.doc]||x.doc)+' issued to '+x.name+' ('+x.course+', '+x.year+'), approved by '+x.by+' on '+new Date(x.at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+'.';
+    },function(){m.className='msg err';m.textContent='Couldn\u2019t check. Try again.'});
+  });
+  $('cF').addEventListener('submit',function(e){
+    e.preventDefault();var m=$('cm'),n=$('cn').value.trim(),raw=$('cr').value.trim().replace(/\s+/g,''),ref=raw?(/^ctu-/i.test(raw)?raw.toUpperCase():raw):mkRef();
+    m.className='msg';m.textContent='';
+    if(!adm())return;
+    if(!n){m.className='msg err';m.textContent='Enter the student name.';return}
+    if(ref.indexOf('/')>=0){m.className='msg err';m.textContent='The reference number cannot contain a slash.';return}
+    fs.doc('issued/'+ref).get().then(function(d){
+      if(d.exists){m.className='msg err';m.textContent='That reference number already exists.';return}
+      return fs.doc('issued/'+ref).set({name:n,doc:$('cd').value,course:$('cc').value.trim(),year:$('cy').value.trim(),by:me.name,at:Date.now()}).then(function(){$('cF').reset();m.textContent='Saved. Reference number: '+ref});
+    }).catch(function(){m.className='msg err';m.textContent='Couldn\u2019t save. Try again.'});
+  });
+  $('ds').addEventListener('input',showDir);
+  $('dirAdd').onclick=function(){if(!me)return;fs.doc('directory/'+uid).set({name:me.name,batch:me.batch||'',work:$('dw').value.trim(),photo:(user&&user.photoURL)||'',ts:Date.now()}).then(function(){alert('You are in the directory.')},function(){alert('Couldn\u2019t save. Try again.')})};
+  $('dirDel').onclick=function(){if(uid)fs.doc('directory/'+uid).delete().then(function(){alert('You were removed from the directory.')},function(){})};
+  $('spF').addEventListener('submit',function(e){
+    e.preventDefault();var n=$('sn').value.trim();if(!n||!adm())return;
+    function put(img){var o={name:n,batch:$('sb').value.trim(),story:$('ss').value.trim(),ts:Date.now()};if(img)o.img=img;send('spF','sm','spotlight',o)}
+    var f=$('sf').files[0];if(f)shrink(f,700,put,0.7);else put();
+  });
+  $('ctF').addEventListener('submit',function(e){
+    e.preventDefault();var v=$('ctx').value.trim();if(!v||!logged||!me)return;
+    send('ctF','ctm','messages',{uid:uid,name:me.name,email:(user&&user.email)||'',text:v,ts:Date.now()});
+  });
+  $('exReq').onclick=function(){csv('requests.csv',[['Name','Student no.','Course','Year','Document','Purpose','Status','Google email','Requested','Reference']].concat(reqs.map(function(r){return [r.name,r.sno,r.course,r.year,DN[r.doc]||r.doc,r.purpose,r.status,r.email,r.ts?new Date(r.ts).toLocaleDateString('en-US'):'',r.ref||'']})))};
+  $('exDir').onclick=function(){csv('directory.csv',[['Name','Batch','Workplace']].concat(dirs.map(function(x){return [x.name,x.batch,x.work]})))};
+  $('exTr').onclick=function(){csv('survey.csv',[['Name','Batch','Status','Work','Related to course']].concat(trs.map(function(x){return [x.name,x.batch,x.status,x.work,x.rel]})))};
+  $('svF').addEventListener('submit',function(e){
+    e.preventDefault();var m=$('svm');if(!logged||!me)return;
+    fs.doc('tracer/'+uid).set({name:me.name,batch:me.batch||'',status:$('svs').value,work:$('svw').value.trim(),rel:$('svr').value,ts:Date.now()}).then(function(){m.className='msg';m.textContent='Thank you. Your answer is saved.'},function(){m.className='msg err';m.textContent='Couldn\u2019t save. Try again.'});
+  });
+  $('jbF').addEventListener('submit',function(e){
+    e.preventDefault();var t=$('jt').value.trim(),c=$('jc').value.trim(),m=$('jm');if(!logged||!me)return;
+    if(!t||!c){m.className='msg err';m.textContent='Enter the job title and the company.';return}
+    send('jbF','jm','jobs',{uid:uid,name:me.name,title:t,company:c,place:$('jl').value.trim(),text:$('jd').value.trim(),apply:$('ja').value.trim(),ts:Date.now()});
+  });
+  var HM={ov:'admin',an:'admin-announcements',sp:'admin-spotlight',rq:'admin-requests',ms:'admin-messages',ce:'admin-certificates'},TN={ov:'Overview',an:'Post an announcement',sp:'Alumni spotlight',rq:'Student requests',ms:'Messages',ce:'Register a certificate'};
+  function adminTab(t){
+    $('admT').textContent='Admin: '+TN[t];
+    document.querySelectorAll('#admin [data-tab]').forEach(function(el){el.hidden=el.getAttribute('data-tab')!==t});
+    document.querySelectorAll('#atabs button').forEach(function(b){b.setAttribute('aria-current',b.getAttribute('data-t')===t?'true':'false')});
+  }
+  document.querySelectorAll('#atabs button').forEach(function(b){b.onclick=function(){location.hash=HM[b.getAttribute('data-t')]}});
+  adminTab('ov');
+  $('rmx').onclick=function(){$('rmod').hidden=true};
+  $('rmod').onclick=function(e){if(e.target===this)this.hidden=true};
+  $('msgBtn').onclick=function(){var t=prompt('Message text',$('msgT').textContent);if(t===null||!adm())return;fs.doc('site/msg').set({text:t.trim()}).catch(function(){alert('Couldn\u2019t save.')})};
+  route();init();
+})();
+</script>
+</body>
+</html>
