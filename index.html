@@ -123,6 +123,14 @@ main>section{animation:fadeIn .35s ease}
 .tabs{display:flex;flex-wrap:wrap;gap:.4rem;margin:0 0 1.2rem}
 .tabs button{border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:.5rem 1rem;border-radius:999px;font:600 .9rem var(--body);cursor:pointer}
 .tabs button[aria-current="true"]{background:var(--maroon);color:#fff;border-color:var(--maroon)}
+.ostats{display:grid;grid-template-columns:repeat(auto-fit,minmax(9rem,1fr));gap:.7rem}
+.ob{border:1px solid var(--line);border-radius:.6rem;padding:.7rem .9rem}.ob b{display:block;font:600 1.6rem var(--head)}.ob span{font-size:.8rem;color:var(--muted)}
+.exrow{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:.7rem 0;border-top:1px solid var(--line)}
+.exrow b{display:block}.exrow span{font-size:.85rem;color:var(--muted)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.rx{display:flex;gap:.4rem;margin:.7rem 0 0}
+.rxb{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:.25rem .7rem;font:600 .85rem var(--body);cursor:pointer;color:var(--ink)}
+.rxb.on{background:var(--maroon);color:#fff;border-color:var(--maroon)}
 .sp img{aspect-ratio:4/5}
 #lb{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.88);display:grid;place-items:center;padding:1rem;cursor:zoom-out}
 #lb img{max-width:100%;max-height:100%;object-fit:contain;border-radius:.5rem}
@@ -198,6 +206,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   <div class="wrap">
     <p class="statlead">One community for every CTU graduate, wherever life took them.</p>
     <div class="stats">
+      <div><b id="s0">0</b><span>Alumni members</span></div>
       <div><b id="s1">0</b><span>Alumni posts</span></div>
       <div><b id="s2">0</b><span>Announcements</span></div>
       <div><b id="s3">0</b><span>Comments</span></div>
@@ -296,8 +305,12 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     <div id="atabs" class="tabs" role="tablist">
       <button type="button" data-t="ov">Overview</button><button type="button" data-t="an">Announcements</button><button type="button" data-t="sp">Spotlight</button><button type="button" data-t="rq">Requests</button><button type="button" data-t="ms">Messages</button><button type="button" data-t="ce">Register certificate</button>
     </div>
-    <div class="card" id="dash" data-tab="ov"><h3>Overview</h3><p id="dashT"></p>
-      <button class="btn m" type="button" id="exReq">Download requests (CSV)</button> <button class="btn m" type="button" id="exDir">Download directory (CSV)</button> <button class="btn m" type="button" id="exTr">Download survey (CSV)</button></div>
+    <div class="card" id="dash" data-tab="ov"><h3>Overview</h3>
+      <div class="ostats"><div class="ob"><b id="o1">0</b><span>Pending requests</span></div><div class="ob"><b id="o2">0</b><span>Total requests</span></div><div class="ob"><b id="o3">0</b><span>Approved certificates</span></div><div class="ob"><b id="o4">0</b><span>Alumni posts</span></div><div class="ob"><b id="o5">0</b><span>Comments</span></div><div class="ob"><b id="o6">0</b><span>Announcements</span></div><div class="ob"><b id="o7">0</b><span>Directory listings</span></div><div class="ob"><b id="o8">0</b><span>Survey responses</span></div><div class="ob"><b id="o9">0</b><span>Messages</span></div><div class="ob"><b id="o10">0</b><span>Unanswered messages</span></div></div>
+      <h3 style="margin-top:1.4rem">Reports</h3>
+      <div class="exrow"><div><b>Student requests</b><span id="cReq">0 records</span></div><button class="btn m" type="button" id="exReq">Download CSV</button></div>
+      <div class="exrow"><div><b>Alumni directory</b><span id="cDir">0 records</span></div><button class="btn m" type="button" id="exDir">Download CSV</button></div>
+      <div class="exrow"><div><b>Graduate tracer survey</b><span id="cTr">0 records</span></div><button class="btn m" type="button" id="exTr">Download CSV</button></div></div>
     <form class="card" id="anF" data-tab="an" novalidate><h3>Post an announcement</h3>
       <label>Title<input type="text" id="at" maxlength="100"></label>
       <label>Date<input type="date" id="ad"></label>
@@ -458,6 +471,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       var s=document.createElement('small');s.textContent=(p.batch?p.batch+' • ':'')+p.date;
       t.appendChild(n);t.appendChild(s);w.appendChild(av);w.appendChild(t);b.appendChild(w);
       if(p.cap){var q=document.createElement('p');q.textContent=p.cap;b.appendChild(q)}
+      b.appendChild(rxRow(p));
       mb(b,'View details',function(){openPost(p)});
       if(adm()||(logged&&p.uid===uid))mb(b,'Delete post',function(){if(confirm('Delete this post?'))fs.doc('posts/'+p.id).delete()});
       b.appendChild(thread(p));c.appendChild(im);c.appendChild(b);feed.appendChild(c);
@@ -569,21 +583,41 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   });
   function addPost(p,cb){fs.collection('posts').add(p).then(function(){cb(true)},function(){cb(false)})}
   function addCom(c,cb){fs.collection('comments').add(c).then(function(){cb(true)},function(){cb(false)})}
-  function thread(p){
-    var t=document.createElement('div');t.className='thread';
-    coms.filter(function(c){return c.postId===p.id}).forEach(function(c){
-      var r=document.createElement('p');r.className='cm';var b=document.createElement('b');b.textContent=c.name;
-      if(c.photo){var ci=document.createElement('img');ci.className='cav';ci.referrerPolicy='no-referrer';ci.alt='';ci.onerror=function(){ci.remove()};ci.src=c.photo;r.appendChild(ci)}
-      r.appendChild(b);r.appendChild(document.createTextNode(' '+c.text));
-      if(adm()||(logged&&c.uid===uid))mb(r,'Delete',function(){fs.doc('comments/'+c.id).delete()});t.appendChild(r);
+  function openReply(r,p,c){
+    var old=r.querySelector('form');if(old){old.remove();return}
+    var f=document.createElement('form'),i=document.createElement('input'),bt=document.createElement('button');
+    f.className='cf';i.type='text';i.maxLength=200;i.placeholder='Reply to '+c.name;i.setAttribute('aria-label','Reply to '+c.name);
+    bt.type='submit';bt.className='btn m';bt.textContent='Send';f.appendChild(i);f.appendChild(bt);
+    f.addEventListener('submit',function(e){
+      e.preventDefault();var v=i.value.trim();if(!v)return;i.value='';
+      addCom({postId:p.id,parent:c.id,uid:uid,photo:(user&&user.photoURL)||'',name:me.name,text:v,ts:Date.now()},function(ok){if(!ok){i.value=v;i.placeholder='Couldn\u2019t send. Try again.'}});
     });
+    r.appendChild(f);i.focus();
+  }
+  function thread(p){
+    var t=document.createElement('div'),cs=coms.filter(function(c){return c.postId===p.id}),byId={},kids={};
+    t.className='thread';
+    cs.forEach(function(c){byId[c.id]=1});
+    cs.forEach(function(c){var k=(c.parent&&byId[c.parent])?c.parent:'';(kids[k]=kids[k]||[]).push(c)});
+    function put(parent,depth){
+      (kids[parent]||[]).forEach(function(c){
+        var r=document.createElement('div'),line=document.createElement('p'),b=document.createElement('b'),bar=document.createElement('div');
+        r.className='cm';r.style.paddingLeft=Math.min(depth,3)*1.2+'rem';line.style.margin='0';
+        if(c.photo){var ci=document.createElement('img');ci.className='cav';ci.referrerPolicy='no-referrer';ci.alt='';ci.onerror=function(){ci.remove()};ci.src=c.photo;line.appendChild(ci)}
+        b.textContent=c.name;line.appendChild(b);line.appendChild(document.createTextNode(' '+c.text));r.appendChild(line);
+        if(logged&&me)mb(bar,'Reply',function(){openReply(r,p,c)});
+        if(adm()||(logged&&c.uid===uid))mb(bar,'Delete',function(){fs.doc('comments/'+c.id).delete()});
+        r.appendChild(bar);t.appendChild(r);put(c.id,depth+1);
+      });
+    }
+    put('',0);
     if(logged&&me){
       var f=document.createElement('form'),i=document.createElement('input'),bt=document.createElement('button');
-      f.className='cf';i.type='text';i.maxLength=200;i.placeholder='Write a comment';i.setAttribute('aria-label','Comment on '+p.name+'’s post');
+      f.className='cf';i.type='text';i.maxLength=200;i.placeholder='Write a comment';i.setAttribute('aria-label','Comment on '+p.name+'\u2019s post');
       bt.type='submit';bt.className='btn m';bt.textContent='Comment';f.appendChild(i);f.appendChild(bt);
       f.addEventListener('submit',function(e){
         e.preventDefault();var v=i.value.trim();if(!v)return;i.value='';
-        addCom({postId:p.id,uid:uid,photo:(user&&user.photoURL)||'',name:me.name,text:v,ts:Date.now()},function(ok){if(!ok){i.value=v;i.placeholder='Couldn’t send. Try again.'}});
+        addCom({postId:p.id,uid:uid,photo:(user&&user.photoURL)||'',name:me.name,text:v,ts:Date.now()},function(ok){if(!ok){i.value=v;i.placeholder='Couldn\u2019t send. Try again.'}});
       });
       t.appendChild(f);
     }else{var a=document.createElement('a');a.href='#account';a.className='lg';a.textContent='Log in to comment';t.appendChild(a)}
@@ -599,6 +633,8 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     fs.collection('posts').orderBy('ts','desc').limit(60).onSnapshot(function(s){posts=rows(s);render();dash()},function(){});
     fs.collection('comments').orderBy('ts','asc').limit(500).onSnapshot(function(s){coms=rows(s);render();dash()},function(){});
     fs.collection('announcements').orderBy('ts','desc').limit(20).onSnapshot(function(sn){anns=rows(sn);showAnn();dash()},function(){});
+    fs.collection('members').get().then(function(sn){memberCount=sn.size;dash()},function(){});
+    fs.collection('reactions').limit(5000).onSnapshot(function(sn){rx=rows(sn);render()},function(){});
     fs.collection('spotlight').orderBy('ts','desc').limit(12).onSnapshot(function(sn){sps=rows(sn);showSp()},function(){});
     fs.collection('jobs').orderBy('ts','desc').limit(100).onSnapshot(function(sn){jobs=rows(sn);showJobs();showHJ()},function(){});
     fs.doc('site/msg').onSnapshot(function(d){if(d.exists&&d.data().text)$('msgT').textContent=d.data().text},function(){});
@@ -620,11 +656,11 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
         unR=q.onSnapshot(function(sn){reqs=rows(sn).sort(function(a,b){return b.ts-a.ts});showReq();acct();render();dash()},function(){});acct();render();
       });
       if(unMe){unMe();unMe=null}
-      if(u){$('rname').value=u.displayName||'';unMe=fs.doc('users/'+uid).onSnapshot(function(s){me=s.exists?s.data():null;acct();render()},function(){acct()})}
+      if(u){$('rname').value=u.displayName||'';unMe=fs.doc('users/'+uid).onSnapshot(function(s){me=s.exists?s.data():null;acct();render();if(me)fs.doc('members/'+uid).set({ts:Date.now()},{merge:true}).catch(function(){})},function(){acct()})}
       acct();render();
     });
   }
-  var mine=[],unQ=null,dirs=[],jobs=[],trs=[],unT=null,sps=[],msgs=[],rs=[],unD=null,unM=null,unS=null,isAdm=false,aErr='',mode='student',anns=[],evs=[],reqs=[],unR=null;
+  var rx=[],memberCount=0,mine=[],unQ=null,dirs=[],jobs=[],trs=[],unT=null,sps=[],msgs=[],rs=[],unD=null,unM=null,unS=null,isAdm=false,aErr='',mode='student',anns=[],evs=[],reqs=[],unR=null;
   try{mode=localStorage.getItem('ah-mode')||'student'}catch(e){}
   function adm(){return isAdm&&mode==='admin'&&!!user}
   function mb(d,txt,fn){var x=document.createElement('button');x.type='button';x.className='btn m';x.style.cssText='margin:.6rem .4rem 0 0;padding:.35rem .7rem;font-size:.85rem';x.textContent=txt;x.onclick=fn;d.appendChild(x)}
@@ -654,7 +690,12 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     if(extra)extra(d);
     l.appendChild(t);l.appendChild(d);return l;
   }
-  function dash(){$('s1').textContent=posts.length;$('s2').textContent=anns.length;$('s3').textContent=coms.length;var e=$('dashT');if(!e)return;var p=reqs.filter(function(r){return r.status==='pending'}).length,a=reqs.filter(function(r){return r.status==='approved'}).length;e.textContent='Pending requests: '+p+'  \u2022  Approved certificates: '+a+'  \u2022  Alumni posts: '+posts.length+'  \u2022  Comments: '+coms.length+'  \u2022  Announcements: '+anns.length+'  \u2022  Directory listings: '+dirs.length+'  \u2022  Survey responses: '+trs.length}
+  function dash(){
+    $('s0').textContent=memberCount;$('s1').textContent=posts.length;$('s2').textContent=anns.length;$('s3').textContent=coms.length;
+    var p=reqs.filter(function(r){return r.status==='pending'||r.status==='review'}).length,a=reqs.filter(function(r){return r.status==='approved'}).length;
+    [p,reqs.length,a,posts.length,coms.length,anns.length,dirs.length,trs.length,msgs.length,msgs.filter(function(x){return !x.reply}).length].forEach(function(n,i){var e=$('o'+(i+1));if(e)e.textContent=n});
+    [['cReq','exReq',reqs.length],['cDir','exDir',dirs.length],['cTr','exTr',trs.length]].forEach(function(x){$(x[0]).textContent=x[2]+' record'+(x[2]===1?'':'s');$(x[1]).disabled=!x[2]});
+  }
   function showDir(){
     var q=($('ds').value||'').toLowerCase();
     fill($('dirList'),dirs.filter(function(x){return (x.name+' '+x.batch+' '+(x.work||'')).toLowerCase().indexOf(q)>=0}).sort(function(a,b){return a.name<b.name?-1:1}),function(x){return item(x.batch,x.name,x.work)});
@@ -719,6 +760,19 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
         if(adm()||(logged&&j.uid===uid))mb(d,'Delete',function(){if(confirm('Delete this job?'))fs.doc('jobs/'+j.id).delete()});
       });
     });
+  }
+  function rxRow(p){
+    var d=document.createElement('div');d.className='rx';
+    [['heart','\u2764\uFE0F','Love'],['laugh','\uD83D\uDE02','Haha'],['sad','\uD83D\uDE22','Sad']].forEach(function(x){
+      var n=rx.filter(function(r){return r.p===p.id&&r.type===x[0]}).length,mine=rx.some(function(r){return r.p===p.id&&r.type===x[0]&&r.uid===uid}),b=document.createElement('button');
+      b.type='button';b.className='rxb'+(mine?' on':'');b.setAttribute('aria-label',x[2]+' ('+n+')');b.textContent=x[1]+' '+n;b.onclick=function(){react(p,x[0])};d.appendChild(b);
+    });
+    return d;
+  }
+  function react(p,t){
+    if(!logged||!me){location.hash='account';return}
+    var id=p.id+'_'+uid,ref=fs.doc('reactions/'+id),cur=rx.filter(function(r){return r.id===id})[0];
+    if(cur&&cur.type===t)ref.delete();else ref.set({p:p.id,uid:uid,type:t});
   }
   function showAnn(){fill($('annList'),anns,function(x){return item(x.date,x.title,x.text,tools('announcements',x))})}
   function row(r,adm){
