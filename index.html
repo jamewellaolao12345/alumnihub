@@ -317,7 +317,6 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       <div class="card"><img id="pfImg" class="avatar-lg" alt="" hidden><h3 id="pfName"></h3><p id="pfSub" style="margin:0"></p><p id="pfEmail" style="margin:.2rem 0 0;color:var(--muted)"></p></div>
       <form class="card" id="pfF" novalidate><h3>Edit profile</h3>
         <label>Full name<input type="text" id="pn" maxlength="60"></label>
-        <label>I am a<select id="pt"><option value="alumni">Alumni (graduate)</option><option value="student">Current student</option><option value="guest">Guest</option></select></label>
         <label>Course<input type="text" id="pc" maxlength="60"></label>
         <label>Graduation year<input type="text" id="py" maxlength="4" placeholder="2019"></label>
         <button class="btn m" type="submit">Save changes</button><p class="msg" id="pm" role="status"></p>
@@ -942,7 +941,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     $('pfEmail').textContent=(user&&user.email)||'';
     var im=$('pfImg');if(user&&user.photoURL){im.referrerPolicy='no-referrer';im.src=user.photoURL;im.hidden=false}else im.hidden=true;
     var ae=document.activeElement;
-    if(!(ae&&ae.closest&&ae.closest('#pfF'))){$('pn').value=me.name;$('pt').value=me.type||'alumni';$('pc').value=me.course||'';$('py').value=me.year||''}
+    if(!(ae&&ae.closest&&ae.closest('#pfF'))){$('pn').value=me.name;$('pc').value=me.course||'';$('py').value=me.year||''}
   }
   function beat(){if(uid&&me&&!document.hidden)fs.doc('presence/'+uid).set({ts:Date.now(),name:me.name}).catch(function(){})}
   function calcOn(){var n=Date.now();$('s4').textContent=pres.filter(function(p){return n-p.ts<150000}).length}
@@ -1063,7 +1062,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   $('pfF').addEventListener('submit',function(e){
     e.preventDefault();var m=$('pm'),n=$('pn').value.trim();if(!logged||!me)return;
     if(!n){m.className='msg err';m.textContent='Enter your name.';return}
-    var p={name:n,type:$('pt').value,course:$('pc').value.trim(),year:$('py').value.trim()};p.batch=p.course+(p.year?', '+p.year:'');
+    var p={name:n,course:$('pc').value.trim(),year:$('py').value.trim()};p.batch=p.course+(p.year?', '+p.year:'');
     fs.doc('users/'+uid).set(p,{merge:true}).then(function(){m.className='msg';m.textContent='Saved.'},function(){m.className='msg err';m.textContent='Couldn\u2019t save. Try again.'});
   });
   setInterval(beat,60000);setInterval(calcOn,30000);
