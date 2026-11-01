@@ -82,23 +82,23 @@ select{display:block;width:100%;margin-top:.3rem;font:inherit;padding:.65rem .75
 .av{overflow:hidden}.av img{width:100%;height:100%;object-fit:cover;display:block}
 #navAcc img{width:1.7rem;height:1.7rem;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:.45rem}
 .aimg{display:block;width:100%;max-height:14rem;object-fit:cover;border-radius:.5rem;margin-top:.6rem}
-#annList{grid-template-columns:repeat(auto-fill,minmax(18rem,24rem))}
-#annList li{display:flex;flex-direction:column;padding:0;overflow:hidden;border-left:1px solid var(--line);border-top:5px solid var(--gold);box-shadow:0 2px 10px rgba(0,0,0,.12)}
-#annList li>div{display:contents}
-#annList .aimg{order:0;width:100%;max-height:none;aspect-ratio:16/9;object-fit:cover;margin:0;border-radius:0;cursor:zoom-in}
-#annList time{order:1;padding:1rem 1.2rem 0}
-#annList h3{order:2;padding:.2rem 1.2rem 0;font-size:1.15rem}
-#annList p{order:3;padding:.3rem 1.2rem 0;flex:1}
+.annc{grid-template-columns:repeat(auto-fill,minmax(18rem,24rem))}
+.annc li{display:flex;flex-direction:column;padding:0;overflow:hidden;border-left:1px solid var(--line);border-top:5px solid var(--gold);box-shadow:0 2px 10px rgba(0,0,0,.12)}
+.annc li>div{display:contents}
+.annc .aimg{order:0;width:100%;max-height:none;aspect-ratio:16/9;object-fit:cover;margin:0;border-radius:0;cursor:zoom-in}
+.annc time{order:1;padding:1rem 1.2rem 0}
+.annc h3{order:2;padding:.2rem 1.2rem 0;font-size:1.15rem}
+.annc p{order:3;padding:.3rem 1.2rem 0;flex:1}
 .abar{order:4;padding:.2rem 1.2rem 1rem}
 .newsh{text-align:center;text-transform:uppercase;font-weight:500;color:var(--maroon);letter-spacing:.02em}
 .newsh::after{content:"";display:block;width:12rem;height:3px;background:var(--maroon);margin:.7rem auto 1.6rem}
-#annList{grid-template-columns:repeat(auto-fill,minmax(17rem,22rem));justify-content:center}
-#annList li{border:1px solid var(--line);box-shadow:none;background:var(--surface)}
-#annList .aimg{aspect-ratio:16/10}
-#annList h3{order:1;padding:1rem 1.2rem .2rem;font-size:1.2rem;font-weight:400;color:var(--maroon)}
-#annList time{order:2;padding:0 1.2rem;font:400 .8rem var(--body);color:var(--muted)}
-#annList p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;padding:.4rem 1.2rem 1rem}
-#annList .rm{order:5;border-radius:0;width:100%;margin:0;padding:.9rem;background:var(--maroon);color:#fff;font-size:.95rem}
+.annc{grid-template-columns:repeat(auto-fill,minmax(17rem,22rem));justify-content:center}
+.annc li{border:1px solid var(--line);box-shadow:none;background:var(--surface)}
+.annc .aimg{aspect-ratio:16/10}
+.annc h3{order:1;padding:1rem 1.2rem .2rem;font-size:1.2rem;font-weight:400;color:var(--maroon)}
+.annc time{order:2;padding:0 1.2rem;font:400 .8rem var(--body);color:var(--muted)}
+.annc p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;padding:.4rem 1.2rem 1rem}
+.annc .rm{order:5;border-radius:0;width:100%;margin:0;padding:.9rem;background:var(--maroon);color:#fff;font-size:.95rem}
 #rmod{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.6);display:grid;place-items:center;padding:1rem;overflow:auto}
 .rmc{background:var(--surface);border-radius:.8rem;max-width:40rem;width:100%;max-height:92vh;overflow:auto;padding:1.4rem;position:relative}
 .rmc img{width:100%;border-radius:.5rem;margin-bottom:1rem}
@@ -110,10 +110,10 @@ select{display:block;width:100%;margin-top:.3rem;font:inherit;padding:.65rem .75
 #rmod:not([hidden]),#lb:not([hidden]){animation:fadeIn .25s ease}
 #rmod:not([hidden]) .rmc{animation:pop .35s cubic-bezier(.2,.8,.2,1)}
 main>section{animation:fadeIn .35s ease}
-.post,#annList li,.tc,.hj{transition:transform .25s ease,box-shadow .25s ease}
-.post:hover,#annList li:hover,.tc:hover,.hj:hover{transform:translateY(-4px);box-shadow:0 10px 24px rgba(0,0,0,.14)}
-.post>img,#annList .aimg{transition:transform .5s ease}
-.post:hover>img,#annList li:hover .aimg{transform:scale(1.04)}
+.post,.annc li,.tc,.hj{transition:transform .25s ease,box-shadow .25s ease}
+.post:hover,.annc li:hover,.tc:hover,.hj:hover{transform:translateY(-4px);box-shadow:0 10px 24px rgba(0,0,0,.14)}
+.post>img,.annc .aimg{transition:transform .5s ease}
+.post:hover>img,.annc li:hover .aimg{transform:scale(1.04)}
 .hj{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:.8rem;overflow:hidden}
 .hj h3{margin:0;padding:1.1rem 1.2rem .2rem;font:500 1.2rem var(--head);color:var(--maroon)}
 .hj .meta{margin:0;padding:0 1.2rem;color:var(--muted);font-size:.85rem}
@@ -131,6 +131,14 @@ main>section{animation:fadeIn .35s ease}
 .rx{display:flex;gap:.4rem;margin:.7rem 0 0}
 .rxb{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:.25rem .7rem;font:600 .85rem var(--body);cursor:pointer;color:var(--ink)}
 .rxb.on{background:var(--maroon);color:#fff;border-color:var(--maroon)}
+.annc li.imp{border:2px solid var(--gold);background:#fff8e6}
+.evg{display:grid;grid-template-columns:repeat(auto-fill,minmax(17rem,1fr));gap:1.2rem;margin-bottom:1rem}
+.hj>img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
+.bd{display:inline-block;align-self:flex-start;margin:.5rem 1.2rem 0;padding:.15rem .65rem;border-radius:999px;font-size:.75rem;font-weight:700}
+.bd.up{background:#e3f1e8;color:#1d5a35}.bd.on{background:#fff0c9;color:#7a5200}.bd.done{background:#ececec;color:#555}
+.avatar-lg{width:80px;height:80px;border-radius:50%;object-fit:cover;display:block;margin-bottom:.6rem}
+.rxb{position:relative}
+.rxb[data-tip]:not([data-tip=""]):hover::after{content:attr(data-tip);position:absolute;bottom:120%;left:0;background:#241a1d;color:#fff;padding:.4rem .6rem;border-radius:.4rem;font:500 .75rem/1.4 var(--body);white-space:pre;z-index:5;text-align:left}
 .sp img{aspect-ratio:4/5}
 #lb{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.88);display:grid;place-items:center;padding:1rem;cursor:zoom-out}
 #lb img{max-width:100%;max-height:100%;object-fit:contain;border-radius:.5rem}
@@ -165,14 +173,11 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   <a class="brand" href="#home"><i>A</i>AlumniHub</a>
   <nav aria-label="Main">
     <a href="#home" data-p="home">Home</a>
+    <a href="#community" data-p="community">Alumni Community</a>
     <a href="#events" data-p="events">Events</a>
-    <a href="#post" data-p="post">Post a photo</a>
-    <a href="#requests" data-p="requests" id="navReq">Requests</a>
-    <a href="#verify" data-p="verify">Verify</a>
-    <a href="#directory" data-p="directory">Directory</a>
-    <a href="#contact" data-p="contact" id="navCt">Contact</a>
-    <a href="#survey" data-p="survey" id="navSv">Survey</a>
-    <a href="#jobs" data-p="jobs">Jobs</a>
+    <a href="#announcements" data-p="announcements">Announcements</a>
+    <a href="#services" data-p="services">Alumni ID &amp; Services</a>
+    <a href="#profile" data-p="profile">My Profile</a>
     <a href="#admin" data-p="admin" id="navAdm" hidden>Admin</a>
     <a href="#account" data-p="account" id="navAcc">Log in</a>
   </nav>
@@ -210,7 +215,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       <div><b id="s1">0</b><span>Alumni posts</span></div>
       <div><b id="s2">0</b><span>Announcements</span></div>
       <div><b id="s3">0</b><span>Comments</span></div>
-      <div><b>Online</b><span>Document requests</span></div>
+      <div><b id="s4">0</b><span>Online now</span></div>
     </div>
   </div>
   <div class="wrap split">
@@ -239,11 +244,12 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   </div>
   <div class="wrap">
     <h2 class="newsh">News &amp; Announcements</h2>
-    <ul class="ann" id="annList">
+    <ul class="ann annc" id="annList">
       <li><time>Dec 12, 2026</time><div><h3>Alumni Homecoming</h3><p>Reunion lunch, campus tour, and batch photos. Bring a classmate you haven’t seen in years.</p></div></li>
       <li><time>Nov 20, 2026</time><div><h3>Update your alumni record</h3><p>Confirm your batch, course, and contact details so we can reach you about batch reunions.</p></div></li>
       <li><time>Nov 5, 2026</time><div><h3>Scholarship fund drive</h3><p>Help a current CTU student cover tuition. Every contribution from alumni counts.</p></div></li>
     </ul>
+    <p style="text-align:center;margin-top:1.4rem"><a class="btn m" href="#announcements">View all announcements</a></p>
   </div>
   <div class="wrap" id="hjWrap" hidden>
     <h2 class="newsh">Latest Job Openings</h2>
@@ -253,11 +259,70 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
 </section>
 
 <!-- EVENTS -->
+<section id="community" hidden>
+  <div class="wrap">
+    <h2>Alumni Community</h2>
+    <p class="lead">Photos and updates shared by CTU alumni. Newest first.</p>
+    <p><a class="btn m" href="#post">Post a photo</a></p>
+    <div class="feed" id="feed"></div>
+  </div>
+</section>
+
+<!-- EVENTS PAGE -->
 <section id="events" hidden>
   <div class="wrap">
-    <h2>Events and alumni posts</h2>
-    <p class="lead">Photos and updates shared by CTU alumni. Newest first.</p>
-    <div class="feed" id="feed"></div>
+    <h2>Events</h2>
+    <p class="lead">Alumni events and activities. Open an event to read the details and register.</p>
+    <h3 style="font:700 1.3rem var(--head);margin:0 0 .8rem">Upcoming events</h3>
+    <div class="evg" id="evUp"></div>
+    <h3 style="font:700 1.3rem var(--head);margin:1.5rem 0 .8rem">Past events</h3>
+    <div class="evg" id="evPast"></div>
+  </div>
+</section>
+
+<!-- ANNOUNCEMENTS PAGE -->
+<section id="announcements" hidden>
+  <div class="wrap">
+    <h2>Announcements</h2>
+    <p class="lead">Official announcements from the Alumni Office. Newest first.</p>
+    <div class="tabs" id="acats">
+      <button type="button" data-c="" aria-current="true">All</button><button type="button" data-c="General Updates">General Updates</button><button type="button" data-c="Important Notices">Important Notices</button><button type="button" data-c="Alumni Services">Alumni Services</button><button type="button" data-c="Events">Events</button>
+    </div>
+    <ul class="ann annc" id="annAll"></ul>
+  </div>
+</section>
+
+<!-- SERVICES PAGE -->
+<section id="services" hidden>
+  <div class="wrap">
+    <h2>Alumni ID &amp; Services</h2>
+    <p class="lead">Documents, verification and tools for alumni.</p>
+    <div class="tri">
+      <a class="tc t1" href="#requests"><b>Document requests</b><span>COR, diploma, good moral, transcript</span></a>
+      <a class="tc t2" href="#verify"><b>Verify a certificate</b><span>Check a reference number</span></a>
+      <a class="tc t3" href="#directory"><b>Alumni directory</b><span>Find classmates</span></a>
+      <a class="tc t1" href="#jobs"><b>Job board</b><span>Openings from alumni</span></a>
+      <a class="tc t2" href="#survey"><b>Tracer survey</b><span>Tell us where you are now</span></a>
+      <a class="tc t3" href="#contact"><b>Contact us</b><span>Send a message to the admin</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- PROFILE PAGE -->
+<section id="profile" hidden>
+  <div class="wrap">
+    <h2>My Profile</h2>
+    <div class="card" id="pfOut" hidden><p>Log in to see your profile.</p><a class="btn m" href="#account">Log in</a></div>
+    <div id="pfIn" hidden>
+      <div class="card"><img id="pfImg" class="avatar-lg" alt="" hidden><h3 id="pfName"></h3><p id="pfSub" style="margin:0"></p><p id="pfEmail" style="margin:.2rem 0 0;color:var(--muted)"></p></div>
+      <form class="card" id="pfF" novalidate><h3>Edit profile</h3>
+        <label>Full name<input type="text" id="pn" maxlength="60"></label>
+        <label>I am a<select id="pt"><option value="alumni">Alumni (graduate)</option><option value="student">Current student</option><option value="guest">Guest</option></select></label>
+        <label>Course<input type="text" id="pc" maxlength="60"></label>
+        <label>Graduation year<input type="text" id="py" maxlength="4" placeholder="2019"></label>
+        <button class="btn m" type="submit">Save changes</button><p class="msg" id="pm" role="status"></p>
+      </form>
+    </div>
   </div>
 </section>
 
@@ -303,7 +368,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   <div class="wrap">
     <h2 id="admT">Admin</h2>
     <div id="atabs" class="tabs" role="tablist">
-      <button type="button" data-t="ov">Overview</button><button type="button" data-t="an">Announcements</button><button type="button" data-t="sp">Spotlight</button><button type="button" data-t="rq">Requests</button><button type="button" data-t="ms">Messages</button><button type="button" data-t="ce">Register certificate</button>
+      <button type="button" data-t="ov">Overview</button><button type="button" data-t="an">Announcements</button><button type="button" data-t="sp">Spotlight</button><button type="button" data-t="rq">Requests</button><button type="button" data-t="ms">Messages</button><button type="button" data-t="ev">Events</button><button type="button" data-t="pa">Participants</button><button type="button" data-t="ce">Register certificate</button>
     </div>
     <div class="card" id="dash" data-tab="ov"><h3>Overview</h3>
       <div class="ostats"><div class="ob"><b id="o1">0</b><span>Pending requests</span></div><div class="ob"><b id="o2">0</b><span>Total requests</span></div><div class="ob"><b id="o3">0</b><span>Approved certificates</span></div><div class="ob"><b id="o4">0</b><span>Alumni posts</span></div><div class="ob"><b id="o5">0</b><span>Comments</span></div><div class="ob"><b id="o6">0</b><span>Announcements</span></div><div class="ob"><b id="o7">0</b><span>Directory listings</span></div><div class="ob"><b id="o8">0</b><span>Survey responses</span></div><div class="ob"><b id="o9">0</b><span>Messages</span></div><div class="ob"><b id="o10">0</b><span>Unanswered messages</span></div></div>
@@ -314,7 +379,9 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     <form class="card" id="anF" data-tab="an" novalidate><h3>Post an announcement</h3>
       <label>Title<input type="text" id="at" maxlength="100"></label>
       <label>Date<input type="date" id="ad"></label>
+      <label>Category<select id="acat"><option>General Updates</option><option>Important Notices</option><option>Alumni Services</option><option>Events</option></select></label>
       <label>Details<textarea id="ax" maxlength="400"></textarea></label>
+      <label style="font-weight:400"><input type="checkbox" id="aimp"> Mark as important</label>
       <label style="font-weight:400"><input type="checkbox" id="arsvp"> Let alumni RSVP with &ldquo;I’m going&rdquo;</label>
       <label>Picture (optional)<input type="file" id="aimgf" accept="image/*"></label>
       <button class="btn m" type="submit">Post announcement</button><p class="msg" id="am" role="status"></p></form>
@@ -331,6 +398,22 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       <label>Story<textarea id="ss" maxlength="400"></textarea></label>
       <label>Portrait (optional)<input type="file" id="sf" accept="image/*"></label>
       <button class="btn m" type="submit">Post spotlight</button><p class="msg" id="sm" role="status"></p></form>
+    <form class="card" id="eF" data-tab="ev" novalidate><h3>Create or edit an event</h3>
+      <label>Title<input type="text" id="etl" maxlength="100"></label>
+      <label>Date<input type="date" id="edt"></label>
+      <label>Time (optional)<input type="time" id="etm"></label>
+      <label>Location<input type="text" id="epl" maxlength="100"></label>
+      <label>Description<textarea id="etx" maxlength="600"></textarea></label>
+      <label>Cover image (optional)<input type="file" id="eim" accept="image/*"></label>
+      <button class="btn m" type="submit">Save event</button> <button class="btn m" type="button" id="ecancel" hidden>Cancel edit</button><p class="msg" id="evm" role="status"></p></form>
+    <ul class="ann" id="evAdm" data-tab="ev"></ul>
+    <div data-tab="pa">
+      <label>Event<select id="paSel"></select></label>
+      <label>Search<input type="text" id="paQ" placeholder="Name, batch or email"></label>
+      <p class="lead" id="paCnt"></p>
+      <button class="btn m" type="button" id="paEx">Export to Excel (CSV)</button>
+      <ul class="ann" id="paList" style="margin-top:1rem"></ul>
+    </div>
     <h2 data-tab="rq" style="margin-top:0">Student requests</h2>
     <ul class="ann" id="admReq" data-tab="rq"></ul>
     <h2 data-tab="ms" style="margin-top:0">Messages</h2>
@@ -424,7 +507,9 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     <div class="card" id="accBack" hidden><p id="accBackT"></p><button class="btn m" id="inBtn" type="button">Log in</button> <button class="btn m" id="admBtn" type="button">Admin login</button><p class="msg err" id="amsg"></p></div>
     <form class="card" id="reg" novalidate hidden>
       <label>Your name<input type="text" id="rname" maxlength="60" autocomplete="name"></label>
-      <label>Course and batch<input type="text" id="rbatch" maxlength="40" placeholder="BSIT, 2019"></label>
+      <label>I am a<select id="rtype"><option value="alumni">Alumni (graduate)</option><option value="student">Current student</option><option value="guest">Guest</option></select></label>
+      <label>Course<input type="text" id="rcourse" maxlength="60" placeholder="BSIT"></label>
+      <label>Graduation year<input type="text" id="ryear" maxlength="4" placeholder="2019"></label>
       <button class="btn m" type="submit">Save profile</button>
       <p class="msg" id="rmsg" role="status"></p>
     </form>
@@ -432,7 +517,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   </div>
 </section>
 </main>
-<div id="rmod" hidden><div class="rmc"><button type="button" id="rmx" aria-label="Close">×</button><img id="rmi" alt="" hidden><h2 id="rmt"></h2><p id="rmd" class="lead" style="margin:0 0 1rem"></p><p id="rmb"></p></div></div>
+<div id="rmod" hidden><div class="rmc"><button type="button" id="rmx" aria-label="Close">×</button><img id="rmi" alt="" hidden><h2 id="rmt"></h2><p id="rmd" class="lead" style="margin:0 0 1rem"></p><p id="rmb"></p><div id="rma"></div></div></div>
 <div id="lb" hidden><img id="lbi" alt="Announcement picture"></div>
 <footer>
   <div class="fwrap">
@@ -464,7 +549,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       var c=document.createElement('article');c.className='post';
       var im=document.createElement('img');im.src=p.img;im.alt='Photo posted by '+p.name;im.loading='lazy';im.style.cursor='zoom-in';im.onclick=function(){openPost(p)};
       var b=document.createElement('div');b.className='body';
-      var w=document.createElement('div');w.className='who';
+      var w=document.createElement('div');w.className='who';w.style.cursor='pointer';w.title='View profile';w.onclick=function(){openProfile(p)};
       var av=document.createElement('span'),L=(p.name||'?').trim().charAt(0).toUpperCase();av.className='av';av.textContent=L;
       if(p.photo){var ph=document.createElement('img');ph.referrerPolicy='no-referrer';ph.alt='';ph.onerror=function(){av.textContent=L};ph.src=p.photo;av.textContent='';av.appendChild(ph)}
       var t=document.createElement('div');var n=document.createElement('b');n.textContent=p.name;
@@ -479,15 +564,16 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   }
 
   function route(){
-    var h=location.hash.slice(1),vp=h.indexOf('verify-')===0?decodeURIComponent(h.slice(7)):'';if(vp)h='verify';var at='';if(h.indexOf('admin')===0){at={'admin':'ov','admin-announcements':'an','admin-spotlight':'sp','admin-requests':'rq','admin-messages':'ms','admin-certificates':'ce'}[h]||'ov';h='admin'}if(['home','events','post','account','requests','admin','verify','directory','contact','survey','jobs'].indexOf(h)<0)h='home';
-    ['home','events','post','account','requests','admin','verify','directory','contact','survey','jobs'].forEach(function(id){document.getElementById(id).hidden=(id!==h)});
+    var h=location.hash.slice(1),vp=h.indexOf('verify-')===0?decodeURIComponent(h.slice(7)):'';if(vp)h='verify';var at='';if(h.indexOf('admin')===0){at={'admin':'ov','admin-announcements':'an','admin-spotlight':'sp','admin-requests':'rq','admin-messages':'ms','admin-certificates':'ce','admin-events':'ev','admin-participants':'pa'}[h]||'ov';h='admin'}if(['home','events','post','account','requests','admin','verify','directory','contact','survey','jobs','community','announcements','services','profile'].indexOf(h)<0)h='home';
+    ['home','events','post','account','requests','admin','verify','directory','contact','survey','jobs','community','announcements','services','profile'].forEach(function(id){document.getElementById(id).hidden=(id!==h)});
+    var nh=['requests','verify','directory','jobs','survey','contact','post'].indexOf(h)>=0?'services':h;
     document.querySelectorAll('nav a').forEach(function(a){
-      if(a.dataset.p===h)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');
+      if(a.dataset.p===nh)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');
     });
     if(vp){$('vi').value=vp;if(fs)$('vF').querySelector('button').click()}
     if(h==='admin')adminTab(at||'ov');
-    if(h==='events')render();
-    if(h==='post'||h==='account'||h==='requests'||h==='admin'||h==='directory'||h==='contact'||h==='survey'||h==='jobs')acct();
+    if(h==='community')render();
+    if(h==='post'||h==='account'||h==='requests'||h==='admin'||h==='directory'||h==='contact'||h==='survey'||h==='jobs'||h==='profile')acct();
     window.scrollTo(0,0);
   }
   window.addEventListener('hashchange',route);
@@ -538,12 +624,12 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     e.preventDefault();
     if(!logged||!me){say('Log in before posting.',true);return}
     if(!data){say('Choose an image to post.',true);return}
-    var post={uid:uid,photo:(user&&user.photoURL)||'',name:me.name,batch:me.batch||'',cap:document.getElementById('cap').value.trim(),img:data,ts:Date.now(),
+    var post={uid:uid,photo:(user&&user.photoURL)||'',name:me.name,batch:me.batch||'',course:me.course||'',year:me.year||'',cap:document.getElementById('cap').value.trim(),img:data,ts:Date.now(),
       date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})};
     post.id='l'+post.ts;
     addPost(post,function(ok){
       if(!ok){say('Couldn’t publish. Try a smaller image, or ask the page owner for contributor access.',true);return}
-      document.getElementById('form').reset();data=null;prev.hidden=true;say('');location.hash='events';
+      document.getElementById('form').reset();data=null;prev.hidden=true;say('');location.hash='community';
     });
   });
   /* ====== PASTE YOUR FIREBASE SETTINGS HERE (Firebase console > Project settings > Your apps > Web) ====== */
@@ -558,7 +644,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     var nv=$('navAcc');nv.textContent='';
     if(on&&user.photoURL){var pi=document.createElement('img');pi.referrerPolicy='no-referrer';pi.alt='';pi.src=user.photoURL;nv.appendChild(pi)}
     nv.appendChild(document.createTextNode(on?me.name.split(' ')[0]:'Log in'));
-    $('gate').hidden=on;$('form').hidden=!on;$('rqGate').hidden=on;$('dirMe').hidden=!on;$('dirOut').hidden=on;$('ctGate').hidden=on;$('ctF').hidden=!on||adm();$('ctAdm').hidden=!(on&&adm());$('myH').hidden=$('myMsg').hidden=!!(on&&adm());$('navCt').hidden=!!(on&&adm());$('svGate').hidden=on;$('svF').hidden=!on;$('jbGate').hidden=on;$('jbF').hidden=!on;$('rqForm').hidden=!on||adm();$('rqAdm').hidden=!(on&&adm());$('navAdm').hidden=!(on&&adm());$('navReq').hidden=!!(on&&adm());$('navSv').hidden=!!(on&&adm());$('heroBtn').hidden=!(on&&adm());$('msgBtn').hidden=!(on&&adm());showSp();showJobs();showAnn();
+    $('gate').hidden=on;$('form').hidden=!on;$('rqGate').hidden=on;$('dirMe').hidden=!on;$('dirOut').hidden=on;$('ctGate').hidden=on;$('ctF').hidden=!on||adm();$('ctAdm').hidden=!(on&&adm());$('myH').hidden=$('myMsg').hidden=!!(on&&adm());$('svGate').hidden=on;$('svF').hidden=!on;$('jbGate').hidden=on;$('jbF').hidden=!on;$('rqForm').hidden=!on||adm();$('rqAdm').hidden=!(on&&adm());$('navAdm').hidden=!(on&&adm());$('heroBtn').hidden=!(on&&adm());$('msgBtn').hidden=!(on&&adm());showSp();showJobs();showProf();showAnn();
     if(on&&!$('qn').value)$('qn').value=me.name;
     if(on)$('whoPost').textContent='Posting as '+me.name+(me.batch?' ('+me.batch+')':'');
     $('accIn').hidden=!on;$('accBack').hidden=!!user;$('reg').hidden=!(user&&!me);
@@ -578,7 +664,8 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   $('reg').addEventListener('submit',function(e){
     e.preventDefault();var n=$('rname').value.trim(),m=$('rmsg');
     if(!n){m.textContent='Enter your name.';m.className='msg err';return}
-    fs.doc('users/'+uid).set({name:n,batch:$('rbatch').value.trim()}).then(function(){location.hash='events'},
+    var p={name:n,type:$('rtype').value,course:$('rcourse').value.trim(),year:$('ryear').value.trim()};p.batch=p.course+(p.year?', '+p.year:'');
+    fs.doc('users/'+uid).set(p).then(function(){location.hash='home'},
       function(){m.textContent='Couldn’t save your profile. Try again.';m.className='msg err'});
   });
   function addPost(p,cb){fs.collection('posts').add(p).then(function(){cb(true)},function(){cb(false)})}
@@ -637,6 +724,8 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     fs.collection('reactions').limit(5000).onSnapshot(function(sn){rx=rows(sn);render()},function(){});
     fs.collection('spotlight').orderBy('ts','desc').limit(12).onSnapshot(function(sn){sps=rows(sn);showSp()},function(){});
     fs.collection('jobs').orderBy('ts','desc').limit(100).onSnapshot(function(sn){jobs=rows(sn);showJobs();showHJ()},function(){});
+    fs.collection('events').orderBy('date','desc').limit(200).onSnapshot(function(sn){evs=rows(sn);showEvents();showEvAdm();showPa()},function(){});
+    fs.collection('presence').orderBy('ts','desc').limit(300).onSnapshot(function(sn){pres=rows(sn);calcOn()},function(){});
     fs.doc('site/msg').onSnapshot(function(d){if(d.exists&&d.data().text)$('msgT').textContent=d.data().text},function(){});
     fs.doc('site/hero').onSnapshot(function(d){if(d.exists&&d.data().img)setHero(d.data().img)},function(){});
     auth.onAuthStateChanged(function(u){
@@ -644,6 +733,8 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       if(unD){unD();unD=null}dirs=[];showDir();
       if(unM){unM();unM=null}msgs=[];showMsg();if(unT){unT();unT=null}trs=[];
       if(unQ){unQ();unQ=null}mine=[];showMine();
+      if(unE){unE();unE=null}regs=[];showEvents();
+      if(u)unE=fs.collection('eventRegs').limit(2000).onSnapshot(function(sn){regs=rows(sn);showEvents();showEvAdm();showPa()},function(){});
       if(u)unQ=fs.collection('messages').where('uid','==',uid).onSnapshot(function(sn){mine=rows(sn).sort(function(a,b){return b.ts-a.ts});showMine()},function(){});if(unS){unS();unS=null}rs=[];
       if(u)unS=fs.collection('rsvps').limit(1000).onSnapshot(function(sn){rs=rows(sn);showAnn()},function(){});
       if(u)unD=fs.collection('directory').limit(500).onSnapshot(function(sn){dirs=rows(sn);showDir();dash()},function(){});
@@ -656,11 +747,11 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
         unR=q.onSnapshot(function(sn){reqs=rows(sn).sort(function(a,b){return b.ts-a.ts});showReq();acct();render();dash()},function(){});acct();render();
       });
       if(unMe){unMe();unMe=null}
-      if(u){$('rname').value=u.displayName||'';unMe=fs.doc('users/'+uid).onSnapshot(function(s){me=s.exists?s.data():null;acct();render();if(me)fs.doc('members/'+uid).set({ts:Date.now()},{merge:true}).catch(function(){})},function(){acct()})}
+      if(u){$('rname').value=u.displayName||'';unMe=fs.doc('users/'+uid).onSnapshot(function(s){me=s.exists?s.data():null;acct();render();if(me)fs.doc('members/'+uid).set({ts:Date.now()},{merge:true}).catch(function(){});if(me)beat()},function(){acct()})}
       acct();render();
     });
   }
-  var rx=[],memberCount=0,mine=[],unQ=null,dirs=[],jobs=[],trs=[],unT=null,sps=[],msgs=[],rs=[],unD=null,unM=null,unS=null,isAdm=false,aErr='',mode='student',anns=[],evs=[],reqs=[],unR=null;
+  var evs=[],regs=[],pres=[],unE=null,acat='',editEv='',rx=[],memberCount=0,mine=[],unQ=null,dirs=[],jobs=[],trs=[],unT=null,sps=[],msgs=[],rs=[],unD=null,unM=null,unS=null,isAdm=false,aErr='',mode='student',anns=[],evs=[],reqs=[],unR=null;
   try{mode=localStorage.getItem('ah-mode')||'student'}catch(e){}
   function adm(){return isAdm&&mode==='admin'&&!!user}
   function mb(d,txt,fn){var x=document.createElement('button');x.type='button';x.className='btn m';x.style.cssText='margin:.6rem .4rem 0 0;padding:.35rem .7rem;font-size:.85rem';x.textContent=txt;x.onclick=fn;d.appendChild(x)}
@@ -740,7 +831,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     var t=rows.map(function(r){return r.map(function(c){c=String(c==null?'':c);if(/^[=+\-@]/.test(c))c="'"+c;return /[",\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c}).join(',')}).join('\r\n');
     var a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+t],{type:'text/csv'}));a.download=name;a.click();
   }
-  function showModal(img,t,m,b){var i=$('rmi');if(img){i.src=img;i.hidden=false}else i.hidden=true;$('rmt').textContent=t;$('rmd').textContent=m||'';$('rmb').textContent=b||'';$('rmod').hidden=false;$('rmod').scrollTop=0}
+  function showModal(img,t,m,b,round){var i=$('rmi');i.style.cssText=round?'width:96px;height:96px;border-radius:50%;object-fit:cover;max-height:none':'';if(img){i.src=img;i.hidden=false}else i.hidden=true;$('rmt').textContent=t;$('rmd').textContent=m||'';$('rmb').textContent=b||'';$('rma').textContent='';$('rmod').hidden=false;$('rmod').scrollTop=0}
   function openPost(p){var cm=coms.filter(function(c){return c.postId===p.id}).map(function(c){return c.name+': '+c.text}).join('\n');showModal(p.img,p.name,(p.batch?p.batch+' \u2022 ':'')+(p.date||''),(p.cap||'')+(cm?'\n\nComments\n'+cm:''))}
   function openJob(j){showModal('',j.title,(j.company||'')+(j.place?' \u2022 '+j.place:''),(j.text||'')+(j.apply?'\n\nHow to apply: '+j.apply:'')+'\n\nPosted by '+j.name)}
   function showHJ(){
@@ -765,16 +856,88 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     var d=document.createElement('div');d.className='rx';
     [['heart','\u2764\uFE0F','Love'],['laugh','\uD83D\uDE02','Haha'],['sad','\uD83D\uDE22','Sad']].forEach(function(x){
       var n=rx.filter(function(r){return r.p===p.id&&r.type===x[0]}).length,mine=rx.some(function(r){return r.p===p.id&&r.type===x[0]&&r.uid===uid}),b=document.createElement('button');
-      b.type='button';b.className='rxb'+(mine?' on':'');b.setAttribute('aria-label',x[2]+' ('+n+')');b.textContent=x[1]+' '+n;b.onclick=function(){react(p,x[0])};d.appendChild(b);
+      b.type='button';b.className='rxb'+(mine?' on':'');b.setAttribute('aria-label',x[2]+' ('+n+')');b.textContent=x[1]+' '+n;var nm=rx.filter(function(r){return r.p===p.id&&r.type===x[0]}).map(function(r){return r.name||'Someone'});b.setAttribute('data-tip',nm.slice(0,8).join('\n')+(nm.length>8?'\nand '+(nm.length-8)+' more':''));b.onclick=function(){react(p,x[0])};d.appendChild(b);
     });
     return d;
   }
   function react(p,t){
     if(!logged||!me){location.hash='account';return}
     var id=p.id+'_'+uid,ref=fs.doc('reactions/'+id),cur=rx.filter(function(r){return r.id===id})[0];
-    if(cur&&cur.type===t)ref.delete();else ref.set({p:p.id,uid:uid,type:t});
+    if(cur&&cur.type===t)ref.delete();else ref.set({p:p.id,uid:uid,type:t,name:me.name});
   }
-  function showAnn(){fill($('annList'),anns,function(x){return item(x.date,x.title,x.text,tools('announcements',x))})}
+  var SN={registered:'Registered',cancelled:'Cancelled',attended:'Attended',absent:'Did Not Attend'},TYPES={alumni:'Alumni',student:'Current student',guest:'Guest'};
+  function evStart(e){return new Date((e.date||'1970-01-01')+'T'+(e.time||'00:00')).getTime()}
+  function evState(e){var n=Date.now(),s=evStart(e),en=s+(e.time?4*3600000:86400000);return n<s?'Upcoming':n<en?'Ongoing':'Completed'}
+  function evCount(e){return regs.filter(function(r){return r.e===e.id&&r.status!=='cancelled'}).length}
+  function fmtEv(e){return (e.date?fmt(e.date):'')+(e.time?' at '+e.time:'')+(e.place?' \u2022 '+e.place:'')}
+  function evCard(e){
+    var c=document.createElement('article'),h=document.createElement('h3'),m=document.createElement('p'),x=document.createElement('p'),b=document.createElement('button'),bd=document.createElement('span'),st=evState(e);
+    c.className='hj';
+    if(e.img){var im=document.createElement('img');im.src=e.img;im.alt='';c.appendChild(im)}
+    h.textContent=e.title;m.className='meta';m.textContent=fmtEv(e);
+    bd.className='bd '+(st==='Upcoming'?'up':st==='Ongoing'?'on':'done');bd.textContent=st;
+    x.className='ex';x.textContent=e.text||'';b.type='button';b.textContent='View details';b.onclick=function(){openEvent(e)};
+    c.appendChild(h);c.appendChild(m);c.appendChild(bd);c.appendChild(x);c.appendChild(b);return c;
+  }
+  function showEvents(){
+    var up=evs.filter(function(e){return evState(e)!=='Completed'}).sort(function(a,b){return evStart(a)-evStart(b)}),
+        past=evs.filter(function(e){return evState(e)==='Completed'}).sort(function(a,b){return evStart(b)-evStart(a)});
+    [['evUp',up,'No upcoming events yet.'],['evPast',past,'No past events yet.']].forEach(function(x){
+      var l=$(x[0]);l.textContent='';
+      if(!x[1].length){var p=document.createElement('p');p.className='lead';p.textContent=x[2];l.appendChild(p);return}
+      x[1].forEach(function(e){l.appendChild(evCard(e))});
+    });
+  }
+  function openEvent(e){
+    var st=evState(e),mine=logged?regs.filter(function(r){return r.id===e.id+'_'+uid})[0]:null,a;
+    showModal(e.img,e.title,fmtEv(e)+' \u2022 '+st+(logged?' \u2022 '+evCount(e)+' registered':''),e.text||'');
+    a=$('rma');
+    if(!logged||!me){var l=document.createElement('a');l.href='#account';l.className='btn m';l.textContent='Log in to register';l.onclick=function(){$('rmod').hidden=true};a.appendChild(l);return}
+    if(st==='Completed'){var p=document.createElement('p');p.textContent=mine?'Your status: '+(SN[mine.status]||mine.status):'This event has ended.';a.appendChild(p);return}
+    var act=!!(mine&&mine.status!=='cancelled');
+    mb(a,act?'Cancel registration':'Register',function(){
+      var ref=fs.doc('eventRegs/'+e.id+'_'+uid),pr=act?ref.update({status:'cancelled'}):(mine?ref.update({status:'registered'}):ref.set({e:e.id,uid:uid,name:me.name,batch:me.batch||'',email:(user&&user.email)||'',status:'registered',ts:Date.now()}));
+      pr.then(function(){setTimeout(function(){openEvent(e)},350)},function(){alert('Couldn\u2019t save. Try again.')});
+    });
+    if(act){var p2=document.createElement('p');p2.style.cssText='margin:.6rem 0 0';p2.textContent='You are registered for this event.';a.appendChild(p2)}
+  }
+  function showEvAdm(){
+    fill($('evAdm'),evs.slice().sort(function(a,b){return evStart(b)-evStart(a)}),function(e){
+      return item(e.date?fmt(e.date):'',e.title,fmtEv(e)+' \u2022 '+evState(e)+' \u2022 '+evCount(e)+' registered',function(d){
+        mb(d,'Edit',function(){editEv=e.id;$('etl').value=e.title;$('edt').value=e.date||'';$('etm').value=e.time||'';$('epl').value=e.place||'';$('etx').value=e.text||'';$('ecancel').hidden=false;$('eF').scrollIntoView()});
+        mb(d,'Delete',function(){if(confirm('Delete this event?'))fs.doc('events/'+e.id).delete()});
+      });
+    });
+  }
+  function showPa(){
+    var sel=$('paSel'),cur=sel.value;sel.textContent='';
+    evs.slice().sort(function(a,b){return evStart(b)-evStart(a)}).forEach(function(e){var o=document.createElement('option');o.value=e.id;o.textContent=e.title+' ('+(e.date||'')+')';sel.appendChild(o)});
+    if(cur)sel.value=cur;
+    var q=($('paQ').value||'').toLowerCase(),id=sel.value,
+        list=regs.filter(function(r){return r.e===id&&((r.name||'')+' '+(r.batch||'')+' '+(r.email||'')).toLowerCase().indexOf(q)>=0}).sort(function(a,b){return a.name<b.name?-1:1});
+    $('paCnt').textContent=list.length+' participant'+(list.length===1?'':'s');
+    fill($('paList'),list,function(r){
+      return item(SN[r.status]||r.status,r.name,(r.batch?r.batch+' \u2022 ':'')+(r.email||''),function(d){
+        var s=document.createElement('select');s.style.cssText='margin-top:.5rem;max-width:14rem';
+        Object.keys(SN).forEach(function(k){var o=document.createElement('option');o.value=k;o.textContent=SN[k];if(k===r.status)o.selected=true;s.appendChild(o)});
+        s.onchange=function(){fs.doc('eventRegs/'+r.id).update({status:s.value})};d.appendChild(s);
+      });
+    });
+  }
+  function openProfile(p){showModal(p.photo||'',p.name,'Alumni profile','Course: '+(p.course||p.batch||'Not shared')+'\nGraduation year: '+(p.year||'Not shared')+'\nDate posted: '+(p.date||''),true)}
+  function showProf(){
+    var on=logged&&me;$('pfOut').hidden=!!on;$('pfIn').hidden=!on;if(!on)return;
+    $('pfName').textContent=me.name;
+    $('pfSub').textContent=(TYPES[me.type]||'Alumni')+((me.course||me.batch)?' \u2022 '+(me.course||me.batch):'')+(me.year?' \u2022 Class of '+me.year:'');
+    $('pfEmail').textContent=(user&&user.email)||'';
+    var im=$('pfImg');if(user&&user.photoURL){im.referrerPolicy='no-referrer';im.src=user.photoURL;im.hidden=false}else im.hidden=true;
+    var ae=document.activeElement;
+    if(!(ae&&ae.closest&&ae.closest('#pfF'))){$('pn').value=me.name;$('pt').value=me.type||'alumni';$('pc').value=me.course||'';$('py').value=me.year||''}
+  }
+  function beat(){if(uid&&me&&!document.hidden)fs.doc('presence/'+uid).set({ts:Date.now(),name:me.name}).catch(function(){})}
+  function calcOn(){var n=Date.now();$('s4').textContent=pres.filter(function(p){return n-p.ts<150000}).length}
+  function annCard(x){var l=item((x.date||'')+(x.cat?' \u2022 '+x.cat:''),(x.important?'\u2605 ':'')+x.title,x.text,tools('announcements',x));if(x.important)l.className='imp';return l}
+  function showAnn(){fill($('annList'),anns.slice(0,3),annCard);fill($('annAll'),anns.filter(function(x){return !acat||x.cat===acat}),annCard)}
   function row(r,adm){
     function b(d,txt,fn){var x=document.createElement('button');x.type='button';x.className='btn m';x.style.margin='.6rem .4rem 0 0';x.textContent=txt;x.onclick=fn;d.appendChild(x)}
     return item({pending:'Pending',review:'Under review',approved:'Approved',rejected:'Rejected'}[r.status]||r.status,(DN[r.doc]||r.doc)+(adm?' for '+r.name:''),'Student no. '+r.sno+' • '+r.course+', '+r.year+'. Purpose: '+r.purpose+(adm&&r.email?'. Google account: '+r.email:'')+(r.ts?'. Requested '+new Date(r.ts).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'')+(r.status==='rejected'&&r.reason?'. Reason: '+r.reason:'')+(r.status==='approved'&&r.ref?'. Reference: '+r.ref:'')+(r.status==='approved'&&!adm?'. You can print your certificate now.':'')+(adm?'':'. Progress: '+prog(r)),function(d){
@@ -811,7 +974,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   (function(){var n=new Date(),z=function(x){return(x<10?'0':'')+x};$('ad').defaultValue=$('ad').value=n.getFullYear()+'-'+z(n.getMonth()+1)+'-'+z(n.getDate())})();
   $('anF').addEventListener('submit',function(e){
     e.preventDefault();var t=$('at').value.trim();if(!t||!adm())return;
-    function put(img){var o={title:t,date:fmt($('ad').value),text:$('ax').value.trim(),ts:Date.now()};if($('arsvp').checked)o.rsvp=true;if(img)o.img=img;send('anF','am','announcements',o)}
+    function put(img){var o={title:t,date:fmt($('ad').value),text:$('ax').value.trim(),ts:Date.now()};if($('arsvp').checked)o.rsvp=true;o.cat=$('acat').value;if($('aimp').checked)o.important=true;if(img)o.img=img;send('anF','am','announcements',o)}
     var f=$('aimgf').files[0];if(f)shrink(f,800,put,0.7);else put();
   });
   $('rqForm').addEventListener('submit',function(e){
@@ -864,7 +1027,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     if(!t||!c){m.className='msg err';m.textContent='Enter the job title and the company.';return}
     send('jbF','jm','jobs',{uid:uid,name:me.name,title:t,company:c,place:$('jl').value.trim(),text:$('jd').value.trim(),apply:$('ja').value.trim(),ts:Date.now()});
   });
-  var HM={ov:'admin',an:'admin-announcements',sp:'admin-spotlight',rq:'admin-requests',ms:'admin-messages',ce:'admin-certificates'},TN={ov:'Overview',an:'Post an announcement',sp:'Alumni spotlight',rq:'Student requests',ms:'Messages',ce:'Register a certificate'};
+  var HM={ov:'admin',an:'admin-announcements',sp:'admin-spotlight',rq:'admin-requests',ms:'admin-messages',ce:'admin-certificates',ev:'admin-events',pa:'admin-participants'},TN={ov:'Overview',an:'Post an announcement',sp:'Alumni spotlight',rq:'Student requests',ms:'Messages',ce:'Register a certificate',ev:'Events',pa:'Event participants'};
   function adminTab(t){
     $('admT').textContent='Admin: '+TN[t];
     document.querySelectorAll('#admin [data-tab]').forEach(function(el){el.hidden=el.getAttribute('data-tab')!==t});
@@ -872,6 +1035,28 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   }
   document.querySelectorAll('#atabs button').forEach(function(b){b.onclick=function(){location.hash=HM[b.getAttribute('data-t')]}});
   adminTab('ov');
+  document.querySelectorAll('#acats button').forEach(function(b){b.onclick=function(){acat=b.getAttribute('data-c');document.querySelectorAll('#acats button').forEach(function(x){x.setAttribute('aria-current',x===b?'true':'false')});showAnn()}});
+  $('eF').addEventListener('submit',function(ev){
+    ev.preventDefault();var t=$('etl').value.trim(),m=$('evm');m.className='msg';m.textContent='';
+    if(!adm())return;
+    if(!t||!$('edt').value){m.className='msg err';m.textContent='Enter a title and a date.';return}
+    function put(img){
+      var o={title:t,date:$('edt').value,time:$('etm').value,place:$('epl').value.trim(),text:$('etx').value.trim()};if(img)o.img=img;
+      var ref=editEv?fs.doc('events/'+editEv):fs.collection('events').doc();if(!editEv)o.ts=Date.now();
+      ref.set(o,{merge:true}).then(function(){editEv='';$('eF').reset();$('ecancel').hidden=true;m.textContent='Saved.'},function(){m.className='msg err';m.textContent='Couldn\u2019t save. Try again.'});
+    }
+    var f=$('eim').files[0];if(f)shrink(f,900,put,0.7);else put();
+  });
+  $('ecancel').onclick=function(){editEv='';$('eF').reset();this.hidden=true};
+  $('paSel').onchange=showPa;$('paQ').addEventListener('input',showPa);
+  $('paEx').onclick=function(){var id=$('paSel').value;csv('participants.csv',[['Name','Batch','Email','Status','Registered on']].concat(regs.filter(function(r){return r.e===id}).map(function(r){return [r.name,r.batch,r.email,SN[r.status]||r.status,r.ts?new Date(r.ts).toLocaleDateString('en-US'):'']})))};
+  $('pfF').addEventListener('submit',function(e){
+    e.preventDefault();var m=$('pm'),n=$('pn').value.trim();if(!logged||!me)return;
+    if(!n){m.className='msg err';m.textContent='Enter your name.';return}
+    var p={name:n,type:$('pt').value,course:$('pc').value.trim(),year:$('py').value.trim()};p.batch=p.course+(p.year?', '+p.year:'');
+    fs.doc('users/'+uid).set(p,{merge:true}).then(function(){m.className='msg';m.textContent='Saved.'},function(){m.className='msg err';m.textContent='Couldn\u2019t save. Try again.'});
+  });
+  setInterval(beat,60000);setInterval(calcOn,30000);
   $('rmx').onclick=function(){$('rmod').hidden=true};
   $('rmod').onclick=function(e){if(e.target===this)this.hidden=true};
   $('msgBtn').onclick=function(){var t=prompt('Message text',$('msgT').textContent);if(t===null||!adm())return;fs.doc('site/msg').set({text:t.trim()}).catch(function(){alert('Couldn\u2019t save.')})};
