@@ -441,7 +441,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   <div class="wrap">
     <h2>Job board</h2>
     <p class="lead">Openings shared by alumni and employers. Always check an employer yourself before sharing personal details or paying anything.</p>
-    <div class="card" id="jbGate" hidden><p>Log in to post a job opening.</p><a class="btn m" href="#account">Log in</a></div>
+    <div class="card" id="jbGate" hidden><p>Log in to see and post job openings.</p><a class="btn m" href="#account">Log in</a></div>
     <form class="card" id="jbF" novalidate hidden><h3>Post a job opening</h3>
       <label>Job title<input type="text" id="jt" maxlength="100"></label>
       <label>Company<input type="text" id="jc" maxlength="80"></label>
@@ -506,7 +506,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     <div class="card" id="accBack" hidden><p id="accBackT"></p><button class="btn m" id="inBtn" type="button">Log in</button> <button class="btn m" id="admBtn" type="button">Admin login</button><p class="msg err" id="amsg"></p></div>
     <form class="card" id="reg" novalidate hidden>
       <label>Your name<input type="text" id="rname" maxlength="60" autocomplete="name"></label>
-      <label>I am a<select id="rtype"><option value="alumni">Alumni (graduate)</option><option value="student">Current student</option><option value="guest">Guest</option></select></label>
+      <label>I am a<select id="rtype"><option value="alumni">Alumni (graduate)</option><option value="student">Current student</option></select></label>
       <label>Course<input type="text" id="rcourse" maxlength="60" placeholder="BSIT"></label>
       <label>Graduation year<input type="text" id="ryear" maxlength="4" placeholder="2019"></label>
       <button class="btn m" type="submit">Save profile</button>
@@ -552,10 +552,10 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       var av=document.createElement('span'),L=(p.name||'?').trim().charAt(0).toUpperCase();av.className='av';av.textContent=L;
       if(p.photo){var ph=document.createElement('img');ph.referrerPolicy='no-referrer';ph.alt='';ph.onerror=function(){av.textContent=L};ph.src=p.photo;av.textContent='';av.appendChild(ph)}
       var t=document.createElement('div');var n=document.createElement('b');n.textContent=p.name;
-      var s=document.createElement('small');s.textContent=(p.batch?p.batch+' • ':'')+p.date;
+      var s=document.createElement('small');s.textContent=(logged&&p.batch?p.batch+' • ':'')+p.date;
       t.appendChild(n);t.appendChild(s);w.appendChild(av);w.appendChild(t);b.appendChild(w);
       if(p.cap){var q=document.createElement('p');q.textContent=p.cap;b.appendChild(q)}
-      b.appendChild(rxRow(p));
+      if(logged)b.appendChild(rxRow(p));
       mb(b,'View details',function(){openPost(p)});
       if(adm()||(logged&&p.uid===uid))mb(b,'Delete post',function(){if(confirm('Delete this post?'))fs.doc('posts/'+p.id).delete()});
       b.appendChild(thread(p));c.appendChild(im);c.appendChild(b);feed.appendChild(c);
@@ -623,7 +623,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     e.preventDefault();
     if(!logged||!me){say('Log in before posting.',true);return}
     if(!data){say('Choose an image to post.',true);return}
-    var post={uid:uid,photo:(user&&user.photoURL)||'',name:me.name,batch:me.batch||'',course:me.course||'',year:me.year||'',cap:document.getElementById('cap').value.trim(),img:data,ts:Date.now(),
+    var post={uid:uid,photo:(user&&user.photoURL)||'',name:me.name,cap:document.getElementById('cap').value.trim(),img:data,ts:Date.now(),
       date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})};
     post.id='l'+post.ts;
     addPost(post,function(ok){
@@ -643,7 +643,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     var nv=$('navAcc');nv.textContent='';
     if(on&&user.photoURL){var pi=document.createElement('img');pi.referrerPolicy='no-referrer';pi.alt='';pi.src=user.photoURL;nv.appendChild(pi)}
     nv.appendChild(document.createTextNode(on?me.name.split(' ')[0]:'Log in'));
-    $('gate').hidden=on;$('form').hidden=!on;$('rqGate').hidden=on;$('dirMe').hidden=!on;$('dirOut').hidden=on;$('ctGate').hidden=on;$('ctF').hidden=!on||adm();$('ctAdm').hidden=!(on&&adm());$('myH').hidden=$('myMsg').hidden=!!(on&&adm());$('svGate').hidden=on;$('svF').hidden=!on;$('jbGate').hidden=on;$('jbF').hidden=!on;$('rqForm').hidden=!on||adm();$('rqAdm').hidden=!(on&&adm());$('navAdm').hidden=!(on&&adm());$('heroBtn').hidden=!(on&&adm());$('msgBtn').hidden=!(on&&adm());showSp();showJobs();showProf();showAnn();
+    $('gate').hidden=on;$('form').hidden=!on;$('rqGate').hidden=on;$('dirMe').hidden=!on;$('dirOut').hidden=on;$('ctGate').hidden=on;$('ctF').hidden=!on||adm();$('ctAdm').hidden=!(on&&adm());$('myH').hidden=$('myMsg').hidden=!!(on&&adm());$('svGate').hidden=on;$('svF').hidden=!on;$('jbGate').hidden=on;$('jbF').hidden=!on;$('jbList').hidden=!on;$('rqForm').hidden=!on||adm();$('rqAdm').hidden=!(on&&adm());$('navAdm').hidden=!(on&&adm());$('heroBtn').hidden=!(on&&adm());$('msgBtn').hidden=!(on&&adm());showSp();showJobs();showProf();showAnn();
     if(on&&!$('qn').value)$('qn').value=me.name;
     if(on)$('whoPost').textContent='Posting as '+me.name+(me.batch?' ('+me.batch+')':'');
     $('accIn').hidden=!on;$('accBack').hidden=!!user;$('reg').hidden=!(user&&!me);
@@ -664,7 +664,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     e.preventDefault();var n=$('rname').value.trim(),m=$('rmsg');
     if(!n){m.textContent='Enter your name.';m.className='msg err';return}
     var p={name:n,type:$('rtype').value,course:$('rcourse').value.trim(),year:$('ryear').value.trim()};p.batch=p.course+(p.year?', '+p.year:'');
-    fs.doc('users/'+uid).set(p).then(function(){location.hash='home'},
+    fs.doc('users/'+uid).set(p).then(function(){location.hash='home';setTimeout(function(){location.reload()},400)},
       function(){m.textContent='Couldn’t save your profile. Try again.';m.className='msg err'});
   });
   function addPost(p,cb){fs.collection('posts').add(p).then(function(){cb(true)},function(){cb(false)})}
@@ -720,9 +720,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     fs.collection('comments').orderBy('ts','asc').limit(500).onSnapshot(function(s){coms=rows(s);render();dash()},function(){});
     fs.collection('announcements').orderBy('ts','desc').limit(20).onSnapshot(function(sn){anns=rows(sn);showAnn();dash()},function(){});
     fs.collection('members').get().then(function(sn){memberCount=sn.size;dash()},function(){});
-    fs.collection('reactions').limit(5000).onSnapshot(function(sn){rx=rows(sn);render()},function(){});
     fs.collection('spotlight').orderBy('ts','desc').limit(12).onSnapshot(function(sn){sps=rows(sn);showSp()},function(){});
-    fs.collection('jobs').orderBy('ts','desc').limit(100).onSnapshot(function(sn){jobs=rows(sn);showJobs();showHJ()},function(){});
     fs.collection('events').orderBy('date','desc').limit(200).onSnapshot(function(sn){evs=rows(sn);showEvents();showEvAdm();showPa()},function(){});
     fs.collection('presence').orderBy('ts','desc').limit(300).onSnapshot(function(sn){pres=rows(sn);calcOn()},function(){});
     fs.doc('site/msg').onSnapshot(function(d){if(d.exists&&d.data().text)$('msgT').textContent=d.data().text},function(){});
@@ -733,6 +731,8 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       if(unM){unM();unM=null}msgs=[];showMsg();if(unT){unT();unT=null}trs=[];
       if(unQ){unQ();unQ=null}mine=[];showMine();
       if(unE){unE();unE=null}regs=[];showEvents();
+      if(unRx){unRx();unRx=null}rx=[];if(unJ){unJ();unJ=null}jobs=[];showJobs();showHJ();
+      if(u){unRx=fs.collection('reactions').limit(5000).onSnapshot(function(sn){rx=rows(sn);render()},function(){});unJ=fs.collection('jobs').orderBy('ts','desc').limit(100).onSnapshot(function(sn){jobs=rows(sn);showJobs();showHJ()},function(){})}
       if(u)unE=fs.collection('eventRegs').limit(2000).onSnapshot(function(sn){regs=rows(sn);showEvents();showEvAdm();showPa()},function(){});
       if(u)unQ=fs.collection('messages').where('uid','==',uid).onSnapshot(function(sn){mine=rows(sn).sort(function(a,b){return b.ts-a.ts});showMine()},function(){});if(unS){unS();unS=null}rs=[];
       if(u)unS=fs.collection('rsvps').limit(1000).onSnapshot(function(sn){rs=rows(sn);showAnn()},function(){});
@@ -746,11 +746,11 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
         unR=q.onSnapshot(function(sn){reqs=rows(sn).sort(function(a,b){return b.ts-a.ts});showReq();acct();render();dash()},function(){});acct();render();
       });
       if(unMe){unMe();unMe=null}
-      if(u){$('rname').value=u.displayName||'';unMe=fs.doc('users/'+uid).onSnapshot(function(s){me=s.exists?s.data():null;acct();render();if(me)fs.doc('members/'+uid).set({ts:Date.now()},{merge:true}).catch(function(){});if(me)beat()},function(){acct()})}
+      if(u){$('rname').value=u.displayName||'';unMe=fs.doc('users/'+uid).onSnapshot(function(s){me=s.exists?s.data():null;if(me&&me.type==='guest'){alert('Guest accounts are no longer allowed. Please contact the admin.');me=null;auth.signOut();return}acct();render();if(me)fs.doc('members/'+uid).set({ts:Date.now()},{merge:true}).catch(function(){});if(me)beat()},function(){acct()})}
       acct();render();
     });
   }
-  var evs=[],regs=[],pres=[],unE=null,acat='',editEv='',rx=[],memberCount=0,mine=[],unQ=null,dirs=[],jobs=[],trs=[],unT=null,sps=[],msgs=[],rs=[],unD=null,unM=null,unS=null,isAdm=false,aErr='',mode='student',anns=[],evs=[],reqs=[],unR=null;
+  var unRx=null,unJ=null,evs=[],regs=[],pres=[],unE=null,acat='',editEv='',rx=[],memberCount=0,mine=[],unQ=null,dirs=[],jobs=[],trs=[],unT=null,sps=[],msgs=[],rs=[],unD=null,unM=null,unS=null,isAdm=false,aErr='',mode='student',anns=[],evs=[],reqs=[],unR=null;
   try{mode=localStorage.getItem('ah-mode')||'student'}catch(e){}
   function adm(){return isAdm&&mode==='admin'&&!!user}
   function mb(d,txt,fn){var x=document.createElement('button');x.type='button';x.className='btn m';x.style.cssText='margin:.6rem .4rem 0 0;padding:.35rem .7rem;font-size:.85rem';x.textContent=txt;x.onclick=fn;d.appendChild(x)}
@@ -924,6 +924,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     });
   }
   function openProfile(p){
+    if(!logged){showModal('',p.name,'Alumni profile','Log in to see profile details.');return}
     function show(q){
       var b=q.batch||'',y=q.year||(b.match(/\b(?:19|20)\d{2}\b/)||[''])[0],c=q.course||b.replace(y,'').replace(/^[\s,\-\u2013]+|[\s,\-\u2013]+$/g,'');
       showModal(q.photo||'',q.name,'Alumni profile','Course: '+(c||'Not shared')+'\nGraduation year: '+(y||'Not shared')+'\nDate posted: '+(p.date||''),true);
@@ -943,7 +944,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     var ae=document.activeElement;
     if(!(ae&&ae.closest&&ae.closest('#pfF'))){$('pn').value=me.name;$('pc').value=me.course||'';$('py').value=me.year||''}
   }
-  function beat(){if(uid&&me&&!document.hidden)fs.doc('presence/'+uid).set({ts:Date.now(),name:me.name}).catch(function(){})}
+  function beat(){if(uid&&me&&!document.hidden)fs.doc('presence/'+uid).set({ts:Date.now()}).catch(function(){})}
   function calcOn(){var n=Date.now();$('s4').textContent=pres.filter(function(p){return n-p.ts<150000}).length}
   function annCard(x){var l=item((x.date||'')+(x.cat?' \u2022 '+x.cat:''),(x.important?'\u2605 ':'')+x.title,x.text,tools('announcements',x));if(x.important)l.className='imp';return l}
   function showAnn(){fill($('annList'),anns.slice(0,3),annCard);fill($('annAll'),anns.filter(function(x){return !acat||x.cat===acat}),annCard)}
