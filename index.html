@@ -991,6 +991,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       return item(st==='approved'?'Approved':st==='pending'?'Pending':'Not approved',(u.name||'')+' \u2022 '+(TYPES[u.type||'alumni']||'Alumni'),(u.batch||'')+(u.studentId?' \u2022 Student ID '+u.studentId:''),function(d){
         if(st!=='approved')mb(d,'Approve',function(){fs.doc('users/'+u.id).update({status:'approved'})});
         if(st==='pending')mb(d,'Reject',function(){fs.doc('users/'+u.id).update({status:'rejected'})});
+        if(st==='approved'&&u.id!==uid)mb(d,'Set to pending',function(){if(confirm('Set '+u.name+' back to pending? They lose posting and reply access until you approve again.'))fs.doc('users/'+u.id).update({status:'pending'})});
         if((u.type||'alumni')==='student'&&st==='approved')mb(d,'Convert to Alumni',function(){
           var y=prompt('Graduation year for '+u.name+'. Only convert after you confirm they graduated:',String(new Date().getFullYear()));
           if(!y||!/^\d{4}$/.test(y.trim()))return;
