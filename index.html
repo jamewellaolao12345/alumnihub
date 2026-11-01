@@ -924,7 +924,10 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       });
     });
   }
-  function openProfile(p){showModal(p.photo||'',p.name,'Alumni profile','Course: '+(p.course||p.batch||'Not shared')+'\nGraduation year: '+(p.year||'Not shared')+'\nDate posted: '+(p.date||''),true)}
+  function openProfile(p){
+    var b=p.batch||'',y=p.year||(b.match(/\b(?:19|20)\d{2}\b/)||[''])[0],c=p.course||b.replace(y,'').replace(/^[\s,\-\u2013]+|[\s,\-\u2013]+$/g,'');
+    showModal(p.photo||'',p.name,'Alumni profile','Course: '+(c||'Not shared')+'\nGraduation year: '+(y||'Not shared')+'\nDate posted: '+(p.date||''),true);
+  }
   function showProf(){
     var on=logged&&me;$('pfOut').hidden=!!on;$('pfIn').hidden=!on;if(!on)return;
     $('pfName').textContent=me.name;
