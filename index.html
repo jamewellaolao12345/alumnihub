@@ -925,8 +925,15 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     });
   }
   function openProfile(p){
-    var b=p.batch||'',y=p.year||(b.match(/\b(?:19|20)\d{2}\b/)||[''])[0],c=p.course||b.replace(y,'').replace(/^[\s,\-\u2013]+|[\s,\-\u2013]+$/g,'');
-    showModal(p.photo||'',p.name,'Alumni profile','Course: '+(c||'Not shared')+'\nGraduation year: '+(y||'Not shared')+'\nDate posted: '+(p.date||''),true);
+    function show(q){
+      var b=q.batch||'',y=q.year||(b.match(/\b(?:19|20)\d{2}\b/)||[''])[0],c=q.course||b.replace(y,'').replace(/^[\s,\-\u2013]+|[\s,\-\u2013]+$/g,'');
+      showModal(q.photo||'',q.name,'Alumni profile','Course: '+(c||'Not shared')+'\nGraduation year: '+(y||'Not shared')+'\nDate posted: '+(p.date||''),true);
+    }
+    show(p);
+    if(logged&&p.uid&&fs)fs.doc('users/'+p.uid).get().then(function(d){
+      if(!d.exists||$('rmod').hidden||$('rmt').textContent!==p.name)return;
+      var u=d.data();show({photo:p.photo,name:p.name,batch:u.batch||p.batch,course:u.course||p.course,year:u.year||p.year});
+    },function(){});
   }
   function showProf(){
     var on=logged&&me;$('pfOut').hidden=!!on;$('pfIn').hidden=!on;if(!on)return;
