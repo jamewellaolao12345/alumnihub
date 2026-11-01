@@ -319,7 +319,8 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       <form class="card" id="pfF" novalidate><h3>Edit profile</h3>
         <label>Full name<input type="text" id="pn" maxlength="60"></label>
         <label>Course<input type="text" id="pc" maxlength="60"></label>
-        <label>Graduation year<input type="text" id="py" maxlength="4" placeholder="2019"></label>
+        <label id="pyL">Graduation year<input type="text" id="py" maxlength="4" placeholder="2019"></label>
+        <label id="psL" hidden>Student ID<input type="text" id="ps" maxlength="30"></label>
         <button class="btn m" type="submit">Save changes</button><p class="msg" id="pm" role="status"></p>
       </form>
     </div>
@@ -959,7 +960,8 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     $('pfEmail').textContent=(user&&user.email)||'';
     var im=$('pfImg');if(user&&user.photoURL){im.referrerPolicy='no-referrer';im.src=user.photoURL;im.hidden=false}else im.hidden=true;
     var ae=document.activeElement;
-    if(!(ae&&ae.closest&&ae.closest('#pfF'))){$('pn').value=me.name;$('pc').value=me.course||'';$('py').value=me.year||''}
+    $('pyL').hidden=me.type==='student';$('psL').hidden=me.type!=='student';
+    if(!(ae&&ae.closest&&ae.closest('#pfF'))){$('ps').value=me.studentId||'';$('ps').readOnly=!!me.studentId;$('pn').value=me.name;$('pc').value=me.course||'';$('py').value=me.year||''}
   }
   function beat(){if(uid&&me&&!document.hidden)fs.doc('presence/'+uid).set({ts:Date.now()}).catch(function(){})}
   function calcOn(){var n=Date.now();$('s4').textContent=pres.filter(function(p){return n-p.ts<150000}).length}
@@ -988,7 +990,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     var q=($('mbQ').value||'').toLowerCase();
     fill($('mbList'),memList.filter(function(u){return ((u.name||'')+' '+(u.batch||'')+' '+(u.studentId||'')+' '+(u.type||'alumni')).toLowerCase().indexOf(q)>=0}).sort(function(a,b){var pa=a.status==='pending'?0:1,pb=b.status==='pending'?0:1;return pa-pb||((a.name||'')<(b.name||'')?-1:1)}),function(u){
       var st=u.status||'approved';
-      return item(st==='approved'?'Approved':st==='pending'?'Pending':'Not approved',(u.name||'')+' \u2022 '+(TYPES[u.type||'alumni']||'Alumni'),(u.batch||'')+(u.studentId?' \u2022 Student ID '+u.studentId:''),function(d){
+      return item(st==='approved'?'Approved':st==='pending'?'Pending':'Not approved',(u.name||'')+' \u2022 '+(TYPES[u.type||'alumni']||'Alumni'),(u.batch||'')+((u.type||'alumni')==='student'?' \u2022 Student ID: '+(u.studentId||'not provided'):''),function(d){
         if(st!=='approved')mb(d,'Approve',function(){fs.doc('users/'+u.id).update({status:'approved'})});
         if(st==='pending')mb(d,'Reject',function(){fs.doc('users/'+u.id).update({status:'rejected'})});
         if(st==='approved'&&u.id!==uid)mb(d,'Set to pending',function(){if(confirm('Set '+u.name+' back to pending? They lose posting and reply access until you approve again.'))fs.doc('users/'+u.id).update({status:'pending'})});
@@ -1117,7 +1119,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   $('pfF').addEventListener('submit',function(e){
     e.preventDefault();var m=$('pm'),n=$('pn').value.trim();if(!logged||!me)return;
     if(!n){m.className='msg err';m.textContent='Enter your name.';return}
-    var p={name:n,course:$('pc').value.trim()};if(me.type==='student'){p.batch=p.course+', '+(me.yearLevel||'')}else{p.year=$('py').value.trim();p.batch=p.course+(p.year?', '+p.year:'')}
+    var p={name:n,course:$('pc').value.trim()};if(me.type==='student'){p.batch=p.course+', '+(me.yearLevel||'');if(!me.studentId&&$('ps').value.trim())p.studentId=$('ps').value.trim()}else{p.year=$('py').value.trim();p.batch=p.course+(p.year?', '+p.year:'')}
     fs.doc('users/'+uid).set(p,{merge:true}).then(function(){m.className='msg';m.textContent='Saved.'},function(){m.className='msg err';m.textContent='Couldn\u2019t save. Try again.'});
   });
   setInterval(beat,60000);setInterval(calcOn,30000);
