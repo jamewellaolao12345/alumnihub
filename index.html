@@ -182,6 +182,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     <a href="#account" data-p="account" id="navAcc">Log in</a>
   </nav>
 </header>
+<div id="pendBar" hidden style="background:#fff0c9;color:#5a3d00;padding:.7rem 1rem;text-align:center;font-weight:600"></div>
 
 <main>
 <!-- HOME -->
@@ -367,10 +368,10 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   <div class="wrap">
     <h2 id="admT">Admin</h2>
     <div id="atabs" class="tabs" role="tablist">
-      <button type="button" data-t="ov">Overview</button><button type="button" data-t="an">Announcements</button><button type="button" data-t="sp">Spotlight</button><button type="button" data-t="rq">Requests</button><button type="button" data-t="ms">Messages</button><button type="button" data-t="ev">Events</button><button type="button" data-t="pa">Participants</button><button type="button" data-t="ce">Register certificate</button>
+      <button type="button" data-t="ov">Overview</button><button type="button" data-t="mb">Members</button><button type="button" data-t="an">Announcements</button><button type="button" data-t="sp">Spotlight</button><button type="button" data-t="rq">Requests</button><button type="button" data-t="ms">Messages</button><button type="button" data-t="ev">Events</button><button type="button" data-t="pa">Participants</button><button type="button" data-t="ce">Register certificate</button>
     </div>
     <div class="card" id="dash" data-tab="ov"><h3>Overview</h3>
-      <div class="ostats"><div class="ob"><b id="o1">0</b><span>Pending requests</span></div><div class="ob"><b id="o2">0</b><span>Total requests</span></div><div class="ob"><b id="o3">0</b><span>Approved certificates</span></div><div class="ob"><b id="o4">0</b><span>Alumni posts</span></div><div class="ob"><b id="o5">0</b><span>Comments</span></div><div class="ob"><b id="o6">0</b><span>Announcements</span></div><div class="ob"><b id="o7">0</b><span>Directory listings</span></div><div class="ob"><b id="o8">0</b><span>Survey responses</span></div><div class="ob"><b id="o9">0</b><span>Messages</span></div><div class="ob"><b id="o10">0</b><span>Unanswered messages</span></div></div>
+      <div class="ostats"><div class="ob"><b id="o1">0</b><span>Pending requests</span></div><div class="ob"><b id="o2">0</b><span>Total requests</span></div><div class="ob"><b id="o3">0</b><span>Approved certificates</span></div><div class="ob"><b id="o4">0</b><span>Alumni posts</span></div><div class="ob"><b id="o5">0</b><span>Comments</span></div><div class="ob"><b id="o6">0</b><span>Announcements</span></div><div class="ob"><b id="o7">0</b><span>Directory listings</span></div><div class="ob"><b id="o8">0</b><span>Survey responses</span></div><div class="ob"><b id="o9">0</b><span>Messages</span></div><div class="ob"><b id="o10">0</b><span>Unanswered messages</span></div><div class="ob"><b id="o11">0</b><span>Accounts awaiting approval</span></div></div>
       <h3 style="margin-top:1.4rem">Reports</h3>
       <div class="exrow"><div><b>Student requests</b><span id="cReq">0 records</span></div><button class="btn m" type="button" id="exReq">Download CSV</button></div>
       <div class="exrow"><div><b>Alumni directory</b><span id="cDir">0 records</span></div><button class="btn m" type="button" id="exDir">Download CSV</button></div>
@@ -397,6 +398,10 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       <label>Story<textarea id="ss" maxlength="400"></textarea></label>
       <label>Portrait (optional)<input type="file" id="sf" accept="image/*"></label>
       <button class="btn m" type="submit">Post spotlight</button><p class="msg" id="sm" role="status"></p></form>
+    <div data-tab="mb">
+      <label>Search members<input type="text" id="mbQ" placeholder="Name, course, student ID or type"></label>
+      <ul class="ann" id="mbList"></ul>
+    </div>
     <form class="card" id="eF" data-tab="ev" novalidate><h3>Create or edit an event</h3>
       <label>Title<input type="text" id="etl" maxlength="100"></label>
       <label>Date<input type="date" id="edt"></label>
@@ -508,8 +513,11 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       <label>Your name<input type="text" id="rname" maxlength="60" autocomplete="name"></label>
       <label>I am a<select id="rtype"><option value="alumni">Alumni (graduate)</option><option value="student">Current student</option></select></label>
       <label>Course<input type="text" id="rcourse" maxlength="60" placeholder="BSIT"></label>
-      <label>Graduation year<input type="text" id="ryear" maxlength="4" placeholder="2019"></label>
+      <label id="rsidL" hidden>Student ID<input type="text" id="rsid" maxlength="30"></label>
+      <label id="rlvL" hidden>Year level<select id="rlevel"><option>1st year</option><option>2nd year</option><option>3rd year</option><option>4th year</option><option>5th year</option></select></label>
+      <label id="ryrL">Graduation year<input type="text" id="ryear" maxlength="4" placeholder="2019"></label>
       <button class="btn m" type="submit">Save profile</button>
+      <p class="lead" style="margin:.8rem 0 0">Alumni and student accounts must be approved by the admin before they can post or reply.</p>
       <p class="msg" id="rmsg" role="status"></p>
     </form>
     <p class="lead" id="mode" style="margin-top:1rem"></p>
@@ -555,7 +563,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       var s=document.createElement('small');s.textContent=(logged&&p.batch?p.batch+' • ':'')+p.date;
       t.appendChild(n);t.appendChild(s);w.appendChild(av);w.appendChild(t);b.appendChild(w);
       if(p.cap){var q=document.createElement('p');q.textContent=p.cap;b.appendChild(q)}
-      if(logged)b.appendChild(rxRow(p));
+      if(full())b.appendChild(rxRow(p));
       mb(b,'View details',function(){openPost(p)});
       if(adm()||(logged&&p.uid===uid))mb(b,'Delete post',function(){if(confirm('Delete this post?'))fs.doc('posts/'+p.id).delete()});
       b.appendChild(thread(p));c.appendChild(im);c.appendChild(b);feed.appendChild(c);
@@ -563,7 +571,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   }
 
   function route(){
-    var h=location.hash.slice(1),vp=h.indexOf('verify-')===0?decodeURIComponent(h.slice(7)):'';if(vp)h='verify';var at='';if(h.indexOf('admin')===0){at={'admin':'ov','admin-announcements':'an','admin-spotlight':'sp','admin-requests':'rq','admin-messages':'ms','admin-certificates':'ce','admin-events':'ev','admin-participants':'pa'}[h]||'ov';h='admin'}if(['home','events','post','account','requests','admin','verify','directory','contact','survey','jobs','community','announcements','services','profile'].indexOf(h)<0)h='home';
+    var h=location.hash.slice(1),vp=h.indexOf('verify-')===0?decodeURIComponent(h.slice(7)):'';if(vp)h='verify';var at='';if(h.indexOf('admin')===0){at={'admin':'ov','admin-announcements':'an','admin-spotlight':'sp','admin-requests':'rq','admin-messages':'ms','admin-certificates':'ce','admin-events':'ev','admin-participants':'pa','admin-members':'mb'}[h]||'ov';h='admin'}if(['home','events','post','account','requests','admin','verify','directory','contact','survey','jobs','community','announcements','services','profile'].indexOf(h)<0)h='home';
     ['home','events','post','account','requests','admin','verify','directory','contact','survey','jobs','community','announcements','services','profile'].forEach(function(id){document.getElementById(id).hidden=(id!==h)});
     var nh=['requests','verify','directory','jobs','survey','contact','post'].indexOf(h)>=0?'services':h;
     document.querySelectorAll('nav a').forEach(function(a){
@@ -621,7 +629,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   });
   document.getElementById('form').addEventListener('submit',function(e){
     e.preventDefault();
-    if(!logged||!me){say('Log in before posting.',true);return}
+    if(!full()){say('Only approved alumni can post.',true);return}
     if(!data){say('Choose an image to post.',true);return}
     var post={uid:uid,photo:(user&&user.photoURL)||'',name:me.name,cap:document.getElementById('cap').value.trim(),img:data,ts:Date.now(),
       date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})};
@@ -651,6 +659,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     $('accBackT').textContent='Sign in with your Google account to post photos and comment.';
     $('accT').textContent=on?'Your account':(user?'Finish your profile':'Log in or register');
     $('mode').textContent=SETUP?'Setup needed: add your Firebase settings near the top of the script.':'Posts and comments are shared with all CTU alumni.';
+    gates();
   }
   $('inBtn').textContent='Student login with Google';$('admBtn').textContent='Admin login with Google';
   function go(m){
@@ -663,7 +672,9 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   $('reg').addEventListener('submit',function(e){
     e.preventDefault();var n=$('rname').value.trim(),m=$('rmsg');
     if(!n){m.textContent='Enter your name.';m.className='msg err';return}
-    var p={name:n,type:$('rtype').value,course:$('rcourse').value.trim(),year:$('ryear').value.trim()};p.batch=p.course+(p.year?', '+p.year:'');
+    var st=$('rtype').value==='student',p={name:n,type:$('rtype').value,course:$('rcourse').value.trim(),status:'pending',ts:Date.now()};
+    if(st){p.studentId=$('rsid').value.trim();p.yearLevel=$('rlevel').value;if(!p.course||!p.studentId){m.textContent='Enter your student ID and course.';m.className='msg err';return}p.batch=p.course+', '+p.yearLevel}
+    else{p.year=$('ryear').value.trim();if(!p.course||!p.year){m.textContent='Enter your course and graduation year.';m.className='msg err';return}p.batch=p.course+', '+p.year}
     fs.doc('users/'+uid).set(p).then(function(){location.hash='home';setTimeout(function(){location.reload()},400)},
       function(){m.textContent='Couldn’t save your profile. Try again.';m.className='msg err'});
   });
@@ -691,13 +702,13 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
         r.className='cm';r.style.paddingLeft=Math.min(depth,3)*1.2+'rem';line.style.margin='0';
         if(c.photo){var ci=document.createElement('img');ci.className='cav';ci.referrerPolicy='no-referrer';ci.alt='';ci.onerror=function(){ci.remove()};ci.src=c.photo;line.appendChild(ci)}
         b.textContent=c.name;line.appendChild(b);line.appendChild(document.createTextNode(' '+c.text));r.appendChild(line);
-        if(logged&&me)mb(bar,'Reply',function(){openReply(r,p,c)});
+        if(canReply())mb(bar,'Reply',function(){openReply(r,p,c)});
         if(adm()||(logged&&c.uid===uid))mb(bar,'Delete',function(){fs.doc('comments/'+c.id).delete()});
         r.appendChild(bar);t.appendChild(r);put(c.id,depth+1);
       });
     }
     put('',0);
-    if(logged&&me){
+    if(canReply()){
       var f=document.createElement('form'),i=document.createElement('input'),bt=document.createElement('button');
       f.className='cf';i.type='text';i.maxLength=200;i.placeholder='Write a comment';i.setAttribute('aria-label','Comment on '+p.name+'\u2019s post');
       bt.type='submit';bt.className='btn m';bt.textContent='Comment';f.appendChild(i);f.appendChild(bt);
@@ -706,7 +717,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
         addCom({postId:p.id,uid:uid,photo:(user&&user.photoURL)||'',name:me.name,text:v,ts:Date.now()},function(ok){if(!ok){i.value=v;i.placeholder='Couldn\u2019t send. Try again.'}});
       });
       t.appendChild(f);
-    }else{var a=document.createElement('a');a.href='#account';a.className='lg';a.textContent='Log in to comment';t.appendChild(a)}
+    }else{var a=document.createElement('a');a.href='#account';a.className='lg';a.textContent=logged?'Your account is waiting for admin approval to comment':'Log in to comment';t.appendChild(a)}
     return t;
   }
   $('feed').addEventListener('focusout',function(){if(held){held=false;setTimeout(render,0)}});
@@ -726,9 +737,9 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     fs.doc('site/msg').onSnapshot(function(d){if(d.exists&&d.data().text)$('msgT').textContent=d.data().text},function(){});
     fs.doc('site/hero').onSnapshot(function(d){if(d.exists&&d.data().img)setHero(d.data().img)},function(){});
     auth.onAuthStateChanged(function(u){
-      user=u;uid=u?u.uid:'';me=null;isAdm=false;reqs=[];if(unR){unR();unR=null}showReq();
+      user=u;uid=u?u.uid:'';me=null;lastR='';isAdm=false;reqs=[];if(unR){unR();unR=null}showReq();
       if(unD){unD();unD=null}dirs=[];showDir();
-      if(unM){unM();unM=null}msgs=[];showMsg();if(unT){unT();unT=null}trs=[];
+      if(unM){unM();unM=null}msgs=[];showMsg();if(unU){unU();unU=null}memList=[];if(unT){unT();unT=null}trs=[];
       if(unQ){unQ();unQ=null}mine=[];showMine();
       if(unE){unE();unE=null}regs=[];showEvents();
       if(unRx){unRx();unRx=null}rx=[];if(unJ){unJ();unJ=null}jobs=[];showJobs();showHJ();
@@ -740,24 +751,26 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       if(u)fs.doc('admins/'+uid).get().then(function(d){isAdm=d.exists},function(e){aErr=e.code||'error'}).then(function(){
         if(mode==='admin'&&!isAdm){$('amsg').textContent='Not an admin. Your User UID is '+uid+(aErr==='permission-denied'?' . Firebase blocked the check, so publish the latest Firestore rules.':' . Add this exact UID as a document ID in the admins collection.');mode='student';auth.signOut();return}
         if(adm())fs.doc('users/'+uid).get().then(function(d){if(!d.exists)fs.doc('users/'+uid).set({name:user.displayName||'Administrator',batch:'Administrator'})},function(){});
+        if(adm())unU=fs.collection('users').limit(1000).onSnapshot(function(sn){memList=rows(sn);showMb();dash()},function(){});
         if(adm())unM=fs.collection('messages').orderBy('ts','desc').limit(100).onSnapshot(function(sn){msgs=rows(sn);showMsg()},function(){});
         if(adm())unT=fs.collection('tracer').limit(1000).onSnapshot(function(sn){trs=rows(sn);dash()},function(){});
         var q=adm()?fs.collection('requests').orderBy('ts','desc').limit(100):fs.collection('requests').where('uid','==',uid);
         unR=q.onSnapshot(function(sn){reqs=rows(sn).sort(function(a,b){return b.ts-a.ts});showReq();acct();render();dash()},function(){});acct();render();
       });
       if(unMe){unMe();unMe=null}
-      if(u){$('rname').value=u.displayName||'';unMe=fs.doc('users/'+uid).onSnapshot(function(s){me=s.exists?s.data():null;if(me&&me.type==='guest'){alert('Guest accounts are no longer allowed. Please contact the admin.');me=null;auth.signOut();return}acct();render();if(me)fs.doc('members/'+uid).set({ts:Date.now()},{merge:true}).catch(function(){});if(me)beat()},function(){acct()})}
+      if(u){$('rname').value=u.displayName||'';unMe=fs.doc('users/'+uid).onSnapshot(function(s){me=s.exists?s.data():null;if(me&&me.type==='guest'){alert('Guest accounts are no longer allowed. Please contact the admin.');me=null;auth.signOut();return}
+      var nr=me?((me.status||'approved')+':'+(me.type||'alumni')):'';if(lastR&&nr!==lastR){location.reload();return}lastR=nr;acct();render();if(me)fs.doc('members/'+uid).set({ts:Date.now()},{merge:true}).catch(function(){});if(me)beat()},function(){acct()})}
       acct();render();
     });
   }
-  var unRx=null,unJ=null,evs=[],regs=[],pres=[],unE=null,acat='',editEv='',rx=[],memberCount=0,mine=[],unQ=null,dirs=[],jobs=[],trs=[],unT=null,sps=[],msgs=[],rs=[],unD=null,unM=null,unS=null,isAdm=false,aErr='',mode='student',anns=[],evs=[],reqs=[],unR=null;
+  var memList=[],unU=null,lastR='',unRx=null,unJ=null,evs=[],regs=[],pres=[],unE=null,acat='',editEv='',rx=[],memberCount=0,mine=[],unQ=null,dirs=[],jobs=[],trs=[],unT=null,sps=[],msgs=[],rs=[],unD=null,unM=null,unS=null,isAdm=false,aErr='',mode='student',anns=[],evs=[],reqs=[],unR=null;
   try{mode=localStorage.getItem('ah-mode')||'student'}catch(e){}
   function adm(){return isAdm&&mode==='admin'&&!!user}
   function mb(d,txt,fn){var x=document.createElement('button');x.type='button';x.className='btn m';x.style.cssText='margin:.6rem .4rem 0 0;padding:.35rem .7rem;font-size:.85rem';x.textContent=txt;x.onclick=fn;d.appendChild(x)}
   function tools(col,x){return function(d){
     if(x.img){var im=document.createElement('img');im.src=x.img;im.alt='';im.className='aimg';im.onclick=function(){$('lbi').src=x.img;$('lb').hidden=false};d.appendChild(im)}
     if(col==='announcements'){var rb=document.createElement('button');rb.type='button';rb.className='btn rm';rb.textContent='Read More';rb.onclick=function(){openAnn(x)};d.appendChild(rb)}
-    if(col==='announcements'&&x.rsvp&&logged&&me){
+    if(col==='announcements'&&x.rsvp&&full()){
       var n=rs.filter(function(r){return r.a===x.id}).length,mine=rs.some(function(r){return r.a===x.id&&r.uid===uid}),rv=document.createElement('div');
       rv.className='abar';
       mb(rv,mine?'Going \u2713 ('+n+')':'I\u2019m going ('+n+')',function(){var ref=fs.doc('rsvps/'+x.id+'_'+uid);if(mine)ref.delete();else ref.set({a:x.id,uid:uid,name:me.name})});
@@ -783,7 +796,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   function dash(){
     $('s0').textContent=memberCount;$('s1').textContent=posts.length;$('s2').textContent=anns.length;$('s3').textContent=coms.length;
     var p=reqs.filter(function(r){return r.status==='pending'||r.status==='review'}).length,a=reqs.filter(function(r){return r.status==='approved'}).length;
-    [p,reqs.length,a,posts.length,coms.length,anns.length,dirs.length,trs.length,msgs.length,msgs.filter(function(x){return !x.reply}).length].forEach(function(n,i){var e=$('o'+(i+1));if(e)e.textContent=n});
+    [p,reqs.length,a,posts.length,coms.length,anns.length,dirs.length,trs.length,msgs.length,msgs.filter(function(x){return !x.reply}).length,memList.filter(function(x){return x.status==='pending'}).length].forEach(function(n,i){var e=$('o'+(i+1));if(e)e.textContent=n});
     [['cReq','exReq',reqs.length],['cDir','exDir',dirs.length],['cTr','exTr',trs.length]].forEach(function(x){$(x[0]).textContent=x[2]+' record'+(x[2]===1?'':'s');$(x[1]).disabled=!x[2]});
   }
   function showDir(){
@@ -860,7 +873,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     return d;
   }
   function react(p,t){
-    if(!logged||!me){location.hash='account';return}
+    if(!full()){if(!logged)location.hash='account';return}
     var id=p.id+'_'+uid,ref=fs.doc('reactions/'+id),cur=rx.filter(function(r){return r.id===id})[0];
     if(cur&&cur.type===t)ref.delete();else ref.set({p:p.id,uid:uid,type:t,name:me.name});
   }
@@ -889,9 +902,13 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   }
   function openEvent(e){
     var st=evState(e),mine=logged?regs.filter(function(r){return r.id===e.id+'_'+uid})[0]:null,a;
-    showModal(e.img,e.title,fmtEv(e)+' \u2022 '+st+(logged?' \u2022 '+evCount(e)+' registered':''),e.text||'');
+    showModal(e.img,e.title,fmtEv(e)+' \u2022 '+st+(full()?' \u2022 '+evCount(e)+' registered':''),e.text||'');
     a=$('rma');
-    if(!logged||!me){var l=document.createElement('a');l.href='#account';l.className='btn m';l.textContent='Log in to register';l.onclick=function(){$('rmod').hidden=true};a.appendChild(l);return}
+    if(!full()){
+      if(!logged){var l=document.createElement('a');l.href='#account';l.className='btn m';l.textContent='Log in to register';l.onclick=function(){$('rmod').hidden=true};a.appendChild(l)}
+      else{var pp=document.createElement('p');pp.textContent=role()==='pending'?'Your account is waiting for admin approval.':'Event registration is for alumni.';a.appendChild(pp)}
+      return;
+    }
     if(st==='Completed'){var p=document.createElement('p');p.textContent=mine?'Your status: '+(SN[mine.status]||mine.status):'This event has ended.';a.appendChild(p);return}
     var act=!!(mine&&mine.status!=='cancelled');
     mb(a,act?'Cancel registration':'Register',function(){
@@ -924,13 +941,13 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     });
   }
   function openProfile(p){
-    if(!logged){showModal('',p.name,'Alumni profile','Log in to see profile details.');return}
+    if(!full()){showModal('',p.name,'Alumni profile','Profile details are available to approved alumni only.');return}
     function show(q){
       var b=q.batch||'',y=q.year||(b.match(/\b(?:19|20)\d{2}\b/)||[''])[0],c=q.course||b.replace(y,'').replace(/^[\s,\-\u2013]+|[\s,\-\u2013]+$/g,'');
       showModal(q.photo||'',q.name,'Alumni profile','Course: '+(c||'Not shared')+'\nGraduation year: '+(y||'Not shared')+'\nDate posted: '+(p.date||''),true);
     }
     show(p);
-    if(logged&&p.uid&&fs)fs.doc('users/'+p.uid).get().then(function(d){
+    if(full()&&p.uid&&fs)fs.doc('users/'+p.uid).get().then(function(d){
       if(!d.exists||$('rmod').hidden||$('rmt').textContent!==p.name)return;
       var u=d.data();show({photo:p.photo,name:p.name,batch:u.batch||p.batch,course:u.course||p.course,year:u.year||p.year});
     },function(){});
@@ -946,6 +963,42 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   }
   function beat(){if(uid&&me&&!document.hidden)fs.doc('presence/'+uid).set({ts:Date.now()}).catch(function(){})}
   function calcOn(){var n=Date.now();$('s4').textContent=pres.filter(function(p){return n-p.ts<150000}).length}
+  function role(){return adm()?'admin':(!logged?'none':((me.status||'approved')!=='approved'?'pending':(me.type==='student'?'student':'alumni')))}
+  function full(){var r=role();return r==='admin'||r==='alumni'}
+  function canReply(){var r=role();return r==='admin'||r==='alumni'||r==='student'}
+  function gates(){
+    var r=role(),f=full(),c=canReply(),pb=$('pendBar');
+    pb.hidden=r!=='pending';
+    pb.textContent=(logged&&me.status==='rejected')?'Your registration was not approved. Please contact the admin.':'Your account is waiting for admin approval. You can read public pages until then.';
+    function deny(id,what){
+      var e=$(id).querySelector('p'),a=$(id).querySelector('a');
+      if(e)e.textContent=r==='none'?'Log in to '+what+'.':r==='pending'?'Your account is waiting for admin approval.':'This is available to approved alumni only.';
+      if(a)a.hidden=r!=='none';
+    }
+    $('gate').hidden=f;$('form').hidden=!f;deny('gate','post photos');
+    $('rqGate').hidden=f;$('rqForm').hidden=r!=='alumni';$('rqAdm').hidden=r!=='admin';deny('rqGate','request your documents');
+    $('dirMe').hidden=!f;$('dirOut').hidden=f;deny('dirOut','see and join the directory');
+    $('svGate').hidden=f;$('svF').hidden=!f;deny('svGate','answer the survey');
+    $('jbGate').hidden=f;$('jbF').hidden=!f;$('jbList').hidden=!f;deny('jbGate','see and post job openings');
+    $('ctGate').hidden=c;$('ctF').hidden=!c||r==='admin';$('ctAdm').hidden=r!=='admin';$('myH').hidden=$('myMsg').hidden=!c||r==='admin';
+    var ct=$('ctGate').querySelector('p');if(ct)ct.textContent=r==='none'?'Log in to send a message.':'Your account is waiting for admin approval.';
+    var a2=$('ctGate').querySelector('a');if(a2)a2.hidden=r!=='none';
+  }
+  function showMb(){
+    var q=($('mbQ').value||'').toLowerCase();
+    fill($('mbList'),memList.filter(function(u){return ((u.name||'')+' '+(u.batch||'')+' '+(u.studentId||'')+' '+(u.type||'alumni')).toLowerCase().indexOf(q)>=0}).sort(function(a,b){var pa=a.status==='pending'?0:1,pb=b.status==='pending'?0:1;return pa-pb||((a.name||'')<(b.name||'')?-1:1)}),function(u){
+      var st=u.status||'approved';
+      return item(st==='approved'?'Approved':st==='pending'?'Pending':'Not approved',(u.name||'')+' \u2022 '+(TYPES[u.type||'alumni']||'Alumni'),(u.batch||'')+(u.studentId?' \u2022 Student ID '+u.studentId:''),function(d){
+        if(st!=='approved')mb(d,'Approve',function(){fs.doc('users/'+u.id).update({status:'approved'})});
+        if(st==='pending')mb(d,'Reject',function(){fs.doc('users/'+u.id).update({status:'rejected'})});
+        if((u.type||'alumni')==='student'&&st==='approved')mb(d,'Convert to Alumni',function(){
+          var y=prompt('Graduation year for '+u.name+'. Only convert after you confirm they graduated:',String(new Date().getFullYear()));
+          if(!y||!/^\d{4}$/.test(y.trim()))return;
+          fs.doc('users/'+u.id).update({type:'alumni',year:y.trim(),batch:(u.course||'')+', '+y.trim(),status:'approved'});
+        });
+      });
+    });
+  }
   function annCard(x){var l=item((x.date||'')+(x.cat?' \u2022 '+x.cat:''),(x.important?'\u2605 ':'')+x.title,x.text,tools('announcements',x));if(x.important)l.className='imp';return l}
   function showAnn(){fill($('annList'),anns.slice(0,3),annCard);fill($('annAll'),anns.filter(function(x){return !acat||x.cat===acat}),annCard)}
   function row(r,adm){
@@ -1014,7 +1067,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     }).catch(function(){m.className='msg err';m.textContent='Couldn\u2019t save. Try again.'});
   });
   $('ds').addEventListener('input',showDir);
-  $('dirAdd').onclick=function(){if(!me)return;fs.doc('directory/'+uid).set({name:me.name,batch:me.batch||'',work:$('dw').value.trim(),photo:(user&&user.photoURL)||'',ts:Date.now()}).then(function(){alert('You are in the directory.')},function(){alert('Couldn\u2019t save. Try again.')})};
+  $('dirAdd').onclick=function(){if(!full())return;fs.doc('directory/'+uid).set({name:me.name,batch:me.batch||'',work:$('dw').value.trim(),photo:(user&&user.photoURL)||'',ts:Date.now()}).then(function(){alert('You are in the directory.')},function(){alert('Couldn\u2019t save. Try again.')})};
   $('dirDel').onclick=function(){if(uid)fs.doc('directory/'+uid).delete().then(function(){alert('You were removed from the directory.')},function(){})};
   $('spF').addEventListener('submit',function(e){
     e.preventDefault();var n=$('sn').value.trim();if(!n||!adm())return;
@@ -1022,22 +1075,22 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     var f=$('sf').files[0];if(f)shrink(f,700,put,0.7);else put();
   });
   $('ctF').addEventListener('submit',function(e){
-    e.preventDefault();var v=$('ctx').value.trim();if(!v||!logged||!me)return;
+    e.preventDefault();var v=$('ctx').value.trim();if(!v||!canReply())return;
     send('ctF','ctm','messages',{uid:uid,name:me.name,email:(user&&user.email)||'',text:v,ts:Date.now()});
   });
   $('exReq').onclick=function(){csv('requests.csv',[['Name','Student no.','Course','Year','Document','Purpose','Status','Google email','Requested','Reference']].concat(reqs.map(function(r){return [r.name,r.sno,r.course,r.year,DN[r.doc]||r.doc,r.purpose,r.status,r.email,r.ts?new Date(r.ts).toLocaleDateString('en-US'):'',r.ref||'']})))};
   $('exDir').onclick=function(){csv('directory.csv',[['Name','Batch','Workplace']].concat(dirs.map(function(x){return [x.name,x.batch,x.work]})))};
   $('exTr').onclick=function(){csv('survey.csv',[['Name','Batch','Status','Work','Related to course']].concat(trs.map(function(x){return [x.name,x.batch,x.status,x.work,x.rel]})))};
   $('svF').addEventListener('submit',function(e){
-    e.preventDefault();var m=$('svm');if(!logged||!me)return;
+    e.preventDefault();var m=$('svm');if(!full())return;
     fs.doc('tracer/'+uid).set({name:me.name,batch:me.batch||'',status:$('svs').value,work:$('svw').value.trim(),rel:$('svr').value,ts:Date.now()}).then(function(){m.className='msg';m.textContent='Thank you. Your answer is saved.'},function(){m.className='msg err';m.textContent='Couldn\u2019t save. Try again.'});
   });
   $('jbF').addEventListener('submit',function(e){
-    e.preventDefault();var t=$('jt').value.trim(),c=$('jc').value.trim(),m=$('jm');if(!logged||!me)return;
+    e.preventDefault();var t=$('jt').value.trim(),c=$('jc').value.trim(),m=$('jm');if(!full())return;
     if(!t||!c){m.className='msg err';m.textContent='Enter the job title and the company.';return}
     send('jbF','jm','jobs',{uid:uid,name:me.name,title:t,company:c,place:$('jl').value.trim(),text:$('jd').value.trim(),apply:$('ja').value.trim(),ts:Date.now()});
   });
-  var HM={ov:'admin',an:'admin-announcements',sp:'admin-spotlight',rq:'admin-requests',ms:'admin-messages',ce:'admin-certificates',ev:'admin-events',pa:'admin-participants'},TN={ov:'Overview',an:'Post an announcement',sp:'Alumni spotlight',rq:'Student requests',ms:'Messages',ce:'Register a certificate',ev:'Events',pa:'Event participants'};
+  var HM={ov:'admin',an:'admin-announcements',sp:'admin-spotlight',rq:'admin-requests',ms:'admin-messages',ce:'admin-certificates',ev:'admin-events',pa:'admin-participants',mb:'admin-members'},TN={ov:'Overview',an:'Post an announcement',sp:'Alumni spotlight',rq:'Student requests',ms:'Messages',ce:'Register a certificate',ev:'Events',pa:'Event participants',mb:'Members'};
   function adminTab(t){
     $('admT').textContent='Admin: '+TN[t];
     document.querySelectorAll('#admin [data-tab]').forEach(function(el){el.hidden=el.getAttribute('data-tab')!==t});
@@ -1063,10 +1116,12 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   $('pfF').addEventListener('submit',function(e){
     e.preventDefault();var m=$('pm'),n=$('pn').value.trim();if(!logged||!me)return;
     if(!n){m.className='msg err';m.textContent='Enter your name.';return}
-    var p={name:n,course:$('pc').value.trim(),year:$('py').value.trim()};p.batch=p.course+(p.year?', '+p.year:'');
+    var p={name:n,course:$('pc').value.trim()};if(me.type==='student'){p.batch=p.course+', '+(me.yearLevel||'')}else{p.year=$('py').value.trim();p.batch=p.course+(p.year?', '+p.year:'')}
     fs.doc('users/'+uid).set(p,{merge:true}).then(function(){m.className='msg';m.textContent='Saved.'},function(){m.className='msg err';m.textContent='Couldn\u2019t save. Try again.'});
   });
   setInterval(beat,60000);setInterval(calcOn,30000);
+  $('mbQ').addEventListener('input',showMb);
+  $('rtype').onchange=function(){var st=this.value==='student';$('rsidL').hidden=!st;$('rlvL').hidden=!st;$('ryrL').hidden=st};
   $('rmx').onclick=function(){$('rmod').hidden=true};
   $('rmod').onclick=function(e){if(e.target===this)this.hidden=true};
   $('msgBtn').onclick=function(){var t=prompt('Message text',$('msgT').textContent);if(t===null||!adm())return;fs.doc('site/msg').set({text:t.trim()}).catch(function(){alert('Couldn\u2019t save.')})};
