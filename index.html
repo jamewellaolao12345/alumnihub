@@ -320,7 +320,6 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
         <label>Full name<input type="text" id="pn" maxlength="60"></label>
         <label>Course<input type="text" id="pc" maxlength="60"></label>
         <label id="pyL">Graduation year<input type="text" id="py" maxlength="4" placeholder="2019"></label>
-        <label id="psL" hidden>Student ID<input type="text" id="ps" maxlength="30"></label>
         <button class="btn m" type="submit">Save changes</button><p class="msg" id="pm" role="status"></p>
       </form>
     </div>
@@ -514,9 +513,11 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       <label>Your name<input type="text" id="rname" maxlength="60" autocomplete="name"></label>
       <label>I am a<select id="rtype"><option value="alumni">Alumni (graduate)</option><option value="student">Current student</option></select></label>
       <label>Course<input type="text" id="rcourse" maxlength="60" placeholder="BSIT"></label>
-      <label id="rsidL" hidden>Student ID<input type="text" id="rsid" maxlength="30"></label>
+      <label id="rsidL"><span id="rsidT">Former student ID number</span><input type="text" id="rsid" maxlength="30"></label>
       <label id="rlvL" hidden>Year level<select id="rlevel"><option>1st year</option><option>2nd year</option><option>3rd year</option><option>4th year</option><option>5th year</option></select></label>
       <label id="ryrL">Graduation year<input type="text" id="ryear" maxlength="4" placeholder="2019"></label>
+      <label>Photo of your official CTU student ID<input type="file" id="rid" accept="image/jpeg,image/png,image/webp"></label>
+      <p class="lead" style="margin:-.4rem 0 .8rem;font-size:.85rem">Only the admin can see this photo. Make sure your name and ID number are readable.</p>
       <button class="btn m" type="submit">Save profile</button>
       <p class="lead" style="margin:.8rem 0 0">Alumni and student accounts must be approved by the admin before they can post or reply.</p>
       <p class="msg" id="rmsg" role="status"></p>
@@ -533,7 +534,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     <div class="flinks"><a href="#home">Home</a><a href="#requests">Document requests</a><a href="#events">Events</a><a href="#verify">Verify a certificate</a><a href="#post">Post a photo</a><a href="#directory">Alumni directory</a><a href="#contact">Contact us</a></div>
   </div>
   <details><summary>Privacy notice</summary>
-  <p>AlumniHub stores your name, course and batch, Google email and profile picture, your posts and comments, and the details you give in document requests (student number, course, year and purpose). It is used only to run the alumni community and to process your requests. Posts, comments and announcements are public. Document requests can be seen only by you and the admins. To correct or remove your information, contact the AlumniHub admin.</p></details></footer>
+  <p>AlumniHub stores your name, course and batch, Google email and profile picture, your posts and comments, and the details you give in document requests (student number, course, year and purpose). When you register, it also stores your student ID number and a photo of your CTU student ID. Only admins can see them, and they are used only to verify your account. It is used only to run the alumni community and to process your requests. Posts, comments and announcements are public. Document requests can be seen only by you and the admins. To correct or remove your information, contact the AlumniHub admin.</p></details></footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
@@ -672,12 +673,28 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   $('outBtn').onclick=function(){if(auth)auth.signOut()};
   $('reg').addEventListener('submit',function(e){
     e.preventDefault();var n=$('rname').value.trim(),m=$('rmsg');
-    if(!n){m.textContent='Enter your name.';m.className='msg err';return}
-    var st=$('rtype').value==='student',p={name:n,type:$('rtype').value,course:$('rcourse').value.trim(),status:'pending',ts:Date.now()};
-    if(st){p.studentId=$('rsid').value.trim();p.yearLevel=$('rlevel').value;if(!p.course||!p.studentId){m.textContent='Enter your student ID and course.';m.className='msg err';return}p.batch=p.course+', '+p.yearLevel}
-    else{p.year=$('ryear').value.trim();if(!p.course||!p.year){m.textContent='Enter your course and graduation year.';m.className='msg err';return}p.batch=p.course+', '+p.year}
-    fs.doc('users/'+uid).set(p).then(function(){location.hash='home';setTimeout(function(){location.reload()},400)},
-      function(){m.textContent='Couldn’t save your profile. Try again.';m.className='msg err'});
+    function bad(t){m.textContent=t;m.className='msg err'}
+    if(!n)return bad('Enter your full name.');
+    var st=$('rtype').value==='student',sid=$('rsid').value.trim(),c=$('rcourse').value.trim(),f=$('rid').files[0];
+    if(!/^[A-Za-z0-9\-\/ ]{3,30}$/.test(sid))return bad(st?'Enter your student ID number.':'Enter your former student ID number.');
+    if(!c)return bad('Enter your course.');
+    var p={name:n,type:$('rtype').value,course:c,status:'pending',ts:Date.now()};
+    if(st){p.yearLevel=$('rlevel').value;p.batch=c+', '+p.yearLevel}
+    else{p.year=$('ryear').value.trim();if(!/^(19|20)\d{2}$/.test(p.year))return bad('Enter your graduation year, for example 2019.');p.batch=c+', '+p.year}
+    if(!f)return bad('Upload a photo of your CTU student ID.');
+    if(['image/jpeg','image/png','image/webp'].indexOf(f.type)<0)return bad('The ID photo must be a JPG, PNG or WebP image.');
+    if(f.size>10*1024*1024)return bad('The ID photo is too large. Choose one under 10 MB.');
+    m.className='msg';m.textContent='Uploading your registration...';
+    var sub=$('reg').querySelector('button[type=submit]');sub.disabled=true;
+    function fail(t){sub.disabled=false;bad(t)}
+    function go(img){
+      if(!img||img.length>850000)return fail('That file could not be read as a picture, or it is too large. Try another photo.');
+      fs.doc('idPhotos/'+uid).set({img:img,ts:Date.now()})
+        .then(function(){return fs.doc('registrations/'+uid).set({studentId:sid,email:(user&&user.email)||'',type:p.type,ts:Date.now()})})
+        .then(function(){return fs.doc('users/'+uid).set(p)})
+        .then(function(){m.className='msg';m.textContent='Submitted.'},function(){fail('Could not save your registration. Try again.')});
+    }
+    shrink(f,1200,function(u1){if(u1&&u1.length>850000)shrink(f,900,go,0.6);else go(u1)},0.75);
   });
   function addPost(p,cb){fs.collection('posts').add(p).then(function(){cb(true)},function(){cb(false)})}
   function addCom(c,cb){fs.collection('comments').add(c).then(function(){cb(true)},function(){cb(false)})}
@@ -740,7 +757,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     auth.onAuthStateChanged(function(u){
       user=u;uid=u?u.uid:'';me=null;lastR='';isAdm=false;reqs=[];if(unR){unR();unR=null}showReq();
       if(unD){unD();unD=null}dirs=[];showDir();
-      if(unM){unM();unM=null}msgs=[];showMsg();if(unU){unU();unU=null}memList=[];if(unT){unT();unT=null}trs=[];
+      if(unM){unM();unM=null}msgs=[];showMsg();if(unU){unU();unU=null}memList=[];if(unRI){unRI();unRI=null}rinfo={};if(unT){unT();unT=null}trs=[];
       if(unQ){unQ();unQ=null}mine=[];showMine();
       if(unE){unE();unE=null}regs=[];showEvents();
       if(unRx){unRx();unRx=null}rx=[];if(unJ){unJ();unJ=null}jobs=[];showJobs();showHJ();
@@ -752,6 +769,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       if(u)fs.doc('admins/'+uid).get().then(function(d){isAdm=d.exists},function(e){aErr=e.code||'error'}).then(function(){
         if(mode==='admin'&&!isAdm){$('amsg').textContent='Not an admin. Your User UID is '+uid+(aErr==='permission-denied'?' . Firebase blocked the check, so publish the latest Firestore rules.':' . Add this exact UID as a document ID in the admins collection.');mode='student';auth.signOut();return}
         if(adm())fs.doc('users/'+uid).get().then(function(d){if(!d.exists)fs.doc('users/'+uid).set({name:user.displayName||'Administrator',batch:'Administrator'})},function(){});
+        if(adm())unRI=fs.collection('registrations').limit(1000).onSnapshot(function(sn){rinfo={};rows(sn).forEach(function(r){rinfo[r.id]=r});showMb()},function(){});
         if(adm())unU=fs.collection('users').limit(1000).onSnapshot(function(sn){memList=rows(sn);showMb();dash()},function(){});
         if(adm())unM=fs.collection('messages').orderBy('ts','desc').limit(100).onSnapshot(function(sn){msgs=rows(sn);showMsg()},function(){});
         if(adm())unT=fs.collection('tracer').limit(1000).onSnapshot(function(sn){trs=rows(sn);dash()},function(){});
@@ -760,6 +778,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       });
       if(unMe){unMe();unMe=null}
       if(u){$('rname').value=u.displayName||'';unMe=fs.doc('users/'+uid).onSnapshot(function(s){me=s.exists?s.data():null;if(me&&me.type==='guest'){alert('Guest accounts are no longer allowed. Please contact the admin.');me=null;auth.signOut();return}
+      if(me&&(me.status||'approved')!=='approved'){var rj=me.status==='rejected';me=null;auth.signOut();$('amsg').className='msg'+(rj?' err':'');$('amsg').textContent=rj?'Your registration was not approved. Please contact the admin.':'Your registration is waiting for admin approval. You can log in after you are approved.';location.hash='account';return}
       var nr=me?((me.status||'approved')+':'+(me.type||'alumni')):'';if(lastR&&nr!==lastR){location.reload();return}lastR=nr;acct();render();if(me)fs.doc('members/'+uid).set({ts:Date.now()},{merge:true}).catch(function(){});if(me)beat()},function(){acct()})}
       acct();render();
     });
@@ -960,8 +979,8 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     $('pfEmail').textContent=(user&&user.email)||'';
     var im=$('pfImg');if(user&&user.photoURL){im.referrerPolicy='no-referrer';im.src=user.photoURL;im.hidden=false}else im.hidden=true;
     var ae=document.activeElement;
-    $('pyL').hidden=me.type==='student';$('psL').hidden=me.type!=='student';
-    if(!(ae&&ae.closest&&ae.closest('#pfF'))){$('ps').value=me.studentId||'';$('ps').readOnly=!!me.studentId;$('pn').value=me.name;$('pc').value=me.course||'';$('py').value=me.year||''}
+    $('pyL').hidden=me.type==='student';
+    if(!(ae&&ae.closest&&ae.closest('#pfF'))){$('pn').value=me.name;$('pc').value=me.course||'';$('py').value=me.year||''}
   }
   function beat(){if(uid&&me&&!document.hidden)fs.doc('presence/'+uid).set({ts:Date.now()}).catch(function(){})}
   function calcOn(){var n=Date.now();$('s4').textContent=pres.filter(function(p){return n-p.ts<150000}).length}
@@ -986,11 +1005,22 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     var ct=$('ctGate').querySelector('p');if(ct)ct.textContent=r==='none'?'Log in to send a message.':'Your account is waiting for admin approval.';
     var a2=$('ctGate').querySelector('a');if(a2)a2.hidden=r!=='none';
   }
+  var idc={},rinfo={},unRI=null;
+  function getId(id,cb){if(idc[id]!==undefined)return cb(idc[id]);fs.doc('idPhotos/'+id).get().then(function(d){idc[id]=d.exists?d.data().img:'';cb(idc[id])},function(){cb('')})}
   function showMb(){
     var q=($('mbQ').value||'').toLowerCase();
     fill($('mbList'),memList.filter(function(u){return ((u.name||'')+' '+(u.batch||'')+' '+(u.studentId||'')+' '+(u.type||'alumni')).toLowerCase().indexOf(q)>=0}).sort(function(a,b){var pa=a.status==='pending'?0:1,pb=b.status==='pending'?0:1;return pa-pb||((a.name||'')<(b.name||'')?-1:1)}),function(u){
       var st=u.status||'approved';
-      return item(st==='approved'?'Approved':st==='pending'?'Pending':'Not approved',(u.name||'')+' \u2022 '+(TYPES[u.type||'alumni']||'Alumni'),(u.batch||'')+((u.type||'alumni')==='student'?' \u2022 Student ID: '+(u.studentId||'not provided'):''),function(d){
+      return item(st==='approved'?'Approved':st==='pending'?'Pending':'Not approved',(u.name||'')+' \u2022 '+(TYPES[u.type||'alumni']||'Alumni'),(u.batch||'')+' \u2022 ID no. '+((rinfo[u.id]&&rinfo[u.id].studentId)||u.studentId||'not provided')+(rinfo[u.id]&&rinfo[u.id].email?' \u2022 '+rinfo[u.id].email:''),function(d){
+        var box=document.createElement('div');d.appendChild(box);
+        function showPhoto(){getId(u.id,function(img){
+          box.textContent='';
+          if(!img){var np=document.createElement('p');np.textContent='No ID photo on file.';np.style.cssText='font-size:.85rem;margin-top:.4rem';box.appendChild(np);return}
+          var im=document.createElement('img');im.src=img;im.alt='ID photo of '+u.name;im.style.cssText='max-width:18rem;width:100%;border-radius:.5rem;margin-top:.6rem;cursor:zoom-in;display:block';
+          im.onclick=function(){$('lbi').src=img;$('lb').hidden=false};box.appendChild(im);
+          mb(box,'Delete ID photo',function(){if(confirm('Delete the stored ID photo of '+u.name+'? This cannot be undone.'))fs.doc('idPhotos/'+u.id).delete().then(function(){idc[u.id]='';showPhoto()})});
+        })}
+        if(st==='pending')showPhoto();else mb(d,'View ID photo',showPhoto);
         if(st!=='approved')mb(d,'Approve',function(){fs.doc('users/'+u.id).update({status:'approved'})});
         if(st==='pending')mb(d,'Reject',function(){fs.doc('users/'+u.id).update({status:'rejected'})});
         if(st==='approved'&&u.id!==uid)mb(d,'Set to pending',function(){if(confirm('Set '+u.name+' back to pending? They lose posting and reply access until you approve again.'))fs.doc('users/'+u.id).update({status:'pending'})});
@@ -1119,12 +1149,12 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   $('pfF').addEventListener('submit',function(e){
     e.preventDefault();var m=$('pm'),n=$('pn').value.trim();if(!logged||!me)return;
     if(!n){m.className='msg err';m.textContent='Enter your name.';return}
-    var p={name:n,course:$('pc').value.trim()};if(me.type==='student'){p.batch=p.course+', '+(me.yearLevel||'');if(!me.studentId&&$('ps').value.trim())p.studentId=$('ps').value.trim()}else{p.year=$('py').value.trim();p.batch=p.course+(p.year?', '+p.year:'')}
+    var p={name:n,course:$('pc').value.trim()};if(me.type==='student'){p.batch=p.course+', '+(me.yearLevel||'')}else{p.year=$('py').value.trim();p.batch=p.course+(p.year?', '+p.year:'')}
     fs.doc('users/'+uid).set(p,{merge:true}).then(function(){m.className='msg';m.textContent='Saved.'},function(){m.className='msg err';m.textContent='Couldn\u2019t save. Try again.'});
   });
   setInterval(beat,60000);setInterval(calcOn,30000);
   $('mbQ').addEventListener('input',showMb);
-  $('rtype').onchange=function(){var st=this.value==='student';$('rsidL').hidden=!st;$('rlvL').hidden=!st;$('ryrL').hidden=st};
+  $('rtype').onchange=function(){var st=this.value==='student';$('rsidT').textContent=st?'Student ID number':'Former student ID number';$('rlvL').hidden=!st;$('ryrL').hidden=st};
   $('rmx').onclick=function(){$('rmod').hidden=true};
   $('rmod').onclick=function(e){if(e.target===this)this.hidden=true};
   $('msgBtn').onclick=function(){var t=prompt('Message text',$('msgT').textContent);if(t===null||!adm())return;fs.doc('site/msg').set({text:t.trim()}).catch(function(){alert('Couldn\u2019t save.')})};
