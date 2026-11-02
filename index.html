@@ -63,7 +63,7 @@ h2{font:700 1.7rem/1.15 var(--head);margin:0 0 1.2rem;letter-spacing:-.01em}
 /* Post form */
 .card{background:var(--surface);border:1px solid var(--line);border-radius:.8rem;padding:clamp(1rem,3vw,1.8rem);max-width:36rem}
 label{display:block;font-weight:600;margin:0 0 .9rem}
-input[type=text],input[type=date],textarea{display:block;width:100%;margin-top:.3rem;font:400 1rem var(--body);padding:.65rem .75rem;border:1px solid var(--line);border-radius:.5rem;background:var(--bg);color:var(--ink)}
+input[type=text],input[type=date],input[type=email],input[type=password],textarea{display:block;width:100%;margin-top:.3rem;font:400 1rem var(--body);padding:.65rem .75rem;border:1px solid var(--line);border-radius:.5rem;background:var(--bg);color:var(--ink)}
 textarea{min-height:5.5rem;resize:vertical}
 input[type=file]{display:block;margin-top:.4rem;max-width:100%}
 .preview{display:block;width:100%;max-height:18rem;object-fit:cover;border-radius:.5rem;margin:0 0 1rem}
@@ -178,6 +178,8 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     <a href="#announcements" data-p="announcements">Announcements</a>
     <a href="#services" data-p="services">Alumni ID &amp; Services</a>
     <a href="#profile" data-p="profile">My Profile</a>
+    <a href="#notices" data-p="notices" id="navNt" hidden>Notifications<span id="ntN"></span></a>
+    <a href="#registrar" data-p="registrar" id="navRg" hidden>Registrar</a>
     <a href="#admin" data-p="admin" id="navAdm" hidden>Admin</a>
     <a href="#account" data-p="account" id="navAcc">Log in</a>
   </nav>
@@ -368,7 +370,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   <div class="wrap">
     <h2 id="admT">Admin</h2>
     <div id="atabs" class="tabs" role="tablist">
-      <button type="button" data-t="ov">Overview</button><button type="button" data-t="mb">Members</button><button type="button" data-t="an">Announcements</button><button type="button" data-t="sp">Spotlight</button><button type="button" data-t="rq">Requests</button><button type="button" data-t="ms">Messages</button><button type="button" data-t="ev">Events</button><button type="button" data-t="pa">Participants</button><button type="button" data-t="ce">Register certificate</button>
+      <button type="button" data-t="ov">Overview</button><button type="button" data-t="mb">Members</button><button type="button" data-t="an">Announcements</button><button type="button" data-t="sp">Spotlight</button><button type="button" data-t="rq">Requests</button><button type="button" data-t="ms">Messages</button><button type="button" data-t="ev">Events</button><button type="button" data-t="pa">Participants</button><button type="button" data-t="rg">Registrars</button><button type="button" data-t="au">Audit log</button><button type="button" data-t="ce">Register certificate</button>
     </div>
     <div class="card" id="dash" data-tab="ov"><h3>Overview</h3>
       <div class="ostats"><div class="ob"><b id="o1">0</b><span>Pending requests</span></div><div class="ob"><b id="o2">0</b><span>Total requests</span></div><div class="ob"><b id="o3">0</b><span>Approved certificates</span></div><div class="ob"><b id="o4">0</b><span>Alumni posts</span></div><div class="ob"><b id="o5">0</b><span>Comments</span></div><div class="ob"><b id="o6">0</b><span>Announcements</span></div><div class="ob"><b id="o7">0</b><span>Directory listings</span></div><div class="ob"><b id="o8">0</b><span>Survey responses</span></div><div class="ob"><b id="o9">0</b><span>Messages</span></div><div class="ob"><b id="o10">0</b><span>Unanswered messages</span></div><div class="ob"><b id="o11">0</b><span>Accounts awaiting approval</span></div></div>
@@ -398,6 +400,16 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       <label>Story<textarea id="ss" maxlength="400"></textarea></label>
       <label>Portrait (optional)<input type="file" id="sf" accept="image/*"></label>
       <button class="btn m" type="submit">Post spotlight</button><p class="msg" id="sm" role="status"></p></form>
+    <div data-tab="rg">
+      <form class="card" id="sgF" novalidate><h3>Create a registrar account</h3>
+        <label>Full name<input type="text" id="sgn" maxlength="80"></label>
+        <label>Email<input type="email" id="sge" maxlength="120"></label>
+        <button class="btn m" type="submit">Create registrar</button>
+        <p class="lead" style="margin:.6rem 0 0">A password setup email is sent to the registrar. You never see the password.</p>
+        <p class="msg" id="sgm" role="status"></p></form>
+      <ul class="ann" id="rgAdm"></ul>
+    </div>
+    <div data-tab="au"><ul class="ann" id="auList"></ul></div>
     <div data-tab="mb">
       <label>Search members<input type="text" id="mbQ" placeholder="Name, course, student ID or type"></label>
       <ul class="ann" id="mbList"></ul>
@@ -503,12 +515,43 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   </div>
 </section>
 
+<!-- REGISTRAR DASHBOARD -->
+<section id="registrar" hidden>
+  <div class="wrap">
+    <h2>Registrar Dashboard</h2>
+    <div class="card" id="rgOut"><p>This page is for registrar staff only.</p><a class="btn m" href="#account">Staff login</a></div>
+    <div id="rgIn" hidden>
+      <p class="lead">Admin-approved document requests. Update the status as you work. The alumnus is notified when a document is ready.</p>
+      <div class="tabs" id="rtabs">
+        <button type="button" data-f="" aria-current="true">All</button><button type="button" data-f="received">Received</button><button type="button" data-f="processing">Processing</button><button type="button" data-f="ready">Ready for Release</button><button type="button" data-f="completed">Completed</button>
+      </div>
+      <label>Search<input type="text" id="rgQ" placeholder="Name, student number, course or email"></label>
+      <ul class="ann" id="rgList"></ul>
+    </div>
+  </div>
+</section>
+
+<!-- NOTIFICATIONS -->
+<section id="notices" hidden>
+  <div class="wrap">
+    <h2>Notifications</h2>
+    <ul class="ann" id="ntList"></ul>
+  </div>
+</section>
+
 <!-- ACCOUNT -->
 <section id="account" hidden>
   <div class="wrap">
     <h2 id="accT">Account</h2>
     <div class="card" id="accIn" hidden><p id="accHi"></p><button class="btn m" id="outBtn" type="button">Log out</button></div>
     <div class="card" id="accBack" hidden><p id="accBackT"></p><button class="btn m" id="inBtn" type="button">Log in</button> <button class="btn m" id="admBtn" type="button">Admin login</button><p class="msg err" id="amsg"></p></div>
+    <form class="card" id="stF" novalidate>
+      <h3>Registrar staff login</h3>
+      <label>Email<input type="email" id="stE" autocomplete="username"></label>
+      <label>Password<input type="password" id="stP" autocomplete="current-password"></label>
+      <button class="btn m" type="submit">Log in as staff</button> <button class="btn m" type="button" id="stR">Forgot password</button>
+      <p class="msg" id="stM" role="status"></p>
+    </form>
     <form class="card" id="reg" novalidate hidden>
       <label>Your name<input type="text" id="rname" maxlength="60" autocomplete="name"></label>
       <label>I am a<select id="rtype"><option value="alumni">Alumni (graduate)</option><option value="student">Current student</option></select></label>
@@ -573,13 +616,14 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   }
 
   function route(){
-    var h=location.hash.slice(1),vp=h.indexOf('verify-')===0?decodeURIComponent(h.slice(7)):'';if(vp)h='verify';var at='';if(h.indexOf('admin')===0){at={'admin':'ov','admin-announcements':'an','admin-spotlight':'sp','admin-requests':'rq','admin-messages':'ms','admin-certificates':'ce','admin-events':'ev','admin-participants':'pa','admin-members':'mb'}[h]||'ov';h='admin'}if(['home','events','post','account','requests','admin','verify','directory','contact','survey','jobs','community','announcements','services','profile'].indexOf(h)<0)h='home';
-    ['home','events','post','account','requests','admin','verify','directory','contact','survey','jobs','community','announcements','services','profile'].forEach(function(id){document.getElementById(id).hidden=(id!==h)});
+    var h=location.hash.slice(1),vp=h.indexOf('verify-')===0?decodeURIComponent(h.slice(7)):'';if(vp)h='verify';var at='';if(h.indexOf('admin')===0){at={'admin':'ov','admin-announcements':'an','admin-spotlight':'sp','admin-requests':'rq','admin-messages':'ms','admin-certificates':'ce','admin-events':'ev','admin-participants':'pa','admin-members':'mb','admin-registrars':'rg','admin-audit':'au'}[h]||'ov';h='admin'}if(['home','events','post','account','requests','admin','verify','directory','contact','survey','jobs','community','announcements','services','profile','registrar','notices'].indexOf(h)<0)h='home';
+    ['home','events','post','account','requests','admin','verify','directory','contact','survey','jobs','community','announcements','services','profile','registrar','notices'].forEach(function(id){document.getElementById(id).hidden=(id!==h)});
     var nh=['requests','verify','directory','jobs','survey','contact','post'].indexOf(h)>=0?'services':h;
     document.querySelectorAll('nav a').forEach(function(a){
       if(a.dataset.p===nh)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');
     });
     if(vp){$('vi').value=vp;if(fs)$('vF').querySelector('button').click()}
+    if(h==='admin'&&staffInfo&&!adm()){location.hash='registrar';return}
     if(h==='admin')adminTab(at||'ov');
     if(h==='community')render();
     if(h==='post'||h==='account'||h==='requests'||h==='admin'||h==='directory'||h==='contact'||h==='survey'||h==='jobs'||h==='profile')acct();
@@ -656,7 +700,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     $('gate').hidden=on;$('form').hidden=!on;$('rqGate').hidden=on;$('dirMe').hidden=!on;$('dirOut').hidden=on;$('ctGate').hidden=on;$('ctF').hidden=!on||adm();$('ctAdm').hidden=!(on&&adm());$('myH').hidden=$('myMsg').hidden=!!(on&&adm());$('svGate').hidden=on;$('svF').hidden=!on;$('jbGate').hidden=on;$('jbF').hidden=!on;$('jbList').hidden=!on;$('rqForm').hidden=!on||adm();$('rqAdm').hidden=!(on&&adm());$('navAdm').hidden=!(on&&adm());$('heroBtn').hidden=!(on&&adm());$('msgBtn').hidden=!(on&&adm());showSp();showJobs();showProf();showAnn();
     if(on&&!$('qn').value)$('qn').value=me.name;
     if(on)$('whoPost').textContent='Posting as '+me.name+(me.batch?' ('+me.batch+')':'');
-    $('accIn').hidden=!on;$('accBack').hidden=!!user;$('reg').hidden=!(user&&!me);
+    $('accIn').hidden=!on;$('accBack').hidden=!!user;$('reg').hidden=!(user&&!me&&staffChecked&&!staffInfo);
     if(on)$('accHi').textContent='You’re logged in as '+me.name+'.';
     $('accBackT').textContent='Sign in with your Google account to post photos and comment.';
     $('accT').textContent=on?'Your account':(user?'Finish your profile':'Log in or register');
@@ -755,11 +799,27 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     fs.doc('site/msg').onSnapshot(function(d){if(d.exists&&d.data().text)$('msgT').textContent=d.data().text},function(){});
     fs.doc('site/hero').onSnapshot(function(d){if(d.exists&&d.data().img)setHero(d.data().img)},function(){});
     auth.onAuthStateChanged(function(u){
-      user=u;uid=u?u.uid:'';me=null;lastR='';isAdm=false;reqs=[];if(unR){unR();unR=null}showReq();
+      user=u;uid=u?u.uid:'';me=null;lastR='';
+      staffInfo=null;staffChecked=!u;if(unSt){unSt();unSt=null}if(unSr){unSr();unSr=null}sreq=[];showRgDash();
+      if(u)unSt=fs.doc('staff/'+uid).onSnapshot(function(d){
+        staffChecked=true;
+        if(d.exists){
+          var was=!!staffInfo;staffInfo=d.data();
+          if(staffInfo.active===false){if(unSr){unSr();unSr=null}sreq=[];staffInfo=null;auth.signOut();$('amsg').className='msg err';$('amsg').textContent='This staff account is deactivated. Please contact the admin.';location.hash='account';return}
+          if(!unSr)unSr=fs.collection('requests').where('status','==','approved').limit(300).onSnapshot(function(sn){sreq=rows(sn);showRgDash()},function(){});
+          if(!was)location.hash='registrar';
+        }else{
+          staffInfo=null;
+          if(u.providerData&&u.providerData[0]&&u.providerData[0].providerId==='password'){auth.signOut();$('amsg').className='msg err';$('amsg').textContent='This email does not have staff access.';location.hash='account';return}
+        }
+        acct();
+      },function(){staffChecked=true;acct()});isAdm=false;reqs=[];if(unR){unR();unR=null}showReq();
       if(unD){unD();unD=null}dirs=[];showDir();
-      if(unM){unM();unM=null}msgs=[];showMsg();if(unU){unU();unU=null}memList=[];if(unRI){unRI();unRI=null}rinfo={};if(unT){unT();unT=null}trs=[];
+      if(unM){unM();unM=null}msgs=[];showMsg();if(unU){unU();unU=null}memList=[];if(unRI){unRI();unRI=null}rinfo={};if(unSt2){unSt2();unSt2=null}stf=[];if(unAu){unAu();unAu=null}aud=[];if(unT){unT();unT=null}trs=[];
       if(unQ){unQ();unQ=null}mine=[];showMine();
       if(unE){unE();unE=null}regs=[];showEvents();
+      if(unNt){unNt();unNt=null}nts=[];showNt();
+      if(u)unNt=fs.collection('notifications').where('to','==',uid).limit(50).onSnapshot(function(sn){nts=rows(sn).sort(function(a,b){return b.ts-a.ts});showNt()},function(){});
       if(unRx){unRx();unRx=null}rx=[];if(unJ){unJ();unJ=null}jobs=[];showJobs();showHJ();
       if(u){unRx=fs.collection('reactions').limit(5000).onSnapshot(function(sn){rx=rows(sn);render()},function(){});unJ=fs.collection('jobs').orderBy('ts','desc').limit(100).onSnapshot(function(sn){jobs=rows(sn);showJobs();showHJ()},function(){})}
       if(u)unE=fs.collection('eventRegs').limit(2000).onSnapshot(function(sn){regs=rows(sn);showEvents();showEvAdm();showPa()},function(){});
@@ -769,6 +829,8 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       if(u)fs.doc('admins/'+uid).get().then(function(d){isAdm=d.exists},function(e){aErr=e.code||'error'}).then(function(){
         if(mode==='admin'&&!isAdm){$('amsg').textContent='Not an admin. Your User UID is '+uid+(aErr==='permission-denied'?' . Firebase blocked the check, so publish the latest Firestore rules.':' . Add this exact UID as a document ID in the admins collection.');mode='student';auth.signOut();return}
         if(adm())fs.doc('users/'+uid).get().then(function(d){if(!d.exists)fs.doc('users/'+uid).set({name:user.displayName||'Administrator',batch:'Administrator'})},function(){});
+        if(adm())unSt2=fs.collection('staff').limit(200).onSnapshot(function(sn){stf=rows(sn);showRg()},function(){});
+        if(adm())unAu=fs.collection('auditLog').orderBy('ts','desc').limit(100).onSnapshot(function(sn){aud=rows(sn);showAu()},function(){});
         if(adm())unRI=fs.collection('registrations').limit(1000).onSnapshot(function(sn){rinfo={};rows(sn).forEach(function(r){rinfo[r.id]=r});showMb()},function(){});
         if(adm())unU=fs.collection('users').limit(1000).onSnapshot(function(sn){memList=rows(sn);showMb();dash()},function(){});
         if(adm())unM=fs.collection('messages').orderBy('ts','desc').limit(100).onSnapshot(function(sn){msgs=rows(sn);showMsg()},function(){});
@@ -783,7 +845,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       acct();render();
     });
   }
-  var memList=[],unU=null,lastR='',unRx=null,unJ=null,evs=[],regs=[],pres=[],unE=null,acat='',editEv='',rx=[],memberCount=0,mine=[],unQ=null,dirs=[],jobs=[],trs=[],unT=null,sps=[],msgs=[],rs=[],unD=null,unM=null,unS=null,isAdm=false,aErr='',mode='student',anns=[],evs=[],reqs=[],unR=null;
+  var stf=[],aud=[],sreq=[],nts=[],staffInfo=null,staffChecked=false,unSt=null,unSr=null,unNt=null,unSt2=null,unAu=null,rf='',memList=[],unU=null,lastR='',unRx=null,unJ=null,evs=[],regs=[],pres=[],unE=null,acat='',editEv='',rx=[],memberCount=0,mine=[],unQ=null,dirs=[],jobs=[],trs=[],unT=null,sps=[],msgs=[],rs=[],unD=null,unM=null,unS=null,isAdm=false,aErr='',mode='student',anns=[],evs=[],reqs=[],unR=null;
   try{mode=localStorage.getItem('ah-mode')||'student'}catch(e){}
   function adm(){return isAdm&&mode==='admin'&&!!user}
   function mb(d,txt,fn){var x=document.createElement('button');x.type='button';x.className='btn m';x.style.cssText='margin:.6rem .4rem 0 0;padding:.35rem .7rem;font-size:.85rem';x.textContent=txt;x.onclick=fn;d.appendChild(x)}
@@ -988,6 +1050,10 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   function full(){var r=role();return r==='admin'||r==='alumni'}
   function canReply(){var r=role();return r==='admin'||r==='alumni'||r==='student'}
   function gates(){
+    var on2=!!(staffInfo&&staffInfo.active!==false);
+    $('navRg').hidden=!on2;$('rgOut').hidden=on2;$('rgIn').hidden=!on2;$('stF').hidden=!!user;
+    if(on2){$('navAcc').textContent=(staffInfo.name||'Staff').split(' ')[0];$('accIn').hidden=false;$('accHi').textContent='You\u2019re logged in as '+staffInfo.name+' (Registrar).';$('accT').textContent='Your account';$('reg').hidden=true}
+    showNt();
     var r=role(),f=full(),c=canReply(),pb=$('pendBar');
     pb.hidden=r!=='pending';
     pb.textContent=(logged&&me.status==='rejected')?'Your registration was not approved. Please contact the admin.':'Your account is waiting for admin approval. You can read public pages until then.';
@@ -1005,6 +1071,42 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     var ct=$('ctGate').querySelector('p');if(ct)ct.textContent=r==='none'?'Log in to send a message.':'Your account is waiting for admin approval.';
     var a2=$('ctGate').querySelector('a');if(a2)a2.hidden=r!=='none';
   }
+  var FL={received:'Received',processing:'Processing',ready:'Ready for Release',completed:'Completed'};
+  function audit(action,target,detail){var ts=Date.now();return fs.collection('auditLog').doc('a'+ts+'_'+Math.random().toString(36).slice(2,8)).set({actor:uid,actorName:me?me.name:'Admin',role:'admin',action:action,target:target,detail:detail||'',ts:ts})}
+  function setFul(r,st){
+    if(!staffInfo||staffInfo.active===false)return;
+    var ts=Date.now(),aid='a'+ts+'_'+Math.random().toString(36).slice(2,8),b=fs.batch();
+    b.update(fs.doc('requests/'+r.id),{fulfil:st,fulfilBy:staffInfo.name,fulfilAt:ts,auditId:aid});
+    b.set(fs.doc('auditLog/'+aid),{actor:uid,actorName:staffInfo.name,role:'registrar',action:'request.'+st,target:r.id,detail:(DN[r.doc]||r.doc)+' for '+r.name,from:r.fulfil||'received',to:st,ts:ts});
+    if(st==='ready')b.set(fs.collection('notifications').doc(),{to:r.uid,req:r.id,msg:'Your '+(DN[r.doc]||'document')+' is ready for release. Collect it at the registrar\u2019s office or check your registered Gmail.',ts:ts,read:false});
+    b.commit().catch(function(){alert('Couldn\u2019t save. Try again.')});
+  }
+  function showRgDash(){
+    var q=($('rgQ').value||'').toLowerCase();
+    var list=sreq.filter(function(r){var f=r.fulfil||'received';return(!rf||f===rf)&&((r.name||'')+' '+(r.sno||'')+' '+(r.course||'')+' '+(r.email||'')+' '+(DN[r.doc]||r.doc)).toLowerCase().indexOf(q)>=0}).sort(function(a,b){return (b.at||b.ts||0)-(a.at||a.ts||0)});
+    fill($('rgList'),list,function(r){
+      var f=r.fulfil||'received';
+      return item(FL[f],(DN[r.doc]||r.doc)+' for '+r.name,'Student no. '+r.sno+' \u2022 '+r.course+', '+r.year+' \u2022 Purpose: '+r.purpose+(r.email?' \u2022 '+r.email:''),function(d){
+        [['processing','Processing'],['ready','Ready for Release'],['completed','Completed']].forEach(function(x){if(f!==x[0])mb(d,x[1],function(){setFul(r,x[0])})});
+      });
+    });
+  }
+  function showNt(){
+    var un=nts.filter(function(n){return !n.read}).length;
+    $('ntN').textContent=un?' ('+un+')':'';
+    $('navNt').hidden=role()!=='alumni';
+    fill($('ntList'),nts,function(n){return item(new Date(n.ts).toLocaleDateString('en-US',{month:'short',day:'numeric'}),n.read?'Document update':'New: Document update',n.msg,function(d){if(!n.read)mb(d,'Mark as read',function(){fs.doc('notifications/'+n.id).update({read:true})})})});
+  }
+  function showRg(){
+    fill($('rgAdm'),stf,function(x){
+      return item(x.active===false?'Inactive':'Active',x.name,x.email||'',function(d){
+        mb(d,'Edit name',function(){var t=prompt('Registrar name',x.name);if(!t||!t.trim())return;fs.doc('staff/'+x.id).update({name:t.trim()}).then(function(){audit('staff.rename',x.id,x.email)})});
+        mb(d,x.active===false?'Activate':'Deactivate',function(){var on=x.active===false;if(confirm((on?'Activate ':'Deactivate ')+x.name+'?'))fs.doc('staff/'+x.id).update({active:on}).then(function(){audit(on?'staff.activate':'staff.deactivate',x.id,x.email)})});
+        mb(d,'Reset password',function(){auth.sendPasswordResetEmail(x.email).then(function(){alert('A password reset email was sent to '+x.email+'.');audit('staff.reset',x.id,x.email)},function(){alert('Could not send the email.')})});
+      });
+    });
+  }
+  function showAu(){fill($('auList'),aud,function(a){return item(new Date(a.ts).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}),(a.actorName||'')+' ('+a.role+') \u2022 '+a.action,(a.detail||'')+(a.from?' \u2022 '+a.from+' \u2192 '+a.to:'')+' \u2022 target '+a.target)})}
   var idc={},rinfo={},unRI=null;
   function getId(id,cb){if(idc[id]!==undefined)return cb(idc[id]);fs.doc('idPhotos/'+id).get().then(function(d){idc[id]=d.exists?d.data().img:'';cb(idc[id])},function(){cb('')})}
   function showMb(){
@@ -1036,7 +1138,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   function showAnn(){fill($('annList'),anns.slice(0,3),annCard);fill($('annAll'),anns.filter(function(x){return !acat||x.cat===acat}),annCard)}
   function row(r,adm){
     function b(d,txt,fn){var x=document.createElement('button');x.type='button';x.className='btn m';x.style.margin='.6rem .4rem 0 0';x.textContent=txt;x.onclick=fn;d.appendChild(x)}
-    return item({pending:'Pending',review:'Under review',approved:'Approved',rejected:'Rejected'}[r.status]||r.status,(DN[r.doc]||r.doc)+(adm?' for '+r.name:''),'Student no. '+r.sno+' • '+r.course+', '+r.year+'. Purpose: '+r.purpose+(adm&&r.email?'. Google account: '+r.email:'')+(r.ts?'. Requested '+new Date(r.ts).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'')+(r.status==='rejected'&&r.reason?'. Reason: '+r.reason:'')+(r.status==='approved'&&r.ref?'. Reference: '+r.ref:'')+(r.status==='approved'&&!adm?'. You can print your certificate now.':'')+(adm?'':'. Progress: '+prog(r)),function(d){
+    return item({pending:'Pending',review:'Under review',approved:'Approved',rejected:'Rejected'}[r.status]||r.status,(DN[r.doc]||r.doc)+(adm?' for '+r.name:''),'Student no. '+r.sno+' • '+r.course+', '+r.year+'. Purpose: '+r.purpose+(adm&&r.email?'. Google account: '+r.email:'')+(r.ts?'. Requested '+new Date(r.ts).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'')+(r.status==='rejected'&&r.reason?'. Reason: '+r.reason:'')+(r.status==='approved'&&r.ref?'. Reference: '+r.ref:'')+(r.status==='approved'&&!adm?'. You can print your certificate now.':'')+(adm?'':'. Progress: '+prog(r))+(r.status==='approved'&&r.fulfil?'. Document: '+FL[r.fulfil]+(r.fulfil==='ready'?'. Collect it at the registrar\u2019s office or check your registered Gmail.':''):''),function(d){
       if(adm&&(r.status==='pending'||r.status==='review')){if(r.status==='pending')b(d,'Start review',function(){setSt(r,'review')});b(d,'Approve',function(){setSt(r,'approved')});b(d,'Reject',function(){setSt(r,'rejected')})}
       if(r.status==='approved')b(d,'Print certificate',function(){printDoc(r)});
       if(adm&&r.status==='approved'&&!r.ref)b(d,'Create verification code',function(){var ref=mkRef();fs.doc('requests/'+r.id).update({ref:ref}).then(function(){return fs.doc('issued/'+ref).set({name:r.name,doc:r.doc,course:r.course,year:r.year,by:r.by||me.name,at:r.at||Date.now()})}).then(function(){alert('Done. The new verification code is '+ref)},function(){alert('Couldn\u2019t save. Try again.')})});
@@ -1123,7 +1225,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     if(!t||!c){m.className='msg err';m.textContent='Enter the job title and the company.';return}
     send('jbF','jm','jobs',{uid:uid,name:me.name,title:t,company:c,place:$('jl').value.trim(),text:$('jd').value.trim(),apply:$('ja').value.trim(),ts:Date.now()});
   });
-  var HM={ov:'admin',an:'admin-announcements',sp:'admin-spotlight',rq:'admin-requests',ms:'admin-messages',ce:'admin-certificates',ev:'admin-events',pa:'admin-participants',mb:'admin-members'},TN={ov:'Overview',an:'Post an announcement',sp:'Alumni spotlight',rq:'Student requests',ms:'Messages',ce:'Register a certificate',ev:'Events',pa:'Event participants',mb:'Members'};
+  var HM={ov:'admin',an:'admin-announcements',sp:'admin-spotlight',rq:'admin-requests',ms:'admin-messages',ce:'admin-certificates',ev:'admin-events',pa:'admin-participants',mb:'admin-members',rg:'admin-registrars',au:'admin-audit'},TN={ov:'Overview',an:'Post an announcement',sp:'Alumni spotlight',rq:'Student requests',ms:'Messages',ce:'Register a certificate',ev:'Events',pa:'Event participants',mb:'Members',rg:'Registrars',au:'Audit log'};
   function adminTab(t){
     $('admT').textContent='Admin: '+TN[t];
     document.querySelectorAll('#admin [data-tab]').forEach(function(el){el.hidden=el.getAttribute('data-tab')!==t});
@@ -1153,6 +1255,28 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     fs.doc('users/'+uid).set(p,{merge:true}).then(function(){m.className='msg';m.textContent='Saved.'},function(){m.className='msg err';m.textContent='Couldn\u2019t save. Try again.'});
   });
   setInterval(beat,60000);setInterval(calcOn,30000);
+  document.querySelectorAll('#rtabs button').forEach(function(b){b.onclick=function(){rf=b.getAttribute('data-f');document.querySelectorAll('#rtabs button').forEach(function(x){x.setAttribute('aria-current',x===b?'true':'false')});showRgDash()}});
+  $('rgQ').addEventListener('input',showRgDash);
+  $('stF').addEventListener('submit',function(e){
+    e.preventDefault();var m=$('stM'),em=$('stE').value.trim(),pw=$('stP').value;m.className='msg';m.textContent='';
+    if(!em||!pw){m.className='msg err';m.textContent='Enter your email and password.';return}
+    auth.signInWithEmailAndPassword(em,pw).catch(function(){m.className='msg err';m.textContent='Sign-in failed. Check your email and password.'});
+  });
+  $('stR').onclick=function(){
+    var em=$('stE').value.trim(),m=$('stM');if(!em){m.className='msg err';m.textContent='Enter your email first.';return}
+    auth.sendPasswordResetEmail(em).then(function(){m.className='msg';m.textContent='If that email has a staff account, a reset link was sent.'},function(){m.className='msg err';m.textContent='Could not send the email. Try again.'});
+  };
+  $('sgF').addEventListener('submit',function(e){
+    e.preventDefault();var n=$('sgn').value.trim(),em=$('sge').value.trim().toLowerCase(),m=$('sgm');m.className='msg';m.textContent='';
+    if(!adm())return;
+    if(!n||!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){m.className='msg err';m.textContent='Enter a name and a valid email.';return}
+    var al='abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789',pw=Array.from(crypto.getRandomValues(new Uint8Array(20))).map(function(b){return al[b%al.length]}).join('');
+    var app2=firebase.initializeApp(CFG,'maker'+Date.now()),a2=app2.auth();
+    a2.createUserWithEmailAndPassword(em,pw).then(function(c){
+      var nu=c.user.uid;
+      return fs.doc('staff/'+nu).set({name:n,email:em,role:'registrar',active:true,canApprove:false,createdBy:uid,createdAt:Date.now()}).then(function(){audit('staff.create',nu,em);return a2.sendPasswordResetEmail(em)});
+    }).then(function(){m.textContent='Registrar created. A password setup email was sent to '+em+'.';$('sgF').reset()},function(er){m.className='msg err';m.textContent=(er&&er.code==='auth/email-already-in-use')?'That email already has a login. Use a different email.':'Could not create the account. Try again.'}).then(function(){a2.signOut().catch(function(){});app2.delete().catch(function(){})});
+  });
   $('mbQ').addEventListener('input',showMb);
   $('rtype').onchange=function(){var st=this.value==='student';$('rsidT').textContent=st?'Student ID number':'Former student ID number';$('rlvL').hidden=!st;$('ryrL').hidden=st};
   $('rmx').onclick=function(){$('rmod').hidden=true};
