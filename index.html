@@ -355,7 +355,8 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       <label>Student number<input type="text" id="qs" maxlength="30"></label>
       <label>Course<input type="text" id="qc" maxlength="60"></label>
       <label>School year or year graduated<input type="text" id="qy" maxlength="20" placeholder="2019"></label>
-      <label>Document<select id="qd"><option value="cor">Certificate of Registration (COR)</option><option value="dip">Diploma (certified copy)</option><option value="gm">Certificate of Good Moral Character</option><option value="tor">Transcript of Records (request slip)</option></select></label>
+      <label>Document<select id="qd"><option value="cor">Certificate of Registration (COR)</option><option value="tor">Transcript of Records (TOR)</option><option value="dip">Certificate of Graduation</option><option value="gm">Certificate of Good Moral Character</option><option value="other">Other document</option></select></label>
+      <label id="qoL" hidden>Describe the document you need<input type="text" id="qo" maxlength="120"></label>
       <label>Purpose<input type="text" id="qp" maxlength="100" placeholder="Employment, scholarship, etc."></label>
       <button class="btn m" type="submit">Send request</button>
       <p class="msg" id="qm" role="status"></p>
@@ -370,10 +371,10 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   <div class="wrap">
     <h2 id="admT">Admin</h2>
     <div id="atabs" class="tabs" role="tablist">
-      <button type="button" data-t="ov">Overview</button><button type="button" data-t="mb">Members</button><button type="button" data-t="an">Announcements</button><button type="button" data-t="sp">Spotlight</button><button type="button" data-t="rq">Requests</button><button type="button" data-t="ms">Messages</button><button type="button" data-t="ev">Events</button><button type="button" data-t="pa">Participants</button><button type="button" data-t="rg">Registrars</button><button type="button" data-t="au">Audit log</button><button type="button" data-t="ce">Register certificate</button>
+      <button type="button" data-t="ov">Overview</button><button type="button" data-t="mb">Members</button><button type="button" data-t="an">Announcements</button><button type="button" data-t="sp">Spotlight</button><button type="button" data-t="rq">Requests</button><button type="button" data-t="ms">Messages</button><button type="button" data-t="ev">Events</button><button type="button" data-t="pa">Participants</button><button type="button" data-t="rg">Registrars</button><button type="button" data-t="au">Audit log</button>
     </div>
     <div class="card" id="dash" data-tab="ov"><h3>Overview</h3>
-      <div class="ostats"><div class="ob"><b id="o1">0</b><span>Pending requests</span></div><div class="ob"><b id="o2">0</b><span>Total requests</span></div><div class="ob"><b id="o3">0</b><span>Approved certificates</span></div><div class="ob"><b id="o4">0</b><span>Alumni posts</span></div><div class="ob"><b id="o5">0</b><span>Comments</span></div><div class="ob"><b id="o6">0</b><span>Announcements</span></div><div class="ob"><b id="o7">0</b><span>Directory listings</span></div><div class="ob"><b id="o8">0</b><span>Survey responses</span></div><div class="ob"><b id="o9">0</b><span>Messages</span></div><div class="ob"><b id="o10">0</b><span>Unanswered messages</span></div><div class="ob"><b id="o11">0</b><span>Accounts awaiting approval</span></div></div>
+      <div class="ostats"><div class="ob"><b id="o1">0</b><span>Pending requests</span></div><div class="ob"><b id="o2">0</b><span>Total requests</span></div><div class="ob"><b id="o3">0</b><span>Released documents</span></div><div class="ob"><b id="o4">0</b><span>Alumni posts</span></div><div class="ob"><b id="o5">0</b><span>Comments</span></div><div class="ob"><b id="o6">0</b><span>Announcements</span></div><div class="ob"><b id="o7">0</b><span>Directory listings</span></div><div class="ob"><b id="o8">0</b><span>Survey responses</span></div><div class="ob"><b id="o9">0</b><span>Messages</span></div><div class="ob"><b id="o10">0</b><span>Unanswered messages</span></div><div class="ob"><b id="o11">0</b><span>Accounts awaiting approval</span></div></div>
       <h3 style="margin-top:1.4rem">Reports</h3>
       <div class="exrow"><div><b>Student requests</b><span id="cReq">0 records</span></div><button class="btn m" type="button" id="exReq">Download CSV</button></div>
       <div class="exrow"><div><b>Alumni directory</b><span id="cDir">0 records</span></div><button class="btn m" type="button" id="exDir">Download CSV</button></div>
@@ -430,7 +431,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       <button class="btn m" type="button" id="paEx">Export to Excel (CSV)</button>
       <ul class="ann" id="paList" style="margin-top:1rem"></ul>
     </div>
-    <h2 data-tab="rq" style="margin-top:0">Student requests</h2>
+    <h2 data-tab="rq" style="margin-top:0">Document requests (view only)</h2>
     <ul class="ann" id="admReq" data-tab="rq"></ul>
     <h2 data-tab="ms" style="margin-top:0">Messages</h2>
     <ul class="ann" id="admMsg" data-tab="ms"></ul>
@@ -521,9 +522,9 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     <h2>Registrar Dashboard</h2>
     <div class="card" id="rgOut"><p>This page is for registrar staff only.</p><a class="btn m" href="#account">Staff login</a></div>
     <div id="rgIn" hidden>
-      <p class="lead">Admin-approved document requests. Update the status as you work. The alumnus is notified when a document is ready.</p>
+      <p class="lead">All new document requests arrive here as Pending. Approve or reject, process, preview, then release the document. Only you can change these statuses.</p>
       <div class="tabs" id="rtabs">
-        <button type="button" data-f="" aria-current="true">All</button><button type="button" data-f="received">Received</button><button type="button" data-f="processing">Processing</button><button type="button" data-f="ready">Ready for Release</button><button type="button" data-f="completed">Completed</button>
+        <button type="button" data-f="" aria-current="true">All</button><button type="button" data-f="pending">Pending</button><button type="button" data-f="approved">Approved</button><button type="button" data-f="processing">Processing</button><button type="button" data-f="ready">Ready for Release</button><button type="button" data-f="completed">Completed</button><button type="button" data-f="rejected">Rejected</button>
       </div>
       <label>Search<input type="text" id="rgQ" placeholder="Name, student number, course or email"></label>
       <ul class="ann" id="rgList"></ul>
@@ -806,7 +807,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
         if(d.exists){
           var was=!!staffInfo;staffInfo=d.data();
           if(staffInfo.active===false){if(unSr){unSr();unSr=null}sreq=[];staffInfo=null;auth.signOut();$('amsg').className='msg err';$('amsg').textContent='This staff account is deactivated. Please contact the admin.';location.hash='account';return}
-          if(!unSr)unSr=fs.collection('requests').where('status','==','approved').limit(300).onSnapshot(function(sn){sreq=rows(sn);showRgDash()},function(){});
+          if(!unSr)unSr=fs.collection('requests').limit(300).onSnapshot(function(sn){sreq=rows(sn);showRgDash()},function(){});
           if(!was)location.hash='registrar';
         }else{
           staffInfo=null;
@@ -877,7 +878,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   }
   function dash(){
     $('s0').textContent=memberCount;$('s1').textContent=posts.length;$('s2').textContent=anns.length;$('s3').textContent=coms.length;
-    var p=reqs.filter(function(r){return r.status==='pending'||r.status==='review'}).length,a=reqs.filter(function(r){return r.status==='approved'}).length;
+    var p=reqs.filter(function(r){return stOf(r)==='pending'}).length,a=reqs.filter(function(r){var q=stOf(r);return q==='ready'||q==='completed'}).length;
     [p,reqs.length,a,posts.length,coms.length,anns.length,dirs.length,trs.length,msgs.length,msgs.filter(function(x){return !x.reply}).length,memList.filter(function(x){return x.status==='pending'}).length].forEach(function(n,i){var e=$('o'+(i+1));if(e)e.textContent=n});
     [['cReq','exReq',reqs.length],['cDir','exDir',dirs.length],['cTr','exTr',trs.length]].forEach(function(x){$(x[0]).textContent=x[2]+' record'+(x[2]===1?'':'s');$(x[1]).disabled=!x[2]});
   }
@@ -919,8 +920,12 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       });
     });
   }
-  var DN={cor:'Certificate of Registration',dip:'Diploma (certified copy)',gm:'Certificate of Good Moral Character',tor:'Transcript of Records'};
-  function prog(r){var t=r.status;return 'Received \u2713 \u2192 '+(t==='pending'?'Under review':'Under review \u2713')+' \u2192 '+(t==='approved'?'Approved \u2713':t==='rejected'?'Rejected':'Decision')}
+  var DN={cor:'Certificate of Registration',dip:'Certificate of Graduation',gm:'Certificate of Good Moral Character',tor:'Transcript of Records',other:'Other document'};
+  var SL={pending:'Pending',approved:'Approved',processing:'Processing',ready:'Ready for Release',completed:'Completed',rejected:'Rejected'};
+  function dname(r){return r.doc==='other'?'Other: '+(r.other||'document'):(DN[r.doc]||r.doc)}
+  function stOf(r){var s=r.status;if(s==='review')return 'pending';if(s==='approved'&&r.fulfil)return r.fulfil==='received'?'approved':r.fulfil;return s}
+  function mkReqNo(){var a='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',t='REQ-',i,b=new Uint32Array(8);crypto.getRandomValues(b);for(i=0;i<8;i++){t+=a[b[i]%32];if(i===3)t+='-'}return t}
+  function prog(r){var o=['pending','approved','processing','ready','completed'],q=stOf(r);if(q==='rejected')return 'Rejected';var i=o.indexOf(q);return o.map(function(x,j){return SL[x]+(j<=i?' \u2713':'')}).join(' \u2192 ')}
   function csv(name,rows){
     var t=rows.map(function(r){return r.map(function(c){c=String(c==null?'':c);if(/^[=+\-@]/.test(c))c="'"+c;return /[",\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c}).join(',')}).join('\r\n');
     var a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+t],{type:'text/csv'}));a.download=name;a.click();
@@ -1048,6 +1053,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   function calcOn(){var n=Date.now();$('s4').textContent=pres.filter(function(p){return n-p.ts<150000}).length}
   function role(){return adm()?'admin':(!logged?'none':((me.status||'approved')!=='approved'?'pending':(me.type==='student'?'student':'alumni')))}
   function full(){var r=role();return r==='admin'||r==='alumni'}
+  function canFull(){return role()==='alumni'}
   function canReply(){var r=role();return r==='admin'||r==='alumni'||r==='student'}
   function gates(){
     var on2=!!(staffInfo&&staffInfo.active!==false);
@@ -1073,21 +1079,33 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   }
   var FL={received:'Received',processing:'Processing',ready:'Ready for Release',completed:'Completed'};
   function audit(action,target,detail){var ts=Date.now();return fs.collection('auditLog').doc('a'+ts+'_'+Math.random().toString(36).slice(2,8)).set({actor:uid,actorName:me?me.name:'Admin',role:'admin',action:action,target:target,detail:detail||'',ts:ts})}
-  function setFul(r,st){
+  function regAct(r,to,reason){
     if(!staffInfo||staffInfo.active===false)return;
-    var ts=Date.now(),aid='a'+ts+'_'+Math.random().toString(36).slice(2,8),b=fs.batch();
-    b.update(fs.doc('requests/'+r.id),{fulfil:st,fulfilBy:staffInfo.name,fulfilAt:ts,auditId:aid});
-    b.set(fs.doc('auditLog/'+aid),{actor:uid,actorName:staffInfo.name,role:'registrar',action:'request.'+st,target:r.id,detail:(DN[r.doc]||r.doc)+' for '+r.name,from:r.fulfil||'received',to:st,ts:ts});
-    if(st==='ready')b.set(fs.collection('notifications').doc(),{to:r.uid,req:r.id,msg:'Your '+(DN[r.doc]||'document')+' is ready for release. Collect it at the registrar\u2019s office or check your registered Gmail.',ts:ts,read:false});
-    b.commit().catch(function(){alert('Couldn\u2019t save. Try again.')});
+    var from=stOf(r),ts=Date.now(),aid='a'+ts+'_'+Math.random().toString(36).slice(2,8),b=fs.batch(),
+        vid=r.reqNo||r.ref||r.id,dn=dname(r),upd={status:to,by:staffInfo.name,at:ts,auditId:aid};
+    if(to==='rejected')upd.reason=reason;
+    if(to==='ready'){upd.released=true;upd.releasedAt=ts}
+    b.update(fs.doc('requests/'+r.id),upd);
+    b.set(fs.doc('auditLog/'+aid),{actor:uid,actorName:staffInfo.name,role:'registrar',action:'request.'+to,target:r.id,detail:dn+' for '+r.name+(reason?' \u2022 Reason: '+reason:''),from:from,to:to,ts:ts});
+    if(to==='ready'&&!(r.ref&&!r.reqNo))b.set(fs.doc('issued/'+vid),{name:r.name,doc:r.doc,course:r.course,year:r.year,by:staffInfo.name,at:ts});
+    var m={approved:'Your request for '+dn+' (ref '+vid+') has been approved.',rejected:'Your request for '+dn+' (ref '+vid+') was rejected. Reason: '+(reason||''),ready:'Your '+dn+' (ref '+vid+') is ready for release. You can view, print or download it in your account, or collect it at the registrar\u2019s office.'}[to];
+    if(m)b.set(fs.collection('notifications').doc(),{to:r.uid,req:r.id,msg:m,ts:ts,read:false});
+    b.commit().catch(function(){alert('Couldn\u2019t save. The request may have changed. Reload and try again.')});
   }
   function showRgDash(){
     var q=($('rgQ').value||'').toLowerCase();
-    var list=sreq.filter(function(r){var f=r.fulfil||'received';return(!rf||f===rf)&&((r.name||'')+' '+(r.sno||'')+' '+(r.course||'')+' '+(r.email||'')+' '+(DN[r.doc]||r.doc)).toLowerCase().indexOf(q)>=0}).sort(function(a,b){return (b.at||b.ts||0)-(a.at||a.ts||0)});
+    var list=sreq.filter(function(r){var f=stOf(r);return(!rf||f===rf)&&((r.name||'')+' '+(r.sno||'')+' '+(r.course||'')+' '+(r.email||'')+' '+(r.reqNo||'')+' '+dname(r)).toLowerCase().indexOf(q)>=0}).sort(function(a,b){return (b.ts||0)-(a.ts||0)});
     fill($('rgList'),list,function(r){
-      var f=r.fulfil||'received';
-      return item(FL[f],(DN[r.doc]||r.doc)+' for '+r.name,'Student no. '+r.sno+' \u2022 '+r.course+', '+r.year+' \u2022 Purpose: '+r.purpose+(r.email?' \u2022 '+r.email:''),function(d){
-        [['processing','Processing'],['ready','Ready for Release'],['completed','Completed']].forEach(function(x){if(f!==x[0])mb(d,x[1],function(){setFul(r,x[0])})});
+      var f=stOf(r);
+      return item(SL[f]||f,dname(r)+' for '+r.name,'Ref '+(r.reqNo||r.ref||r.id)+' \u2022 Student no. '+r.sno+' \u2022 '+r.course+', '+r.year+' \u2022 Purpose: '+r.purpose+(r.email?' \u2022 '+r.email:'')+(f==='rejected'&&r.reason?' \u2022 Reason: '+r.reason:''),function(d){
+        if(f==='pending'){
+          mb(d,'Approve',function(){regAct(r,'approved')});
+          mb(d,'Reject',function(){var w=prompt('Reason for rejecting (the alumnus will see this):');if(w===null)return;w=w.trim();if(w.length<3){alert('A rejection reason is required.');return}regAct(r,'rejected',w)});
+        }
+        if(f==='approved')mb(d,'Start processing',function(){regAct(r,'processing')});
+        if(f==='processing'||f==='ready'||f==='completed')mb(d,'Preview document',function(){printDoc(r,true)});
+        if(f==='processing')mb(d,'Release Document',function(){if(confirm('Release this document to '+r.name+'? Check the preview first. This cannot be undone.'))regAct(r,'ready')});
+        if(f==='ready')mb(d,'Mark Completed',function(){if(confirm('Mark this request Completed? Do this after the alumnus has received the document.'))regAct(r,'completed')});
       });
     });
   }
@@ -1138,30 +1156,43 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   function showAnn(){fill($('annList'),anns.slice(0,3),annCard);fill($('annAll'),anns.filter(function(x){return !acat||x.cat===acat}),annCard)}
   function row(r,adm){
     function b(d,txt,fn){var x=document.createElement('button');x.type='button';x.className='btn m';x.style.margin='.6rem .4rem 0 0';x.textContent=txt;x.onclick=fn;d.appendChild(x)}
-    return item({pending:'Pending',review:'Under review',approved:'Approved',rejected:'Rejected'}[r.status]||r.status,(DN[r.doc]||r.doc)+(adm?' for '+r.name:''),'Student no. '+r.sno+' • '+r.course+', '+r.year+'. Purpose: '+r.purpose+(adm&&r.email?'. Google account: '+r.email:'')+(r.ts?'. Requested '+new Date(r.ts).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'')+(r.status==='rejected'&&r.reason?'. Reason: '+r.reason:'')+(r.status==='approved'&&r.ref?'. Reference: '+r.ref:'')+(r.status==='approved'&&!adm?'. You can print your certificate now.':'')+(adm?'':'. Progress: '+prog(r))+(r.status==='approved'&&r.fulfil?'. Document: '+FL[r.fulfil]+(r.fulfil==='ready'?'. Collect it at the registrar\u2019s office or check your registered Gmail.':''):''),function(d){
-      if(adm&&(r.status==='pending'||r.status==='review')){if(r.status==='pending')b(d,'Start review',function(){setSt(r,'review')});b(d,'Approve',function(){setSt(r,'approved')});b(d,'Reject',function(){setSt(r,'rejected')})}
-      if(r.status==='approved')b(d,'Print certificate',function(){printDoc(r)});
-      if(adm&&r.status==='approved'&&!r.ref)b(d,'Create verification code',function(){var ref=mkRef();fs.doc('requests/'+r.id).update({ref:ref}).then(function(){return fs.doc('issued/'+ref).set({name:r.name,doc:r.doc,course:r.course,year:r.year,by:r.by||me.name,at:r.at||Date.now()})}).then(function(){alert('Done. The new verification code is '+ref)},function(){alert('Couldn\u2019t save. Try again.')})});
-      if(r.status==='approved')b(d,'Copy reference number',function(){if(navigator.clipboard)navigator.clipboard.writeText(r.ref||r.id).then(function(){alert('Copied. Paste it on the Verify page.')},function(){prompt('Copy this reference number:',r.ref||r.id)});else prompt('Copy this reference number:',r.ref||r.id)});
+    var q=stOf(r),no=r.reqNo||r.ref||r.id;
+    return item(SL[q]||q,dname(r)+(adm?' for '+r.name:''),'Ref '+no+' \u2022 Student no. '+r.sno+' \u2022 '+r.course+', '+r.year+'. Purpose: '+r.purpose+(adm&&r.email?'. Google account: '+r.email:'')+(r.ts?'. Requested '+new Date(r.ts).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'')+(q==='rejected'&&r.reason?'. Reason: '+r.reason:'')+(adm?'':'. Progress: '+prog(r))+(!adm&&q==='ready'?'. Your document is ready. Print or download it here, or collect it at the registrar\u2019s office.':''),function(d){
+      if(adm)return;
+      b(d,'Print receipt',function(){printReceipt(r)});
+      if(q==='ready'||q==='completed'){
+        b(d,'Print document',function(){printDoc(r)});
+        b(d,'Download document',function(){alert('In the print window, choose \"Save as PDF\" as the printer.');printDoc(r)});
+      }
+      b(d,'Copy reference number',function(){if(navigator.clipboard)navigator.clipboard.writeText(no).then(function(){alert('Copied. Use it on the Verify page.')},function(){prompt('Copy this reference number:',no)});else prompt('Copy this reference number:',no)});
     });
   }
   function mkRef(){var a='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',t='CTU-',i,b=new Uint32Array(8);crypto.getRandomValues(b);for(i=0;i<8;i++){t+=a[b[i]%32];if(i===3)t+='-'}return t}
-  function setSt(r,st){
-    var o={status:st,by:me.name,at:Date.now()};if(st==='approved')o.ref=mkRef();
-    if(st==='rejected'){var w=prompt('Reason for rejecting (the student will see this):');if(w===null)return;o.reason=w.trim()}
-    fs.doc('requests/'+r.id).update(o).then(function(){if(st==='approved')fs.doc('issued/'+o.ref).set({name:r.name,doc:r.doc,course:r.course,year:r.year,by:me.name,at:o.at})},function(){alert('Couldn\u2019t save. Try again.')});
-  }
   function showReq(){
     fill($('myReq'),reqs.filter(function(r){return r.uid===uid}),function(r){return row(r,false)});
-    if(adm())fill($('admReq'),reqs.slice().sort(function(a,b){return (a.status==='pending'?0:1)-(b.status==='pending'?0:1)}),function(r){return row(r,true)});
+    if(adm())fill($('admReq'),reqs.slice().sort(function(a,b){return (b.ts||0)-(a.ts||0)}),function(r){return row(r,true)});
   }
-  function printDoc(r){
-    var w=window.open('','_blank');if(!w){alert('Allow popups to print your certificate.');return}
-    var T={cor:'Certificate of Registration',dip:'Certificate of Graduation',gm:'Certificate of Good Moral Character',tor:'Transcript of Records Request Slip'}[r.doc]||'Certificate',
+  function printDoc(r,preview){
+    var w=window.open('','_blank');if(!w){alert('Allow popups to print your document.');return}
+    var vid=r.reqNo||r.ref||r.id,
+    T={cor:'Certificate of Registration',dip:'Certificate of Graduation',gm:'Certificate of Good Moral Character',tor:'Transcript of Records',other:'Requested Document'}[r.doc]||'Document',
     C='<b>'+esc(r.course)+'</b>',Y='<b>'+esc(r.year)+'</b>',
-    body={cor:'is officially registered as a student of '+C+' for school year '+Y+'.',dip:'has completed the requirements for '+C+' and graduated in '+Y+'.',gm:'is a student or graduate of '+C+' ('+Y+') and has no derogatory record on file at the time of issue.',tor:'has requested a copy of the Transcript of Records for '+C+' ('+Y+'). Please claim it at the Registrar\u2019s Office with this slip and a valid ID.'}[r.doc]||'';
-    var qr='';try{var q=qrcode(0,'M');q.addData(location.origin+location.pathname+'#verify-'+(r.ref||r.id));q.make();qr='<img src="'+q.createDataURL(4,2)+'" width="110" height="110" alt="QR code to verify">'}catch(e){}
-    w.document.write('<title>'+T+'</title><body style="font:18px Georgia,serif;text-align:center;padding:50px;border:8px double #7a1f2e;margin:20px"><h2>Cebu Technological University</h2><h1>'+T+'</h1><p>This certifies that</p><h2>'+esc(r.name)+'</h2><p>Student no. '+esc(r.sno)+'</p><p>'+body+'</p><p>Issued upon request for: '+esc(r.purpose)+'</p><br><br><p>______________________<br>Registrar</p>'+qr+'<p style="font-size:13px;color:#555">Reference '+esc(r.ref||r.id)+'. Verify at '+esc(location.origin+location.pathname)+'#verify. Approved by '+esc(r.by||'')+' through AlumniHub. Valid only with the registrar\u2019s signature and school seal.</p>');
+    body={cor:'is registered as a student of '+C+' for school year '+Y+'.',dip:'has completed the requirements for '+C+' and graduated in '+Y+'.',gm:'is a student or graduate of '+C+' ('+Y+') and has no derogatory record on file at the time of issue.',tor:'has requested the Transcript of Records for '+C+' ('+Y+'). The official transcript is released by the Registrar\u2019s Office.',other:'has requested: <b>'+esc(r.other||'')+'</b>.'}[r.doc]||'';
+    var qr='';try{var q=qrcode(0,'M');q.addData(location.origin+location.pathname+'#verify-'+vid);q.make();qr='<img src="'+q.createDataURL(4,2)+'" width="110" height="110" alt="QR code to verify">'}catch(e){}
+    w.document.write('<title>'+T+' (TEMPORARY)</title><body style="font:18px Georgia,serif;text-align:center;padding:40px;border:8px double #7a1f2e;margin:20px">'
+      +'<div style="position:fixed;top:42%;left:0;right:0;transform:rotate(-25deg);font:700 64px Arial,sans-serif;color:rgba(200,0,0,.13);pointer-events:none">TEMPORARY / UNOFFICIAL</div>'
+      +'<p style="background:#b3261e;color:#fff;font:700 15px Arial,sans-serif;padding:8px;margin:0 0 20px">TEMPORARY / UNOFFICIAL DOCUMENT'+(preview?' \u2022 PREVIEW BEFORE RELEASE':'')+'</p>'
+      +'<h2 style="margin-bottom:0">Cebu Technological University</h2><h3 style="margin-top:4px">Consolacion Campus</h3><h1>'+T+'</h1>'
+      +'<p>This temporary document is for</p><h2>'+esc(r.name)+'</h2><p>Student no. '+esc(r.sno)+'</p><p>'+body+'</p><p>Purpose: '+esc(r.purpose)+'</p><br>'+qr
+      +'<p style="font-size:13px;color:#444">Reference no. '+esc(vid)+'<br>Verify at '+esc(location.origin+location.pathname)+'#verify</p>'
+      +'<p style="font-size:13px;color:#b3261e;font-weight:700">TEMPORARY / UNOFFICIAL. This document uses a placeholder format and has no official value until the university provides authorized templates.</p>');
+    w.document.close();w.print();
+  }
+  function printReceipt(r){
+    var w=window.open('','_blank');if(!w){alert('Allow popups to print your receipt.');return}
+    w.document.write('<title>Request receipt</title><body style="font:16px Arial,sans-serif;max-width:480px;margin:30px auto;border:2px solid #7a1f2e;padding:24px"><h2>AlumniHub \u2013 Document Request Receipt</h2><p>Cebu Technological University \u2013 Consolacion Campus</p><hr>'
+      +'<p><b>Reference no.</b> '+esc(r.reqNo||r.ref||r.id)+'</p><p><b>Document</b> '+esc(dname(r))+'</p><p><b>Name</b> '+esc(r.name)+'</p><p><b>Student no.</b> '+esc(r.sno)+'</p><p><b>Course / year</b> '+esc(r.course)+', '+esc(r.year)+'</p><p><b>Purpose</b> '+esc(r.purpose)+'</p><p><b>Submitted</b> '+new Date(r.ts||Date.now()).toLocaleString('en-US')+'</p><p><b>Status</b> '+esc(SL[stOf(r)]||'')+'</p><hr>'
+      +'<p style="font-size:13px">This receipt only proves that the request was submitted. It is not an official document.</p>');
     w.document.close();w.print();
   }
   function send(form,msgId,col,data){
@@ -1175,19 +1206,27 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     function put(img){var o={title:t,date:fmt($('ad').value),text:$('ax').value.trim(),ts:Date.now()};if($('arsvp').checked)o.rsvp=true;o.cat=$('acat').value;if($('aimp').checked)o.important=true;if(img)o.img=img;send('anF','am','announcements',o)}
     var f=$('aimgf').files[0];if(f)shrink(f,800,put,0.7);else put();
   });
+  $('qd').onchange=function(){$('qoL').hidden=this.value!=='other'};
   $('rqForm').addEventListener('submit',function(e){
-    e.preventDefault();var n=$('qn').value.trim(),sn=$('qs').value.trim(),c=$('qc').value.trim(),y=$('qy').value.trim(),p=$('qp').value.trim();
-    if(!n||!sn||!c||!y||!p){$('qm').className='msg err';$('qm').textContent='Fill in every field.';return}
-    send('rqForm','qm','requests',{uid:uid,email:(user&&user.email)||'',name:n,sno:sn,course:c,year:y,doc:$('qd').value,purpose:p,status:'pending',ts:Date.now()});
+    e.preventDefault();var n=$('qn').value.trim(),sn=$('qs').value.trim(),c=$('qc').value.trim(),y=$('qy').value.trim(),p=$('qp').value.trim(),doc=$('qd').value,ot=$('qo').value.trim(),m=$('qm');
+    if(!canFull()){return}
+    if(!n||!sn||!c||!y||!p||(doc==='other'&&ot.length<3)){m.className='msg err';m.textContent='Fill in every field.';return}
+    var tries=0;
+    function make(){
+      var no=mkReqNo(),data={uid:uid,email:(user&&user.email)||'',name:n,sno:sn,course:c,year:y,doc:doc,purpose:p,status:'pending',ts:Date.now(),reqNo:no};
+      if(doc==='other')data.other=ot;
+      fs.doc('requests/'+no).set(data).then(function(){$('rqForm').reset();$('qoL').hidden=true;m.className='msg';m.textContent='Request sent. Your reference number is '+no+'. You can print a receipt below.'},function(){if(++tries<3)make();else{m.className='msg err';m.textContent='Couldn\u2019t save. Check that you are allowed to do this.'}});
+    }
+    make();
   });
   $('lb').onclick=function(){this.hidden=true};
   document.addEventListener('keydown',function(e){if(e.key==='Escape'){$('lb').hidden=true;$('rmod').hidden=true}});
   $('vF').addEventListener('submit',function(e){
-    e.preventDefault();var raw=$('vi').value.trim().replace(/\s+/g,''),id=/^ctu-/i.test(raw)?raw.toUpperCase():raw,m=$('vm');m.className='msg';m.textContent='';
+    e.preventDefault();var raw=$('vi').value.trim().replace(/\s+/g,''),id=/^(ctu|req)-/i.test(raw)?raw.toUpperCase():raw,m=$('vm');m.className='msg';m.textContent='';
     if(!id||id.indexOf('/')>=0)return;
     fs.doc('issued/'+id).get().then(function(d){
       if(!d.exists){m.className='msg err';m.textContent='No certificate was issued with this reference number.';return}
-      var x=d.data();m.textContent='Valid. '+(DN[x.doc]||x.doc)+' issued to '+x.name+' ('+x.course+', '+x.year+'), approved by '+x.by+' on '+new Date(x.at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+'.';
+      var x=d.data();m.textContent='Valid. '+(DN[x.doc]||x.doc)+' issued to '+x.name+' ('+x.course+', '+x.year+'), released by '+x.by+' on '+new Date(x.at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+'.';
     },function(){m.className='msg err';m.textContent='Couldn\u2019t check. Try again.'});
   });
   $('cF').addEventListener('submit',function(e){
@@ -1225,7 +1264,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     if(!t||!c){m.className='msg err';m.textContent='Enter the job title and the company.';return}
     send('jbF','jm','jobs',{uid:uid,name:me.name,title:t,company:c,place:$('jl').value.trim(),text:$('jd').value.trim(),apply:$('ja').value.trim(),ts:Date.now()});
   });
-  var HM={ov:'admin',an:'admin-announcements',sp:'admin-spotlight',rq:'admin-requests',ms:'admin-messages',ce:'admin-certificates',ev:'admin-events',pa:'admin-participants',mb:'admin-members',rg:'admin-registrars',au:'admin-audit'},TN={ov:'Overview',an:'Post an announcement',sp:'Alumni spotlight',rq:'Student requests',ms:'Messages',ce:'Register a certificate',ev:'Events',pa:'Event participants',mb:'Members',rg:'Registrars',au:'Audit log'};
+  var HM={ov:'admin',an:'admin-announcements',sp:'admin-spotlight',rq:'admin-requests',ms:'admin-messages',ce:'admin-certificates',ev:'admin-events',pa:'admin-participants',mb:'admin-members',rg:'admin-registrars',au:'admin-audit'},TN={ov:'Overview',an:'Post an announcement',sp:'Alumni spotlight',rq:'Document requests (view only)',ms:'Messages',ce:'Register a certificate',ev:'Events',pa:'Event participants',mb:'Members',rg:'Registrars',au:'Audit log'};
   function adminTab(t){
     $('admT').textContent='Admin: '+TN[t];
     document.querySelectorAll('#admin [data-tab]').forEach(function(el){el.hidden=el.getAttribute('data-tab')!==t});
