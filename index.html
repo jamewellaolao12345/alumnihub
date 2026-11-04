@@ -173,11 +173,11 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   <a class="brand" href="#home"><i>A</i>AlumniHub</a>
   <nav aria-label="Main">
     <a href="#home" data-p="home">Home</a>
-    <a href="#community" data-p="community">Alumni Community</a>
+    <a href="#community" data-p="community" id="navCm">Alumni Community</a>
     <a href="#events" data-p="events">Events</a>
     <a href="#announcements" data-p="announcements">Announcements</a>
-    <a href="#services" data-p="services">Alumni ID &amp; Services</a>
-    <a href="#profile" data-p="profile">My Profile</a>
+    <a href="#services" data-p="services" id="navSvc">Alumni ID &amp; Services</a>
+    <a href="#profile" data-p="profile" id="navPf">My Profile</a>
     <a href="#notices" data-p="notices" id="navNt" hidden>Notifications<span id="ntN"></span></a>
     <a href="#registrar" data-p="registrar" id="navRg" hidden>Registrar</a>
     <a href="#admin" data-p="admin" id="navAdm" hidden>Admin</a>
@@ -208,7 +208,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     <div class="hero-text">
       <h1>Welcome back to CTU</h1>
       <p>AlumniHub is where Cebu Technological University graduates share news, catch up at events, and post photos from wherever life took them.</p>
-      <a class="btn" href="#post">Post a photo</a><a class="btn alt" href="#events">See events</a>
+      <a class="btn" href="#post" id="hbPost">Post a photo</a><a class="btn alt" href="#events" id="hbEv">See events</a>
     </div>
   </div>
   <div class="wrap">
@@ -221,7 +221,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       <div><b id="s4">0</b><span>Online now</span></div>
     </div>
   </div>
-  <div class="wrap split">
+  <div class="wrap split" id="joinWrap">
     <div class="art" role="img" aria-label="Decorative graphic"></div>
     <div><h2>Join your alumni community</h2>
       <p>Share photos from reunions, comment on posts, and find classmates in the alumni directory. It takes one click with your Google account.</p>
@@ -233,11 +233,11 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
         <p id="msgT">Welcome, CTU alumni. This is your space to stay in touch with the school and with each other. Check the announcements, share your news, and request your documents online.</p>
         <button class="btn" id="msgBtn" type="button" hidden>Edit message</button></div></div>
   </div>
-  <div class="wrap">
+  <div class="wrap" id="legWrap">
     <h2>Strengthen the legacy</h2>
     <div class="tri">
-      <a class="tc t1" href="#directory"><b>Alumni Directory</b><span>Find classmates and connect</span></a>
-      <a class="tc t2" href="#requests"><b>Document Requests</b><span>Request your COR or diploma online</span></a>
+      <a class="tc t1" href="#directory" id="hcDir"><b>Alumni Directory</b><span>Find classmates and connect</span></a>
+      <a class="tc t2" href="#requests" id="hcReq"><b>Document Requests</b><span>Request your COR or diploma online</span></a>
       <a class="tc t3" href="#verify"><b>Verify a Certificate</b><span>Check that a certificate is genuine</span></a>
     </div>
   </div>
@@ -266,7 +266,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   <div class="wrap">
     <h2>Alumni Community</h2>
     <p class="lead">Photos and updates shared by CTU alumni. Newest first.</p>
-    <p><a class="btn m" href="#post">Post a photo</a></p>
+    <p id="cmPost"><a class="btn m" href="#post">Post a photo</a></p>
     <div class="feed" id="feed"></div>
   </div>
 </section>
@@ -301,11 +301,11 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     <h2>Alumni ID &amp; Services</h2>
     <p class="lead">Documents, verification and tools for alumni.</p>
     <div class="tri">
-      <a class="tc t1" href="#requests"><b>Document requests</b><span>COR, diploma, good moral, transcript</span></a>
+      <a class="tc t1" href="#requests" id="svcReq"><b>Document requests</b><span>COR, diploma, good moral, transcript</span></a>
       <a class="tc t2" href="#verify"><b>Verify a certificate</b><span>Check a reference number</span></a>
-      <a class="tc t3" href="#directory"><b>Alumni directory</b><span>Find classmates</span></a>
-      <a class="tc t1" href="#jobs"><b>Job board</b><span>Openings from alumni</span></a>
-      <a class="tc t2" href="#survey"><b>Tracer survey</b><span>Tell us where you are now</span></a>
+      <a class="tc t3" href="#directory" id="svcDir"><b>Alumni directory</b><span>Find classmates</span></a>
+      <a class="tc t1" href="#jobs" id="svcJob"><b>Job board</b><span>Openings from alumni</span></a>
+      <a class="tc t2" href="#survey" id="svcSur"><b>Tracer survey</b><span>Tell us where you are now</span></a>
       <a class="tc t3" href="#contact"><b>Contact us</b><span>Send a message to the admin</span></a>
     </div>
   </div>
@@ -385,16 +385,8 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       <label>Category<select id="acat"><option>General Updates</option><option>Important Notices</option><option>Alumni Services</option><option>Events</option></select></label>
       <label>Details<textarea id="ax" maxlength="400"></textarea></label>
       <label style="font-weight:400"><input type="checkbox" id="aimp"> Mark as important</label>
-      <label style="font-weight:400"><input type="checkbox" id="arsvp"> Let alumni RSVP with &ldquo;I’m going&rdquo;</label>
       <label>Picture (optional)<input type="file" id="aimgf" accept="image/*"></label>
       <button class="btn m" type="submit">Post announcement</button><p class="msg" id="am" role="status"></p></form>
-    <form class="card" id="cF" data-tab="ce" novalidate><h3>Register a certificate</h3>
-      <label>Reference number (leave empty to create one)<input type="text" id="cr" maxlength="40" autocomplete="off"></label>
-      <label>Student name<input type="text" id="cn" maxlength="80"></label>
-      <label>Course<input type="text" id="cc" maxlength="60"></label>
-      <label>Year<input type="text" id="cy" maxlength="20"></label>
-      <label>Document<select id="cd"><option value="cor">Certificate of Registration (COR)</option><option value="dip">Diploma (certified copy)</option><option value="gm">Certificate of Good Moral Character</option><option value="tor">Transcript of Records (request slip)</option></select></label>
-      <button class="btn m" type="submit">Save record</button><p class="msg" id="cm" role="status"></p></form>
     <form class="card" id="spF" data-tab="sp" novalidate><h3>Add an alumni spotlight</h3>
       <label>Name<input type="text" id="sn" maxlength="80"></label>
       <label>Course and batch<input type="text" id="sb" maxlength="40"></label>
@@ -494,7 +486,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     <p class="lead">Alumni who chose to be listed. Only logged-in alumni can see it.</p>
     <div class="card" id="dirOut"><p>Log in to see and join the directory.</p><a class="btn m" href="#account">Log in</a></div>
     <div id="dirMe" hidden>
-      <div class="card"><h3>Your listing</h3>
+      <div class="card" id="dirForm"><h3>Your listing</h3>
         <label>Where do you work? (optional)<input type="text" id="dw" maxlength="80"></label>
         <button class="btn m" type="button" id="dirAdd">Add or update my listing</button> <button class="btn m" type="button" id="dirDel">Remove me</button></div>
       <label style="margin-top:1rem">Search<input type="text" id="ds" placeholder="Name, batch or workplace"></label>
@@ -575,7 +567,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
 <footer>
   <div class="fwrap">
     <div class="fbrand"><i>A</i><div><b>AlumniHub</b><span>Cebu Technological University alumni</span></div></div>
-    <div class="flinks"><a href="#home">Home</a><a href="#requests">Document requests</a><a href="#events">Events</a><a href="#verify">Verify a certificate</a><a href="#post">Post a photo</a><a href="#directory">Alumni directory</a><a href="#contact">Contact us</a></div>
+    <div class="flinks" id="flk"><a href="#home">Home</a><a href="#requests">Document requests</a><a href="#events">Events</a><a href="#verify">Verify a certificate</a><a href="#post">Post a photo</a><a href="#directory">Alumni directory</a><a href="#contact">Contact us</a></div>
   </div>
   <details><summary>Privacy notice</summary>
   <p>AlumniHub stores your name, course and batch, Google email and profile picture, your posts and comments, and the details you give in document requests (student number, course, year and purpose). When you register, it also stores your student ID number and a photo of your CTU student ID. Only admins can see them, and they are used only to verify your account. It is used only to run the alumni community and to process your requests. Posts, comments and announcements are public. Document requests can be seen only by you and the admins. To correct or remove your information, contact the AlumniHub admin.</p></details></footer>
@@ -624,7 +616,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       if(a.dataset.p===nh)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');
     });
     if(vp){$('vi').value=vp;if(fs)$('vF').querySelector('button').click()}
-    if(h==='admin'&&staffInfo&&!adm()){location.hash='registrar';return}
+    if(staffInfo&&staffInfo.active!==false&&!adm()&&['home','announcements','events','registrar','account','verify'].indexOf(h)<0){location.hash='registrar';return}
     if(h==='admin')adminTab(at||'ov');
     if(h==='community')render();
     if(h==='post'||h==='account'||h==='requests'||h==='admin'||h==='directory'||h==='contact'||h==='survey'||h==='jobs'||h==='profile')acct();
@@ -676,7 +668,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   });
   document.getElementById('form').addEventListener('submit',function(e){
     e.preventDefault();
-    if(!full()){say('Only approved alumni can post.',true);return}
+    if(!canFull()){say('Only approved alumni can post.',true);return}
     if(!data){say('Choose an image to post.',true);return}
     var post={uid:uid,photo:(user&&user.photoURL)||'',name:me.name,cap:document.getElementById('cap').value.trim(),img:data,ts:Date.now(),
       date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})};
@@ -801,7 +793,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     fs.doc('site/hero').onSnapshot(function(d){if(d.exists&&d.data().img)setHero(d.data().img)},function(){});
     auth.onAuthStateChanged(function(u){
       user=u;uid=u?u.uid:'';me=null;lastR='';
-      staffInfo=null;staffChecked=!u;if(unSt){unSt();unSt=null}if(unSr){unSr();unSr=null}sreq=[];showRgDash();
+      admChecked=!u;staffInfo=null;staffChecked=!u;if(unSt){unSt();unSt=null}if(unSr){unSr();unSr=null}sreq=[];showRgDash();
       if(u)unSt=fs.doc('staff/'+uid).onSnapshot(function(d){
         staffChecked=true;
         if(d.exists){
@@ -827,7 +819,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       if(u)unQ=fs.collection('messages').where('uid','==',uid).onSnapshot(function(sn){mine=rows(sn).sort(function(a,b){return b.ts-a.ts});showMine()},function(){});if(unS){unS();unS=null}rs=[];
       if(u)unS=fs.collection('rsvps').limit(1000).onSnapshot(function(sn){rs=rows(sn);showAnn()},function(){});
       if(u)unD=fs.collection('directory').limit(500).onSnapshot(function(sn){dirs=rows(sn);showDir();dash()},function(){});
-      if(u)fs.doc('admins/'+uid).get().then(function(d){isAdm=d.exists},function(e){aErr=e.code||'error'}).then(function(){
+      if(u)fs.doc('admins/'+uid).get().then(function(d){isAdm=d.exists;admChecked=true},function(e){aErr=e.code||'error';admChecked=true}).then(function(){
         if(mode==='admin'&&!isAdm){$('amsg').textContent='Not an admin. Your User UID is '+uid+(aErr==='permission-denied'?' . Firebase blocked the check, so publish the latest Firestore rules.':' . Add this exact UID as a document ID in the admins collection.');mode='student';auth.signOut();return}
         if(adm())fs.doc('users/'+uid).get().then(function(d){if(!d.exists)fs.doc('users/'+uid).set({name:user.displayName||'Administrator',batch:'Administrator'})},function(){});
         if(adm())unSt2=fs.collection('staff').limit(200).onSnapshot(function(sn){stf=rows(sn);showRg()},function(){});
@@ -846,7 +838,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       acct();render();
     });
   }
-  var stf=[],aud=[],sreq=[],nts=[],staffInfo=null,staffChecked=false,unSt=null,unSr=null,unNt=null,unSt2=null,unAu=null,rf='',memList=[],unU=null,lastR='',unRx=null,unJ=null,evs=[],regs=[],pres=[],unE=null,acat='',editEv='',rx=[],memberCount=0,mine=[],unQ=null,dirs=[],jobs=[],trs=[],unT=null,sps=[],msgs=[],rs=[],unD=null,unM=null,unS=null,isAdm=false,aErr='',mode='student',anns=[],evs=[],reqs=[],unR=null;
+  var admChecked=false,footDef='',stf=[],aud=[],sreq=[],nts=[],staffInfo=null,staffChecked=false,unSt=null,unSr=null,unNt=null,unSt2=null,unAu=null,rf='',memList=[],unU=null,lastR='',unRx=null,unJ=null,evs=[],regs=[],pres=[],unE=null,acat='',editEv='',rx=[],memberCount=0,mine=[],unQ=null,dirs=[],jobs=[],trs=[],unT=null,sps=[],msgs=[],rs=[],unD=null,unM=null,unS=null,isAdm=false,aErr='',mode='student',anns=[],evs=[],reqs=[],unR=null;
   try{mode=localStorage.getItem('ah-mode')||'student'}catch(e){}
   function adm(){return isAdm&&mode==='admin'&&!!user}
   function mb(d,txt,fn){var x=document.createElement('button');x.type='button';x.className='btn m';x.style.cssText='margin:.6rem .4rem 0 0;padding:.35rem .7rem;font-size:.85rem';x.textContent=txt;x.onclick=fn;d.appendChild(x)}
@@ -1055,6 +1047,29 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   function full(){var r=role();return r==='admin'||r==='alumni'}
   function canFull(){return role()==='alumni'}
   function canReply(){var r=role();return r==='admin'||r==='alumni'||r==='student'}
+  function navRole(){return adm()?'admin':((staffInfo&&staffInfo.active!==false)?'registrar':role())}
+  function roleUi(){
+    var nr=navRole(),inn=!!user;
+    function hide(id,h){var e=$(id);if(e)e.hidden=h}
+    hide('navCm',nr==='registrar');
+    hide('navSvc',nr==='admin'||nr==='registrar');
+    hide('navPf',nr==='admin'||nr==='registrar');
+    hide('hbPost',inn&&nr!=='alumni');
+    hide('hbEv',nr==='registrar');
+    hide('cmPost',inn&&nr!=='alumni');
+    hide('joinWrap',inn);
+    hide('legWrap',nr==='registrar');
+    hide('hcDir',nr==='student');hide('hcReq',nr==='student');
+    ['svcReq','svcDir','svcJob','svcSur'].forEach(function(id){hide(id,nr==='student')});
+    var F={admin:[['home','Home'],['community','Alumni Community'],['events','Events'],['announcements','Announcements'],['verify','Verify a certificate']],
+      registrar:[['home','Home'],['announcements','Announcements'],['events','Events'],['verify','Verify a certificate']],
+      student:[['home','Home'],['community','Alumni Community'],['events','Events'],['announcements','Announcements'],['verify','Verify a certificate'],['contact','Contact us']]}[nr],fl=$('flk');
+    if(fl){
+      if(F){fl.textContent='';F.forEach(function(x){var a=document.createElement('a');a.href='#'+x[0];a.textContent=x[1];fl.appendChild(a)})}
+      else if(footDef)fl.innerHTML=footDef;
+    }
+    if(admChecked&&!adm()&&/^#admin/.test(location.hash)&&!(staffInfo&&staffInfo.active!==false))location.hash=user?'home':'account';
+  }
   function gates(){
     var on2=!!(staffInfo&&staffInfo.active!==false);
     $('navRg').hidden=!on2;$('rgOut').hidden=on2;$('rgIn').hidden=!on2;$('stF').hidden=!!user;
@@ -1068,14 +1083,15 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       if(e)e.textContent=r==='none'?'Log in to '+what+'.':r==='pending'?'Your account is waiting for admin approval.':'This is available to approved alumni only.';
       if(a)a.hidden=r!=='none';
     }
-    $('gate').hidden=f;$('form').hidden=!f;deny('gate','post photos');
+    $('gate').hidden=r==='alumni';$('form').hidden=r!=='alumni';deny('gate','post photos');
     $('rqGate').hidden=f;$('rqForm').hidden=r!=='alumni';$('rqAdm').hidden=r!=='admin';deny('rqGate','request your documents');
-    $('dirMe').hidden=!f;$('dirOut').hidden=f;deny('dirOut','see and join the directory');
-    $('svGate').hidden=f;$('svF').hidden=!f;deny('svGate','answer the survey');
+    $('dirMe').hidden=!f;$('dirOut').hidden=f;deny('dirOut','see and join the directory');$('dirForm').hidden=r!=='alumni';
+    $('svGate').hidden=r==='alumni';$('svF').hidden=r!=='alumni';deny('svGate','answer the survey');
     $('jbGate').hidden=f;$('jbF').hidden=!f;$('jbList').hidden=!f;deny('jbGate','see and post job openings');
     $('ctGate').hidden=c;$('ctF').hidden=!c||r==='admin';$('ctAdm').hidden=r!=='admin';$('myH').hidden=$('myMsg').hidden=!c||r==='admin';
     var ct=$('ctGate').querySelector('p');if(ct)ct.textContent=r==='none'?'Log in to send a message.':'Your account is waiting for admin approval.';
     var a2=$('ctGate').querySelector('a');if(a2)a2.hidden=r!=='none';
+    roleUi();
   }
   var FL={received:'Received',processing:'Processing',ready:'Ready for Release',completed:'Completed'};
   function audit(action,target,detail){var ts=Date.now();return fs.collection('auditLog').doc('a'+ts+'_'+Math.random().toString(36).slice(2,8)).set({actor:uid,actorName:me?me.name:'Admin',role:'admin',action:action,target:target,detail:detail||'',ts:ts})}
@@ -1203,7 +1219,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   (function(){var n=new Date(),z=function(x){return(x<10?'0':'')+x};$('ad').defaultValue=$('ad').value=n.getFullYear()+'-'+z(n.getMonth()+1)+'-'+z(n.getDate())})();
   $('anF').addEventListener('submit',function(e){
     e.preventDefault();var t=$('at').value.trim();if(!t||!adm())return;
-    function put(img){var o={title:t,date:fmt($('ad').value),text:$('ax').value.trim(),ts:Date.now()};if($('arsvp').checked)o.rsvp=true;o.cat=$('acat').value;if($('aimp').checked)o.important=true;if(img)o.img=img;send('anF','am','announcements',o)}
+    function put(img){var o={title:t,date:fmt($('ad').value),text:$('ax').value.trim(),ts:Date.now()};o.cat=$('acat').value;if($('aimp').checked)o.important=true;if(img)o.img=img;send('anF','am','announcements',o)}
     var f=$('aimgf').files[0];if(f)shrink(f,800,put,0.7);else put();
   });
   $('qd').onchange=function(){$('qoL').hidden=this.value!=='other'};
@@ -1228,17 +1244,6 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       if(!d.exists){m.className='msg err';m.textContent='No certificate was issued with this reference number.';return}
       var x=d.data();m.textContent='Valid. '+(DN[x.doc]||x.doc)+' issued to '+x.name+' ('+x.course+', '+x.year+'), released by '+x.by+' on '+new Date(x.at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+'.';
     },function(){m.className='msg err';m.textContent='Couldn\u2019t check. Try again.'});
-  });
-  $('cF').addEventListener('submit',function(e){
-    e.preventDefault();var m=$('cm'),n=$('cn').value.trim(),raw=$('cr').value.trim().replace(/\s+/g,''),ref=raw?(/^ctu-/i.test(raw)?raw.toUpperCase():raw):mkRef();
-    m.className='msg';m.textContent='';
-    if(!adm())return;
-    if(!n){m.className='msg err';m.textContent='Enter the student name.';return}
-    if(ref.indexOf('/')>=0){m.className='msg err';m.textContent='The reference number cannot contain a slash.';return}
-    fs.doc('issued/'+ref).get().then(function(d){
-      if(d.exists){m.className='msg err';m.textContent='That reference number already exists.';return}
-      return fs.doc('issued/'+ref).set({name:n,doc:$('cd').value,course:$('cc').value.trim(),year:$('cy').value.trim(),by:me.name,at:Date.now()}).then(function(){$('cF').reset();m.textContent='Saved. Reference number: '+ref});
-    }).catch(function(){m.className='msg err';m.textContent='Couldn\u2019t save. Try again.'});
   });
   $('ds').addEventListener('input',showDir);
   $('dirAdd').onclick=function(){if(!full())return;fs.doc('directory/'+uid).set({name:me.name,batch:me.batch||'',work:$('dw').value.trim(),photo:(user&&user.photoURL)||'',ts:Date.now()}).then(function(){alert('You are in the directory.')},function(){alert('Couldn\u2019t save. Try again.')})};
@@ -1316,6 +1321,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       return fs.doc('staff/'+nu).set({name:n,email:em,role:'registrar',active:true,canApprove:false,createdBy:uid,createdAt:Date.now()}).then(function(){audit('staff.create',nu,em);return a2.sendPasswordResetEmail(em)});
     }).then(function(){m.textContent='Registrar created. A password setup email was sent to '+em+'.';$('sgF').reset()},function(er){m.className='msg err';m.textContent=(er&&er.code==='auth/email-already-in-use')?'That email already has a login. Use a different email.':'Could not create the account. Try again.'}).then(function(){a2.signOut().catch(function(){});app2.delete().catch(function(){})});
   });
+  footDef=$('flk').innerHTML;
   $('mbQ').addEventListener('input',showMb);
   $('rtype').onchange=function(){var st=this.value==='student';$('rsidT').textContent=st?'Student ID number':'Former student ID number';$('rlvL').hidden=!st;$('ryrL').hidden=st};
   $('rmx').onclick=function(){$('rmod').hidden=true};
