@@ -97,7 +97,7 @@ select{display:block;width:100%;margin-top:.3rem;font:inherit;padding:.65rem .75
 .annc .aimg{aspect-ratio:16/10}
 .annc h3{order:1;padding:1rem 1.2rem .2rem;font-size:1.2rem;font-weight:400;color:var(--maroon)}
 .annc time{order:2;padding:0 1.2rem;font:400 .8rem var(--body);color:var(--muted)}
-.annc p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;padding:.4rem 1.2rem 1rem}
+.annc p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;padding:.4rem 1.2rem 0;margin:0 0 1rem}
 .annc .rm{order:5;border-radius:0;width:100%;margin:0;padding:.9rem;background:var(--maroon);color:#fff;font-size:.95rem}
 #rmod{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.6);display:grid;place-items:center;padding:1rem;overflow:auto}
 .rmc{background:var(--surface);border-radius:.8rem;max-width:40rem;width:100%;max-height:92vh;overflow:auto;padding:1.4rem;position:relative}
@@ -117,7 +117,7 @@ main>section{animation:fadeIn .35s ease}
 .hj{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:.8rem;overflow:hidden}
 .hj h3{margin:0;padding:1.1rem 1.2rem .2rem;font:500 1.2rem var(--head);color:var(--maroon)}
 .hj .meta{margin:0;padding:0 1.2rem;color:var(--muted);font-size:.85rem}
-.hj .ex{margin:0;padding:.5rem 1.2rem 1rem;flex:1;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.hj .ex{margin:0 0 1rem;padding:.5rem 1.2rem 0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .hj button{border:0;background:var(--maroon);color:#fff;padding:.9rem;font:600 .95rem var(--body);cursor:pointer}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 .tabs{display:flex;flex-wrap:wrap;gap:.4rem;margin:0 0 1.2rem}
@@ -139,6 +139,11 @@ main>section{animation:fadeIn .35s ease}
 .avatar-lg{width:80px;height:80px;border-radius:50%;object-fit:cover;display:block;margin-bottom:.6rem}
 .rxb{position:relative}
 .rxb[data-tip]:not([data-tip=""]):hover::after{content:attr(data-tip);position:absolute;bottom:120%;left:0;background:#241a1d;color:#fff;padding:.4rem .6rem;border-radius:.4rem;font:500 .75rem/1.4 var(--body);white-space:pre;z-index:5;text-align:left}
+.feed,.evg,.annc,.tri{align-items:start}
+.nb{display:inline-block;min-width:1.4rem;padding:.05rem .45rem;margin-left:.4rem;border-radius:999px;background:#c68a14;color:#fff;font-size:.75rem;font-weight:700;line-height:1.4;text-align:center}
+.nb.m{background:#d9731a}.nb.h{background:#b3261e}
+.tabs button.hot{border-color:#d9731a;box-shadow:0 0 0 2px rgba(217,115,26,.25)}
+#admMsg li.new{border-left:5px solid #d9731a;background:#fff7ed}
 .sp img{aspect-ratio:4/5}
 #lb{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.88);display:grid;place-items:center;padding:1rem;cursor:zoom-out}
 #lb img{max-width:100%;max-height:100%;object-fit:contain;border-radius:.5rem}
@@ -180,7 +185,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     <a href="#profile" data-p="profile" id="navPf">My Profile</a>
     <a href="#notices" data-p="notices" id="navNt" hidden>Notifications<span id="ntN"></span></a>
     <a href="#registrar" data-p="registrar" id="navRg" hidden>Registrar</a>
-    <a href="#admin" data-p="admin" id="navAdm" hidden>Admin</a>
+    <a href="#admin" data-p="admin" id="navAdm" hidden>Admin<span class="nb" id="nbAdm" hidden></span></a>
     <a href="#account" data-p="account" id="navAcc">Log in</a>
   </nav>
 </header>
@@ -371,7 +376,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   <div class="wrap">
     <h2 id="admT">Admin</h2>
     <div id="atabs" class="tabs" role="tablist">
-      <button type="button" data-t="ov">Overview</button><button type="button" data-t="mb">Members</button><button type="button" data-t="an">Announcements</button><button type="button" data-t="sp">Spotlight</button><button type="button" data-t="rq">Requests</button><button type="button" data-t="ms">Messages</button><button type="button" data-t="ev">Events</button><button type="button" data-t="pa">Participants</button><button type="button" data-t="rg">Registrars</button><button type="button" data-t="au">Audit log</button>
+      <button type="button" data-t="ov">Overview</button><button type="button" data-t="mb">Members</button><button type="button" data-t="an">Announcements</button><button type="button" data-t="sp">Spotlight</button><button type="button" data-t="rq">Requests</button><button type="button" data-t="ms">Messages<span class="nb" id="nbMs" hidden></span></button><button type="button" data-t="ev">Events</button><button type="button" data-t="pa">Participants</button><button type="button" data-t="rg">Registrars</button><button type="button" data-t="au">Audit log</button>
     </div>
     <div class="card" id="dash" data-tab="ov"><h3>Overview</h3>
       <div class="ostats"><div class="ob"><b id="o1">0</b><span>Pending requests</span></div><div class="ob"><b id="o2">0</b><span>Total requests</span></div><div class="ob"><b id="o3">0</b><span>Released documents</span></div><div class="ob"><b id="o4">0</b><span>Alumni posts</span></div><div class="ob"><b id="o5">0</b><span>Comments</span></div><div class="ob"><b id="o6">0</b><span>Announcements</span></div><div class="ob"><b id="o7">0</b><span>Directory listings</span></div><div class="ob"><b id="o8">0</b><span>Survey responses</span></div><div class="ob"><b id="o9">0</b><span>Messages</span></div><div class="ob"><b id="o10">0</b><span>Unanswered messages</span></div><div class="ob"><b id="o11">0</b><span>Accounts awaiting approval</span></div></div>
@@ -891,7 +896,13 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       c.appendChild(d);l.appendChild(c);
     });
   }
-  function showMsg(){
+  function msgBadge(){
+    var n=msgs.filter(function(x){return !x.reply}).length,lv=n>=6?'h':n>=3?'m':'';
+    ['nbMs','nbAdm'].forEach(function(id){var e=$(id);if(!e)return;e.hidden=!n||!adm();e.textContent=n;e.className='nb'+(lv?' '+lv:'')});
+    var tb=document.querySelector('#atabs button[data-t="ms"]');if(tb)tb.classList.toggle('hot',n>0&&adm());
+  }
+  function showMsg(){showMsg0();msgBadge();Array.prototype.forEach.call($('admMsg').children,function(li,i){if(msgs[i]&&!msgs[i].reply)li.classList.add('new')})}
+  function showMsg0(){
     fill($('admMsg'),msgs,function(m){
       return item(new Date(m.ts).toLocaleDateString('en-US',{month:'short',day:'numeric'}),m.name+(m.email?' ('+m.email+')':'')+(m.reply?' \u2713 replied':''),m.text,function(d){
         if(m.reply){var p=document.createElement('p');p.style.cssText='margin-top:.4rem;font-size:.9rem';p.textContent='Your reply: '+m.reply;d.appendChild(p)}
