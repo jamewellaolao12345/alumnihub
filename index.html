@@ -149,6 +149,16 @@ main>section{animation:fadeIn .35s ease}
 .annc button.rmx{order:4;align-self:flex-start;background:none;border:0;color:var(--maroon);padding:0 1.2rem;margin:-.6rem 0 1rem;font:600 .85rem var(--body);text-decoration:underline;cursor:pointer}
 .annc li.open p{display:block;-webkit-line-clamp:unset;overflow:visible}
 .annc .rm{margin-top:auto}
+.annc li.noimg p{-webkit-line-clamp:8}
+.req{color:#b3261e;font-weight:700}
+.reqn{margin:-.4rem 0 1rem;font-size:.85rem;color:var(--muted)}
+.ferr{display:block;margin-top:.35rem;color:#b3261e;font-weight:500;font-size:.85rem}
+[aria-invalid="true"]{border-color:#b3261e!important;box-shadow:0 0 0 1px #b3261e}
+#etm{display:block;width:100%;margin-top:.3rem;font:400 1rem var(--body);padding:.65rem .75rem;border:1px solid var(--line);border-radius:.5rem;background:var(--bg);color:var(--ink)}
+.annc .aed{margin-top:auto}.annc li:has(.aed) .rm{margin-top:0}
+.anib{display:flex;gap:.8rem;align-items:center;margin:-.3rem 0 1rem;padding:.6rem;border:1px solid var(--line);border-radius:.5rem}
+.anib img{width:7rem;aspect-ratio:16/10;object-fit:cover;border-radius:.4rem;flex:none}
+.anib.off img{opacity:.35}
 .annc .rsv{order:4;margin:0;padding:0 1.2rem 1rem;color:var(--muted);font-size:.85rem}
 .nb{display:inline-block;min-width:1.4rem;padding:.05rem .45rem;margin-left:.4rem;border-radius:999px;background:#c68a14;color:#fff;font-size:.75rem;font-weight:700;line-height:1.4;text-align:center}
 .nb.m{background:#d9731a}.nb.h{background:#b3261e}
@@ -407,14 +417,15 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       <div class="exrow"><div><b>Student requests</b><span id="cReq">0 records</span></div><button class="btn m" type="button" id="exReq">Download CSV</button></div>
       <div class="exrow"><div><b>Alumni directory</b><span id="cDir">0 records</span></div><button class="btn m" type="button" id="exDir">Download CSV</button></div>
       <div class="exrow"><div><b>Graduate tracer survey</b><span id="cTr">0 records</span></div><button class="btn m" type="button" id="exTr">Download CSV</button></div></div>
-    <form class="card" id="anF" data-tab="an" novalidate><h3>Post an announcement</h3>
-      <label>Title<input type="text" id="at" maxlength="100"></label>
+    <form class="card" id="anF" data-tab="an" novalidate><h3 id="anH">Add Announcement</h3><p class="reqn"><span class="req">*</span> Required. Pictures are optional.</p>
+      <label>Title <span class="req" aria-hidden="true">*</span><input type="text" id="at" maxlength="100" required aria-required="true"></label>
       <label>Date<input type="date" id="ad"></label>
-      <label>Category<select id="acat"><option>General Updates</option><option>Important Notices</option><option>Alumni Services</option><option>Events</option></select></label>
-      <label>Details<textarea id="ax" maxlength="400"></textarea></label>
+      <label>Category <span class="req" aria-hidden="true">*</span><select id="acat" required aria-required="true"><option value="">Choose a category</option><option>General Updates</option><option>Important Notices</option><option>Alumni Services</option><option>Events</option></select></label>
+      <label>Description <span class="req" aria-hidden="true">*</span><textarea id="ax" maxlength="400" required aria-required="true"></textarea></label>
       <label style="font-weight:400"><input type="checkbox" id="aimp"> Mark as important</label>
       <label>Picture (optional)<input type="file" id="aimgf" accept="image/*"></label>
-      <button class="btn m" type="submit">Post announcement</button><p class="msg" id="am" role="status"></p></form>
+      <div id="anImgBox" class="anib" hidden><img id="anImgPrev" alt="Current announcement picture"><div><p id="anImgNote" class="msg" style="margin:0;min-height:0">Current picture. Choose a new file above to replace it, or leave it empty to keep it.</p><label style="font-weight:400;margin:.4rem 0 0"><input type="checkbox" id="anImgDel"> Remove this picture</label></div></div>
+      <div class="formbar"><button class="btn m" type="submit" id="anBtn">Post announcement</button><button class="btn ghost" type="button" id="anCancel" hidden>Cancel</button></div><p class="msg" id="am" role="status"></p></form>
     <form class="card" id="spF" data-tab="sp" novalidate><h3 id="spH">Add an alumni spotlight</h3>
       <label>Name<input type="text" id="sn" maxlength="80"></label>
       <label>Course and batch<input type="text" id="sb" maxlength="40"></label>
@@ -437,14 +448,14 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       <label>Search members<input type="text" id="mbQ" placeholder="Name, course, student ID or type"></label>
       <ul class="ann" id="mbList"></ul>
     </div>
-    <form class="card" id="eF" data-tab="ev" novalidate><h3>Create or edit an event</h3>
-      <label>Title<input type="text" id="etl" maxlength="100"></label>
-      <label>Date<input type="date" id="edt"></label>
-      <label>Time (optional)<input type="time" id="etm"></label>
+    <form class="card" id="eF" data-tab="ev" novalidate><h3>Create or edit an event</h3><p class="reqn"><span class="req">*</span> Required. Pictures are optional.</p>
+      <label>Title <span class="req" aria-hidden="true">*</span><input type="text" id="etl" maxlength="100" required aria-required="true"></label>
+      <label>Date <span class="req" aria-hidden="true">*</span><input type="date" id="edt" required aria-required="true"></label>
+      <label>Time <span class="req" aria-hidden="true">*</span><input type="time" id="etm" required aria-required="true"></label>
       <label>Location<input type="text" id="epl" maxlength="100"></label>
-      <label>Description<textarea id="etx" maxlength="600"></textarea></label>
+      <label>Description <span class="req" aria-hidden="true">*</span><textarea id="etx" maxlength="600" required aria-required="true"></textarea></label>
       <label>Cover image (optional)<input type="file" id="eim" accept="image/*"></label>
-      <button class="btn m" type="submit">Save event</button> <button class="btn m" type="button" id="ecancel" hidden>Cancel edit</button><p class="msg" id="evm" role="status"></p></form>
+      <button class="btn m" type="submit" id="eBtn">Save event</button> <button class="btn m" type="button" id="ecancel" hidden>Cancel edit</button><p class="msg" id="evm" role="status"></p></form>
     <ul class="ann" id="evAdm" data-tab="ev"></ul>
     <div data-tab="pa">
       <label>Event<select id="paSel"></select></label>
@@ -873,7 +884,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   function adm(){return isAdm&&mode==='admin'&&!!user}
   function mb(d,txt,fn){var x=document.createElement('button');x.type='button';x.className='btn m';x.style.cssText='margin:.6rem .4rem 0 0;padding:.35rem .7rem;font-size:.85rem';x.textContent=txt;x.onclick=fn;d.appendChild(x)}
   function tools(col,x){return function(d){
-    if(x.img){var im=document.createElement('img');im.src=x.img;im.alt='';im.className='aimg';im.onclick=function(){$('lbi').src=x.img;$('lb').hidden=false};d.appendChild(im);im.onload=function(){var li=im.closest('li');if(li)eqEv(li.parentNode)}}
+    if(x.img){var im=document.createElement('img');im.onerror=function(){var li=im.closest('li');im.remove();if(li){li.classList.add('noimg');eqEv(li.parentNode)}};im.src=x.img;im.alt='';im.className='aimg';im.onclick=function(){$('lbi').src=x.img;$('lb').hidden=false};d.appendChild(im);im.onload=function(){var li=im.closest('li');if(li)eqEv(li.parentNode)}}
     if(col==='announcements'){
       var ap=d.querySelector('p'),rx=document.createElement('button');rx.type='button';rx.className='rmx';rx.textContent='Read more';rx.hidden=true;
       rx.onclick=function(){var li=rx.closest('li'),o=li.classList.toggle('open');rx.textContent=o?'Show less':'Read more';eqEv(li.parentNode)};
@@ -888,9 +899,9 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       mb(rv,mine?'Going \u2713 ('+n+')':'I\u2019m going ('+n+')',function(){var btn=this,ref=fs.doc('rsvps/'+x.id+'_'+uid);btn.disabled=true;(mine?ref.delete():ref.set({a:x.id,uid:uid,name:me.name})).then(function(){btn.disabled=false},function(er){btn.disabled=false;alert('Couldn\u2019t update your RSVP ('+((er&&er.code)||'error')+'). '+(er&&er.code==='permission-denied'?'Publish the latest Firestore rules and try again.':'Try again.'))})});
       d.appendChild(rv);
     }
-    if(adm()){var bar=document.createElement('div');bar.className='abar';d.appendChild(bar);
-      mb(bar,'Edit',function(){var t=prompt('Title',x.title);if(t===null)return;var tx=prompt('Details',x.text||'');if(tx===null)return;fs.doc(col+'/'+x.id).update({title:t.trim()||x.title,text:tx.trim()})});
-      mb(bar,'Delete',function(){if(confirm('Delete this?'))fs.doc(col+'/'+x.id).delete()});
+    if(adm()){var bar=document.createElement('div');bar.className='abar aed';d.appendChild(bar);
+      mb(bar,'Edit',function(){editAnn(x)});
+      mb(bar,'Delete',function(){if(confirm('Delete this announcement?'))fs.doc(col+'/'+x.id).delete().then(function(){if(editAn===x.id)anReset()},function(){alert('Couldn\u2019t delete this announcement. Make sure you are logged in as admin.')})});
     }
   }}
   function esc(x){return String(x==null?'':x).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
@@ -915,7 +926,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     var q=($('ds').value||'').toLowerCase();
     fill($('dirList'),dirs.filter(function(x){return (x.name+' '+x.batch+' '+(x.work||'')).toLowerCase().indexOf(q)>=0}).sort(function(a,b){return a.name<b.name?-1:1}),function(x){return item(x.batch,x.name,x.work)});
   }
-  function openAnn(x){var i=$('rmi');if(x.img){i.src=x.img;i.hidden=false}else i.hidden=true;$('rmt').textContent=x.title;$('rmd').textContent=x.date||'';$('rmb').textContent=x.text||'';$('rmod').hidden=false}
+  function openAnn(x){var i=$('rmi');i.onerror=function(){i.hidden=true};if(x.img){i.src=x.img;i.hidden=false}else{i.hidden=true;i.removeAttribute('src')}$('rmt').textContent=x.title;$('rmd').textContent=x.date||'';$('rmb').textContent=x.text||'';$('rmod').hidden=false}
   function showSp(){
     var w=$('spWrap'),l=$('spList');l.textContent='';w.hidden=!sps.length;
     sps.forEach(function(x){
@@ -1070,7 +1081,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     if(forced&&logged)mine=Object.assign({},mine||{},{status:forced});
     showModal(e.img,e.title,fmtEv(e)+' \u2022 '+st+(full()?' \u2022 '+evCount(e)+' registered':''),e.text||'');
     a=$('rma');
-    if(adm()){var ad=document.createElement('div');ad.className='abar';mb(ad,'Edit event',function(){$('rmod').hidden=true;location.hash='admin-events';setTimeout(function(){editEv=e.id;$('etl').value=e.title;$('edt').value=e.date||'';$('etm').value=e.time||'';$('epl').value=e.place||'';$('etx').value=e.text||'';$('ecancel').hidden=false;$('eF').scrollIntoView()},50)});mb(ad,'Delete event',function(){delEv(e,this)});a.appendChild(ad);return}
+    if(adm()){var ad=document.createElement('div');ad.className='abar';mb(ad,'Edit event',function(){$('rmod').hidden=true;location.hash='admin-events';setTimeout(function(){editEv=e.id;clrErr($('eF'));$('evm').className='msg';$('evm').textContent='';$('etl').value=e.title||'';$('edt').value=e.date||'';$('etm').value=e.time||'';$('epl').value=e.place||'';$('etx').value=e.text||'';$('ecancel').hidden=false;$('eF').scrollIntoView()},50)});mb(ad,'Delete event',function(){delEv(e,this)});a.appendChild(ad);return}
     if(!full()){
       if(!logged){var l=document.createElement('a');l.href='#account';l.className='btn m';l.textContent='Log in to register';l.onclick=function(){$('rmod').hidden=true};a.appendChild(l)}
       else{var pp=document.createElement('p');pp.textContent=role()==='pending'?'Your account is waiting for admin approval.':'Event registration is for alumni.';a.appendChild(pp)}
@@ -1090,14 +1101,14 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     if(!confirm('Delete the event \u201c'+e.title+'\u201d? Its registrations will also be removed. This cannot be undone.'))return;
     if(btn)btn.disabled=true;
     fs.doc('events/'+e.id).delete().then(function(){
-      $('rmod').hidden=true;if(editEv===e.id){editEv='';$('eF').reset();$('ecancel').hidden=true}
+      $('rmod').hidden=true;if(editEv===e.id){editEv='';$('eF').reset();clrErr($('eF'));$('ecancel').hidden=true}
       return fs.collection('eventRegs').where('e','==',e.id).get().then(function(sn){return Promise.all(sn.docs.map(function(d){return d.ref.delete()}))}).catch(function(){});
     },function(er){if(btn)btn.disabled=false;alert('Couldn\u2019t delete this event ('+((er&&er.code)||'error')+'). '+(er&&er.code==='permission-denied'?'Make sure you are logged in with an admin account and Admin mode is on.':'Check your internet connection and try again.'))});
   }
   function showEvAdm(){
     fill($('evAdm'),evs.slice().sort(function(a,b){return evStart(b)-evStart(a)}),function(e){
       return item(e.date?fmt(e.date):'',e.title,fmtEv(e)+' \u2022 '+evState(e)+' \u2022 '+evCount(e)+' registered',function(d){
-        mb(d,'Edit',function(){editEv=e.id;$('etl').value=e.title;$('edt').value=e.date||'';$('etm').value=e.time||'';$('epl').value=e.place||'';$('etx').value=e.text||'';$('ecancel').hidden=false;$('eF').scrollIntoView()});
+        mb(d,'Edit',function(){editEv=e.id;clrErr($('eF'));$('evm').className='msg';$('evm').textContent='';$('etl').value=e.title||'';$('edt').value=e.date||'';$('etm').value=e.time||'';$('epl').value=e.place||'';$('etx').value=e.text||'';$('ecancel').hidden=false;$('eF').scrollIntoView()});
         mb(d,'Delete',function(){delEv(e,this)});
       });
     });
@@ -1266,7 +1277,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       });
     });
   }
-  function annCard(x){var l=item((x.date||'')+(x.cat?' \u2022 '+x.cat:''),(x.important?'\u2605 ':'')+x.title,x.text,tools('announcements',x));if(x.important)l.className='imp';return l}
+  function annCard(x){var l=item((x.date||'')+(x.cat?' \u2022 '+x.cat:''),(x.important?'\u2605 ':'')+x.title,x.text,tools('announcements',x));if(x.important)l.classList.add('imp');if(!x.img)l.classList.add('noimg');return l}
   function showAnn(){fill($('annList'),anns.slice(0,3),annCard);fill($('annAll'),anns.filter(function(x){return !acat||x.cat===acat}),annCard)}
   function row(r,adm){
     function b(d,txt,fn){var x=document.createElement('button');x.type='button';x.className='btn m';x.style.margin='.6rem .4rem 0 0';x.textContent=txt;x.onclick=fn;d.appendChild(x)}
@@ -1315,10 +1326,44 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   }
   function fmt(v){if(!v)return'';var p=v.split('-'),d=new Date(+p[0],+p[1]-1,+p[2]);return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}
   (function(){var n=new Date(),z=function(x){return(x<10?'0':'')+x};$('ad').defaultValue=$('ad').value=n.getFullYear()+'-'+z(n.getMonth()+1)+'-'+z(n.getDate())})();
+  function fErr(id,msg){var el=$(id),w=el.closest('label')||el.parentNode,e=w.querySelector('.ferr');
+    if(!e){e=document.createElement('span');e.className='ferr';e.id=id+'Err';e.setAttribute('role','alert');w.appendChild(e)}
+    e.textContent=msg||'';e.hidden=!msg;if(msg){el.setAttribute('aria-invalid','true');el.setAttribute('aria-describedby',e.id)}else{el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby')}}
+  function clrErr(f){f.querySelectorAll('.ferr').forEach(function(e){e.textContent='';e.hidden=true});f.querySelectorAll('[aria-invalid]').forEach(function(el){el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby')})}
+  /* rules: [fieldId, test(value) -> error message or ''] ; returns true when the form is valid */
+  function vForm(f,rules,msgEl){var first=null;rules.forEach(function(r){var el=$(r[0]),v=el.type==='file'?el.files[0]:String(el.value||'').trim(),er=r[1](v)||'';fErr(r[0],er);if(er&&!first)first=el});
+    if(first){msgEl.className='msg err';msgEl.textContent='Please fix the highlighted fields before saving.';first.focus();return false}return true}
+  function need(label){return function(v){return v?'':label}}
+  function imgOk(v){return !v||/^image\//.test(v.type)?'':'Choose a picture file (JPG, PNG, GIF or WebP), or leave this empty.'}
+  ['at','acat','ax','aimgf','etl','edt','etm','etx','eim'].forEach(function(id){var el=$(id),h=function(){if(el.getAttribute('aria-invalid'))fErr(id,'')};el.addEventListener('input',h);el.addEventListener('change',h)});
+  var editAn='',anBusy=false;
+  function unfmt(v){if(!v)return'';var d=new Date(v);if(isNaN(d))return'';var z=function(n){return(n<10?'0':'')+n};return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate())}
+  function anReset(){editAn='';$('anF').reset();clrErr($('anF'));$('anH').textContent='Add Announcement';$('anBtn').textContent='Post announcement';$('anCancel').hidden=true;$('anImgBox').hidden=true;$('anImgBox').classList.remove('off');$('anImgPrev').removeAttribute('src')}
+  function editAnn(x){
+    if(!adm())return;$('rmod').hidden=true;location.hash='admin-announcements';
+    setTimeout(function(){anReset();editAn=x.id;$('at').value=x.title||'';$('ad').value=unfmt(x.date)||$('ad').value;
+      var c=$('acat');c.value=x.cat||'';if(c.value!==(x.cat||''))c.value='';
+      $('ax').value=x.text||'';$('aimp').checked=!!x.important;$('aimgf').value='';
+      if(x.img){$('anImgPrev').src=x.img;$('anImgBox').hidden=false}
+      $('anH').textContent='Edit Announcement';$('anBtn').textContent='Save Changes';$('anCancel').hidden=false;$('am').className='msg';$('am').textContent='';
+      $('anF').scrollIntoView({behavior:'smooth',block:'start'});$('at').focus({preventScroll:true})},60);
+  }
+  $('anImgDel').onchange=function(){$('anImgBox').classList.toggle('off',this.checked)};
+  $('anCancel').onclick=function(){anReset();$('am').className='msg';$('am').textContent=''};
   $('anF').addEventListener('submit',function(e){
-    e.preventDefault();var t=$('at').value.trim();if(!t||!adm())return;
-    function put(img){var o={title:t,date:fmt($('ad').value),text:$('ax').value.trim(),ts:Date.now()};o.cat=$('acat').value;if($('aimp').checked)o.important=true;if(img)o.img=img;send('anF','am','announcements',o)}
-    var f=$('aimgf').files[0];if(f)shrink(f,800,put,0.7);else put();
+    e.preventDefault();if(!adm()||anBusy)return;
+    var t=$('at').value.trim(),c=$('acat').value,tx=$('ax').value.trim(),m=$('am');m.className='msg';m.textContent='';
+    if(!vForm($('anF'),[['at',need('Enter a title.')],['acat',need('Choose a category.')],['ax',need('Enter a description.')],['aimgf',imgOk]],m))return;
+    function done(){anBusy=false;$('anBtn').disabled=false}
+    function put(img){
+      if(editAn){var id=editAn,u={title:t,date:fmt($('ad').value),cat:c,text:tx,important:$('aimp').checked,edited:Date.now()},FV=firebase.firestore.FieldValue;
+        if(img)u.img=img;else if($('anImgDel').checked)u.img=FV.delete();
+        fs.doc('announcements/'+id).update(u).then(function(){done();anReset();m.textContent='Changes saved.'},function(er){done();m.className='msg err';m.textContent='Couldn\u2019t save the changes'+(er&&er.code==='not-found'?'. This announcement was deleted.':'. Make sure you are logged in as admin.')});return}
+      var o={title:t,date:fmt($('ad').value),text:tx,ts:Date.now(),cat:c};if($('aimp').checked)o.important=true;if(img)o.img=img;
+      fs.collection('announcements').add(o).then(function(){done();anReset();m.textContent='Announcement posted.'},function(){done();m.className='msg err';m.textContent='Couldn\u2019t save. Check that you are allowed to do this.'});
+    }
+    anBusy=true;$('anBtn').disabled=true;
+    var f=$('aimgf').files[0];if(f)shrink(f,800,function(img){if(!img){done();fErr('aimgf','This picture couldn\u2019t be read. Choose another file, or leave this empty.');m.className='msg err';m.textContent='Please fix the highlighted fields before saving.';return}put(img)},0.7);else put();
   });
   $('qd').onchange=function(){$('qoL').hidden=this.value!=='other'};
   $('rqForm').addEventListener('submit',function(e){
@@ -1385,16 +1430,19 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   document.querySelectorAll('#acats button').forEach(function(b){b.onclick=function(){acat=b.getAttribute('data-c');document.querySelectorAll('#acats button').forEach(function(x){x.setAttribute('aria-current',x===b?'true':'false')});showAnn()}});
   $('eF').addEventListener('submit',function(ev){
     ev.preventDefault();var t=$('etl').value.trim(),m=$('evm');m.className='msg';m.textContent='';
-    if(!adm())return;
-    if(!t||!$('edt').value){m.className='msg err';m.textContent='Enter a title and a date.';return}
+    if(!adm()||evBusy)return;
+    if(!vForm($('eF'),[['etl',need('Enter a title.')],['edt',need('Choose a date.')],['etm',need('Choose a time.')],['etx',need('Enter a description.')],['eim',imgOk]],m))return;
+    function done(){evBusy=false;$('eBtn').disabled=false}
     function put(img){
       var o={title:t,date:$('edt').value,time:$('etm').value,place:$('epl').value.trim(),text:$('etx').value.trim()};if(img)o.img=img;
       var ref=editEv?fs.doc('events/'+editEv):fs.collection('events').doc();if(!editEv)o.ts=Date.now();
-      ref.set(o,{merge:true}).then(function(){editEv='';$('eF').reset();$('ecancel').hidden=true;m.textContent='Saved.'},function(){m.className='msg err';m.textContent='Couldn\u2019t save. Try again.'});
+      ref.set(o,{merge:true}).then(function(){done();editEv='';$('eF').reset();clrErr($('eF'));$('ecancel').hidden=true;m.textContent='Saved.'},function(er){done();m.className='msg err';m.textContent='Couldn\u2019t save'+(er&&er.code==='permission-denied'?'. Firebase rejected it: make sure you are logged in as admin and every required field is filled in.':'. Try again.')});
     }
-    var f=$('eim').files[0];if(f)shrink(f,900,put,0.7);else put();
+    evBusy=true;$('eBtn').disabled=true;
+    var f=$('eim').files[0];if(f)shrink(f,900,function(img){if(!img){done();fErr('eim','This picture couldn\u2019t be read. Choose another file, or leave this empty.');m.className='msg err';m.textContent='Please fix the highlighted fields before saving.';return}put(img)},0.7);else put();
   });
-  $('ecancel').onclick=function(){editEv='';$('eF').reset();this.hidden=true};
+  var evBusy=false;
+  $('ecancel').onclick=function(){editEv='';$('eF').reset();clrErr($('eF'));$('evm').textContent='';this.hidden=true};
   $('paSel').onchange=showPa;$('paQ').addEventListener('input',showPa);
   $('paEx').onclick=function(){var id=$('paSel').value;csv('participants.csv',[['Name','Batch','Email','Status','Registered on']].concat(regs.filter(function(r){return r.e===id}).map(function(r){return [r.name,r.batch,r.email,SN[r.status]||r.status,r.ts?new Date(r.ts).toLocaleDateString('en-US'):'']})))};
   $('pfF').addEventListener('submit',function(e){
