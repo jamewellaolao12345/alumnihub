@@ -1001,11 +1001,12 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       return;
     }
     if(st==='Completed'){var p=document.createElement('p');p.textContent=mine?'Your status: '+(SN[mine.status]||mine.status):'This event has ended.';a.appendChild(p);return}
+    if(mine&&(mine.status==='attended'||mine.status==='absent')){var pf=document.createElement('p');pf.textContent='Your status: '+(SN[mine.status]||mine.status)+'. Attendance was already recorded by the admin, so this registration can no longer be changed.';a.appendChild(pf);return}
     var act=!!(mine&&mine.status!=='cancelled');
     mb(a,act?'Cancel registration':'Register',function(){
       var btn=this,to=act?'cancelled':'registered';btn.disabled=true;
-      var ref=fs.doc('eventRegs/'+e.id+'_'+uid),pr=act?ref.update({status:'cancelled'}):(mine?ref.update({status:'registered'}):ref.set({e:e.id,uid:uid,name:me.name,batch:me.batch||'',email:(user&&user.email)||'',status:'registered',ts:Date.now()}));
-      pr.then(function(){openEvent(e,to)},function(er){btn.disabled=false;alert('Couldn\u2019t save ('+((er&&er.code)||'error')+'). '+(er&&er.code==='permission-denied'?'Publish the latest Firestore rules and try again.':'Try again.'))});
+      var ref=fs.doc('eventRegs/'+e.id+'_'+uid),pr=act?ref.update({status:'cancelled'}):(mine?ref.update({status:'registered'}):ref.set({e:e.id,uid:uid,name:(me&&me.name)||(user&&user.displayName)||'Member',batch:(me&&me.batch)||'',email:(user&&user.email)||'',status:'registered',ts:Date.now()}));
+      pr.then(function(){openEvent(e,to)},function(er){btn.disabled=false;alert('Couldn\u2019t save ('+((er&&er.code)||'error')+'). '+(er&&er.code==='permission-denied'?'Your registration for this event can\u2019t be changed right now. If the admin already marked your attendance, please contact them.':'Try again.'))});
     });
     if(act){var p2=document.createElement('p');p2.style.cssText='margin:.6rem 0 0';p2.textContent='You are registered for this event.';a.appendChild(p2)}
   }
