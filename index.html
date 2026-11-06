@@ -1081,7 +1081,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     if(forced&&logged)mine=Object.assign({},mine||{},{status:forced});
     showModal(e.img,e.title,fmtEv(e)+' \u2022 '+st+(full()?' \u2022 '+evCount(e)+' registered':''),e.text||'');
     a=$('rma');
-    if(adm()){var ad=document.createElement('div');ad.className='abar';mb(ad,'Edit event',function(){$('rmod').hidden=true;location.hash='admin-events';setTimeout(function(){editEv=e.id;clrErr($('eF'));$('evm').className='msg';$('evm').textContent='';$('etl').value=e.title||'';$('edt').value=e.date||'';$('etm').value=e.time||'';$('epl').value=e.place||'';$('etx').value=e.text||'';$('ecancel').hidden=false;$('eF').scrollIntoView()},50)});mb(ad,'Delete event',function(){delEv(e,this)});a.appendChild(ad);return}
+    if(adm()){return}
     if(!full()){
       if(!logged){var l=document.createElement('a');l.href='#account';l.className='btn m';l.textContent='Log in to register';l.onclick=function(){$('rmod').hidden=true};a.appendChild(l)}
       else{var pp=document.createElement('p');pp.textContent=role()==='pending'?'Your account is waiting for admin approval.':'Event registration is for alumni.';a.appendChild(pp)}
