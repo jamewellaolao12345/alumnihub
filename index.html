@@ -259,6 +259,11 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     </ul>
     <p style="text-align:center;margin-top:1.4rem"><a class="btn m" href="#announcements">View all announcements</a></p>
   </div>
+  <div class="wrap" id="heWrap" hidden>
+    <h2 class="newsh">Upcoming Events</h2>
+    <div class="evg" id="heList"></div>
+    <p style="text-align:center;margin-top:1.4rem"><a class="btn m" href="#events">See all events</a></p>
+  </div>
   <div class="wrap" id="hjWrap" hidden>
     <h2 class="newsh">Latest Job Openings</h2>
     <div class="tri" id="hjList"></div>
@@ -989,6 +994,8 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       if(!x[1].length){var p=document.createElement('p');p.className='lead';p.textContent=x[2];l.appendChild(p);return}
       x[1].forEach(function(e){l.appendChild(evCard(e))});
     });
+    var hw=$('heWrap'),hl=$('heList'),ha=up.slice(0,3);hl.textContent='';hw.hidden=!ha.length;
+    ha.forEach(function(e){hl.appendChild(evCard(e))});
   }
   function openEvent(e,forced){
     var st=evState(e),mine=logged?regs.filter(function(r){return r.id===e.id+'_'+uid})[0]:null,a;
