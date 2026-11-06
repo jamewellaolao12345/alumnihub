@@ -139,7 +139,12 @@ main>section{animation:fadeIn .35s ease}
 .avatar-lg{width:80px;height:80px;border-radius:50%;object-fit:cover;display:block;margin-bottom:.6rem}
 .rxb{position:relative}
 .rxb[data-tip]:not([data-tip=""]):hover::after{content:attr(data-tip);position:absolute;bottom:120%;left:0;background:#241a1d;color:#fff;padding:.4rem .6rem;border-radius:.4rem;font:500 .75rem/1.4 var(--body);white-space:pre;z-index:5;text-align:left}
-.feed,.evg,.annc,.tri{align-items:start}
+.feed,.annc,.tri{align-items:start}
+.evg{align-items:start}
+.hj .ex{margin-bottom:.3rem}
+.hj .vd{margin-top:auto}
+.hj button.rmx{align-self:flex-start;background:none;color:var(--maroon);padding:0 1.2rem;margin:0 0 1rem;font:600 .85rem var(--body);text-decoration:underline}
+.hj.open .ex{display:block;-webkit-line-clamp:unset;overflow:visible}
 .nb{display:inline-block;min-width:1.4rem;padding:.05rem .45rem;margin-left:.4rem;border-radius:999px;background:#c68a14;color:#fff;font-size:.75rem;font-weight:700;line-height:1.4;text-align:center}
 .nb.m{background:#d9731a}.nb.h{background:#b3261e}
 .tabs button.hot{border-color:#d9731a;box-shadow:0 0 0 2px rgba(217,115,26,.25)}
@@ -977,14 +982,34 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   function evState(e){var n=Date.now(),s=evStart(e),en=s+(e.time?4*3600000:86400000);return n<s?'Upcoming':n<en?'Ongoing':'Completed'}
   function evCount(e){return regs.filter(function(r){return r.e===e.id&&r.status!=='cancelled'}).length}
   function fmtEv(e){return (e.date?fmt(e.date):'')+(e.time?' at '+e.time:'')+(e.place?' \u2022 '+e.place:'')}
+  var eqQ=[];
+  function eqEv(g){
+    if(!g||eqQ.indexOf(g)>=0)return;eqQ.push(g);
+    requestAnimationFrame(function(){
+      eqQ.splice(eqQ.indexOf(g),1);
+      var cs=[].slice.call(g.children).filter(function(c){return c.classList.contains('hj')}),rows={};
+      cs.forEach(function(c){c.style.minHeight=''});
+      cs.forEach(function(c){var t=c.offsetTop;(rows[t]=rows[t]||[]).push(c)});
+      Object.keys(rows).forEach(function(t){
+        var m=0;rows[t].forEach(function(c){if(!c.classList.contains('open'))m=Math.max(m,Math.ceil(c.getBoundingClientRect().height))});
+        rows[t].forEach(function(c){c.style.minHeight=m?m+'px':''});
+      });
+    });
+  }
+  window.addEventListener('resize',function(){document.querySelectorAll('.evg').forEach(eqEv)});
   function evCard(e){
     var c=document.createElement('article'),h=document.createElement('h3'),m=document.createElement('p'),x=document.createElement('p'),b=document.createElement('button'),bd=document.createElement('span'),st=evState(e);
     c.className='hj';
     if(e.img){var im=document.createElement('img');im.src=e.img;im.alt='';c.appendChild(im)}
     h.textContent=e.title;m.className='meta';m.textContent=fmtEv(e);
     bd.className='bd '+(st==='Upcoming'?'up':st==='Ongoing'?'on':'done');bd.textContent=st;
-    x.className='ex';x.textContent=e.text||'';b.type='button';b.textContent='View details';b.onclick=function(){openEvent(e)};
-    c.appendChild(h);c.appendChild(m);c.appendChild(bd);c.appendChild(x);c.appendChild(b);return c;
+    x.className='ex';x.textContent=e.text||'';b.type='button';b.className='vd';b.textContent='View details';b.onclick=function(){openEvent(e)};
+    var r=document.createElement('button');r.type='button';r.className='rmx';r.textContent='Read more';r.hidden=true;
+    r.onclick=function(){var o=c.classList.toggle('open');r.textContent=o?'Show less':'Read more';eqEv(c.parentNode)};
+    c.appendChild(h);c.appendChild(m);c.appendChild(bd);c.appendChild(x);c.appendChild(r);c.appendChild(b);
+    function chk(){if(!c.classList.contains('open')&&x.clientHeight)r.hidden=x.scrollHeight<=x.clientHeight+1;eqEv(c.parentNode)}
+    if(window.ResizeObserver)new ResizeObserver(chk).observe(x);else setTimeout(chk,0);
+    return c;
   }
   function showEvents(){
     var up=evs.filter(function(e){return evState(e)!=='Completed'}).sort(function(a,b){return evStart(a)-evStart(b)}),
@@ -1002,6 +1027,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     if(forced&&logged)mine=Object.assign({},mine||{},{status:forced});
     showModal(e.img,e.title,fmtEv(e)+' \u2022 '+st+(full()?' \u2022 '+evCount(e)+' registered':''),e.text||'');
     a=$('rma');
+    if(adm()){var ad=document.createElement('div');ad.className='abar';mb(ad,'Edit event',function(){$('rmod').hidden=true;location.hash='admin-events';setTimeout(function(){editEv=e.id;$('etl').value=e.title;$('edt').value=e.date||'';$('etm').value=e.time||'';$('epl').value=e.place||'';$('etx').value=e.text||'';$('ecancel').hidden=false;$('eF').scrollIntoView()},50)});mb(ad,'Delete event',function(){delEv(e,this)});a.appendChild(ad)}
     if(!full()){
       if(!logged){var l=document.createElement('a');l.href='#account';l.className='btn m';l.textContent='Log in to register';l.onclick=function(){$('rmod').hidden=true};a.appendChild(l)}
       else{var pp=document.createElement('p');pp.textContent=role()==='pending'?'Your account is waiting for admin approval.':'Event registration is for alumni.';a.appendChild(pp)}
@@ -1017,11 +1043,19 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     });
     if(act){var p2=document.createElement('p');p2.style.cssText='margin:.6rem 0 0';p2.textContent='You are registered for this event.';a.appendChild(p2)}
   }
+  function delEv(e,btn){
+    if(!confirm('Delete the event \u201c'+e.title+'\u201d? Its registrations will also be removed. This cannot be undone.'))return;
+    if(btn)btn.disabled=true;
+    fs.doc('events/'+e.id).delete().then(function(){
+      $('rmod').hidden=true;if(editEv===e.id){editEv='';$('eF').reset();$('ecancel').hidden=true}
+      return fs.collection('eventRegs').where('e','==',e.id).get().then(function(sn){return Promise.all(sn.docs.map(function(d){return d.ref.delete()}))}).catch(function(){});
+    },function(er){if(btn)btn.disabled=false;alert('Couldn\u2019t delete this event ('+((er&&er.code)||'error')+'). '+(er&&er.code==='permission-denied'?'Make sure you are logged in with an admin account and Admin mode is on.':'Check your internet connection and try again.'))});
+  }
   function showEvAdm(){
     fill($('evAdm'),evs.slice().sort(function(a,b){return evStart(b)-evStart(a)}),function(e){
       return item(e.date?fmt(e.date):'',e.title,fmtEv(e)+' \u2022 '+evState(e)+' \u2022 '+evCount(e)+' registered',function(d){
         mb(d,'Edit',function(){editEv=e.id;$('etl').value=e.title;$('edt').value=e.date||'';$('etm').value=e.time||'';$('epl').value=e.place||'';$('etx').value=e.text||'';$('ecancel').hidden=false;$('eF').scrollIntoView()});
-        mb(d,'Delete',function(){if(confirm('Delete this event?'))fs.doc('events/'+e.id).delete()});
+        mb(d,'Delete',function(){delEv(e,this)});
       });
     });
   }
