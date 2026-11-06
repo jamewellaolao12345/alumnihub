@@ -180,6 +180,14 @@ main>section{animation:fadeIn .35s ease}
 .card+.card{margin-top:1rem}
 footer details{max-width:40rem;margin:.8rem auto 0;text-align:left}footer summary{cursor:pointer;text-align:center}
 footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;border-top:1px solid var(--line)}
+#home>.wrap{padding-top:clamp(1.25rem,3vw,2.25rem);padding-bottom:clamp(1.25rem,3vw,2.25rem)}
+#home>.hero+.wrap{padding-top:clamp(2rem,5vw,3.5rem)}
+#home>.wrap:last-child{padding-bottom:clamp(2rem,5vw,3.5rem)}
+#home>.wrap>p:last-child{margin-bottom:0}
+#home .evg{margin-bottom:0}
+#home .newsh::after{margin-bottom:1.4rem}
+.formbar{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
 @media (prefers-reduced-motion:no-preference){.hero-text{animation:rise .7s ease-out both}@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}}
 </style>
 </head>
@@ -407,12 +415,14 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       <label style="font-weight:400"><input type="checkbox" id="aimp"> Mark as important</label>
       <label>Picture (optional)<input type="file" id="aimgf" accept="image/*"></label>
       <button class="btn m" type="submit">Post announcement</button><p class="msg" id="am" role="status"></p></form>
-    <form class="card" id="spF" data-tab="sp" novalidate><h3>Add an alumni spotlight</h3>
+    <form class="card" id="spF" data-tab="sp" novalidate><h3 id="spH">Add an alumni spotlight</h3>
       <label>Name<input type="text" id="sn" maxlength="80"></label>
       <label>Course and batch<input type="text" id="sb" maxlength="40"></label>
       <label>Story<textarea id="ss" maxlength="400"></textarea></label>
       <label>Portrait (optional)<input type="file" id="sf" accept="image/*"></label>
-      <button class="btn m" type="submit">Post spotlight</button><p class="msg" id="sm" role="status"></p></form>
+      <p id="spImgNote" class="msg" style="margin:-.4rem 0 .9rem;min-height:0" hidden>Leave empty to keep the current portrait.</p>
+      <div class="formbar"><button class="btn m" type="submit" id="spBtn">Post spotlight</button><button class="btn ghost" type="button" id="spCancel" hidden>Cancel editing</button></div><p class="msg" id="sm" role="status"></p></form>
+    <div data-tab="sp"><h3 style="margin:1.6rem 0 .8rem;font:700 1.1rem var(--head)">Current spotlights</h3><ul class="ann" id="spAdm"></ul></div>
     <div data-tab="rg">
       <form class="card" id="sgF" novalidate><h3>Create a registrar account</h3>
         <label>Full name<input type="text" id="sgn" maxlength="80"></label>
@@ -472,13 +482,13 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     <h2>Job board</h2>
     <p class="lead">Openings shared by alumni and employers. Always check an employer yourself before sharing personal details or paying anything.</p>
     <div class="card" id="jbGate" hidden><p>Log in to see and post job openings.</p><a class="btn m" href="#account">Log in</a></div>
-    <form class="card" id="jbF" novalidate hidden><h3>Post a job opening</h3>
+    <form class="card" id="jbF" novalidate hidden><h3 id="jbH">Post a job opening</h3>
       <label>Job title<input type="text" id="jt" maxlength="100"></label>
       <label>Company<input type="text" id="jc" maxlength="80"></label>
       <label>Location<input type="text" id="jl" maxlength="80"></label>
       <label>Description<textarea id="jd" maxlength="600"></textarea></label>
       <label>How to apply (email, phone or website)<input type="text" id="ja" maxlength="150"></label>
-      <button class="btn m" type="submit">Post job</button><p class="msg" id="jm" role="status"></p>
+      <div class="formbar"><button class="btn m" type="submit" id="jbBtn">Post job</button><button class="btn ghost" type="button" id="jbCancel" hidden>Cancel editing</button></div><p class="msg" id="jm" role="status"></p>
     </form>
     <ul class="ann" id="jbList" style="margin-top:1.5rem"></ul>
   </div>
@@ -914,9 +924,19 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       if(x.img){var im=document.createElement('img');im.src=x.img;im.alt=x.name;c.appendChild(im)}
       d.className='body';h.textContent=x.name;h.style.cssText='margin:0 0 .3rem;font:600 1.15rem var(--head)';
       p.textContent=(x.batch?x.batch+'. ':'')+(x.story||'');d.appendChild(h);d.appendChild(p);
-      if(adm())mb(d,'Delete',function(){if(confirm('Delete this?'))fs.doc('spotlight/'+x.id).delete()});
+      if(adm()){mb(d,'Edit',function(){editSpot(x)});mb(d,'Delete',function(){delSpot(x)})}
       c.appendChild(d);l.appendChild(c);
     });
+    var al=$('spAdm');if(al)fill(al,adm()?sps:[],function(x){return item('',x.name,(x.batch?x.batch+'. ':'')+(x.story||''),function(d){mb(d,'Edit',function(){editSpot(x)});mb(d,'Delete',function(){delSpot(x)})})});
+  }
+  var editSp='';
+  function delSpot(x){if(!adm()||!confirm('Delete this spotlight?'))return;fs.doc('spotlight/'+x.id).delete().then(function(){if(editSp===x.id)spReset()},function(){alert('Couldn\u2019t delete this spotlight. Make sure you are logged in as admin.')})}
+  function spReset(){editSp='';$('spF').reset();$('spH').textContent='Add an alumni spotlight';$('spBtn').textContent='Post spotlight';$('spCancel').hidden=true;$('spImgNote').hidden=true}
+  function editSpot(x){
+    if(!adm())return;$('rmod').hidden=true;location.hash='admin-spotlight';
+    setTimeout(function(){editSp=x.id;$('sn').value=x.name||'';$('sb').value=x.batch||'';$('ss').value=x.story||'';$('sf').value='';
+      $('spH').textContent='Edit spotlight: '+(x.name||'');$('spBtn').textContent='Save changes';$('spCancel').hidden=false;$('spImgNote').hidden=!x.img;$('sm').textContent='';
+      $('spF').scrollIntoView({behavior:'smooth',block:'start'});$('sn').focus({preventScroll:true})},60);
   }
   function msgBadge(){
     var n=msgs.filter(function(x){return !x.reply}).length,lv=n>=6?'h':n>=3?'m':'';
@@ -957,7 +977,18 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   }
   function showModal(img,t,m,b,round){var i=$('rmi');i.style.cssText=round?'width:96px;height:96px;border-radius:50%;object-fit:cover;max-height:none':'';if(img){i.src=img;i.hidden=false}else i.hidden=true;$('rmt').textContent=t;$('rmd').textContent=m||'';$('rmb').textContent=b||'';$('rma').textContent='';$('rmod').hidden=false;$('rmod').scrollTop=0}
   function openPost(p){var cm=coms.filter(function(c){return c.postId===p.id}).map(function(c){return c.name+': '+c.text}).join('\n');showModal(p.img,p.name,(p.batch?p.batch+' \u2022 ':'')+(p.date||''),(p.cap||'')+(cm?'\n\nComments\n'+cm:''))}
-  function openJob(j){showModal('',j.title,(j.company||'')+(j.place?' \u2022 '+j.place:''),(j.text||'')+(j.apply?'\n\nHow to apply: '+j.apply:'')+'\n\nPosted by '+j.name)}
+  function openJob(j){showModal('',j.title,(j.company||'')+(j.place?' \u2022 '+j.place:''),(j.text||'')+(j.apply?'\n\nHow to apply: '+j.apply:'')+'\n\nPosted by '+j.name);
+    if(canJob(j)){var b=document.createElement('div');b.className='abar';mb(b,'Edit job',function(){editJob(j)});mb(b,'Delete job',function(){delJob(j)});$('rma').appendChild(b)}}
+  function canJob(j){return adm()||(full()&&logged&&j.uid===uid)}
+  var editJb='';
+  function jbReset(){editJb='';$('jbF').reset();$('jbH').textContent='Post a job opening';$('jbBtn').textContent='Post job';$('jbCancel').hidden=true}
+  function delJob(j){if(!canJob(j)||!confirm('Delete this job opening?'))return;fs.doc('jobs/'+j.id).delete().then(function(){$('rmod').hidden=true;if(editJb===j.id)jbReset()},function(){alert('Couldn\u2019t delete this job opening. Only the person who posted it or an admin can delete it.')})}
+  function editJob(j){
+    if(!canJob(j))return;$('rmod').hidden=true;location.hash='jobs';
+    setTimeout(function(){editJb=j.id;$('jt').value=j.title||'';$('jc').value=j.company||'';$('jl').value=j.place||'';$('jd').value=j.text||'';$('ja').value=j.apply||'';
+      $('jbH').textContent='Edit job opening';$('jbBtn').textContent='Save changes';$('jbCancel').hidden=false;$('jm').textContent='';
+      $('jbF').scrollIntoView({behavior:'smooth',block:'start'});$('jt').focus({preventScroll:true})},60);
+  }
   function showHJ(){
     var w=$('hjWrap'),l=$('hjList'),a=jobs.slice(0,3);l.textContent='';w.hidden=!a.length;
     a.forEach(function(j){
@@ -972,7 +1003,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       return item(j.ts?new Date(j.ts).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'',j.title,(j.company||'')+(j.place?' \u2022 '+j.place:''),function(d){
         function line(t,sm){var p=document.createElement('p');p.textContent=t;if(sm)p.style.cssText='font-size:.85rem;margin-top:.4rem';d.appendChild(p)}
         if(j.text)line(j.text);if(j.apply)line('How to apply: '+j.apply);line('Posted by '+j.name,1);
-        if(adm()||(logged&&j.uid===uid))mb(d,'Delete',function(){if(confirm('Delete this job?'))fs.doc('jobs/'+j.id).delete()});
+        if(canJob(j)){mb(d,'Edit',function(){editJob(j)});mb(d,'Delete',function(){delJob(j)})}
       });
     });
   }
@@ -1039,7 +1070,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     if(forced&&logged)mine=Object.assign({},mine||{},{status:forced});
     showModal(e.img,e.title,fmtEv(e)+' \u2022 '+st+(full()?' \u2022 '+evCount(e)+' registered':''),e.text||'');
     a=$('rma');
-    if(adm()){var ad=document.createElement('div');ad.className='abar';mb(ad,'Edit event',function(){$('rmod').hidden=true;location.hash='admin-events';setTimeout(function(){editEv=e.id;$('etl').value=e.title;$('edt').value=e.date||'';$('etm').value=e.time||'';$('epl').value=e.place||'';$('etx').value=e.text||'';$('ecancel').hidden=false;$('eF').scrollIntoView()},50)});mb(ad,'Delete event',function(){delEv(e,this)});a.appendChild(ad);var an=document.createElement('p');an.style.cssText='margin:.6rem 0 0';an.textContent='You are in Admin mode. Admins manage events and don\u2019t register for them. See who registered under Admin \u2192 Event participants.';a.appendChild(an);return}
+    if(adm()){var ad=document.createElement('div');ad.className='abar';mb(ad,'Edit event',function(){$('rmod').hidden=true;location.hash='admin-events';setTimeout(function(){editEv=e.id;$('etl').value=e.title;$('edt').value=e.date||'';$('etm').value=e.time||'';$('epl').value=e.place||'';$('etx').value=e.text||'';$('ecancel').hidden=false;$('eF').scrollIntoView()},50)});mb(ad,'Delete event',function(){delEv(e,this)});a.appendChild(ad);return}
     if(!full()){
       if(!logged){var l=document.createElement('a');l.href='#account';l.className='btn m';l.textContent='Log in to register';l.onclick=function(){$('rmod').hidden=true};a.appendChild(l)}
       else{var pp=document.createElement('p');pp.textContent=role()==='pending'?'Your account is waiting for admin approval.':'Event registration is for alumni.';a.appendChild(pp)}
@@ -1317,9 +1348,13 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   $('dirDel').onclick=function(){if(uid)fs.doc('directory/'+uid).delete().then(function(){alert('You were removed from the directory.')},function(){})};
   $('spF').addEventListener('submit',function(e){
     e.preventDefault();var n=$('sn').value.trim();if(!n||!adm())return;
-    function put(img){var o={name:n,batch:$('sb').value.trim(),story:$('ss').value.trim(),ts:Date.now()};if(img)o.img=img;send('spF','sm','spotlight',o)}
+    function put(img){
+      if(editSp){var u={name:n,batch:$('sb').value.trim(),story:$('ss').value.trim()},m=$('sm');if(img)u.img=img;m.className='msg';
+        fs.doc('spotlight/'+editSp).update(u).then(function(){spReset();m.textContent='Changes saved.'},function(){m.className='msg err';m.textContent='Couldn\u2019t save the changes. Make sure you are logged in as admin.'});return}
+      var o={name:n,batch:$('sb').value.trim(),story:$('ss').value.trim(),ts:Date.now()};if(img)o.img=img;send('spF','sm','spotlight',o)}
     var f=$('sf').files[0];if(f)shrink(f,700,put,0.7);else put();
   });
+  $('spCancel').onclick=function(){spReset();$('sm').textContent=''};
   $('ctF').addEventListener('submit',function(e){
     e.preventDefault();var v=$('ctx').value.trim();if(!v||!canReply())return;
     send('ctF','ctm','messages',{uid:uid,name:me.name,email:(user&&user.email)||'',text:v,ts:Date.now()});
@@ -1334,8 +1369,11 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   $('jbF').addEventListener('submit',function(e){
     e.preventDefault();var t=$('jt').value.trim(),c=$('jc').value.trim(),m=$('jm');if(!full())return;
     if(!t||!c){m.className='msg err';m.textContent='Enter the job title and the company.';return}
+    if(editJb){m.className='msg';m.textContent='';
+      fs.doc('jobs/'+editJb).update({title:t,company:c,place:$('jl').value.trim(),text:$('jd').value.trim(),apply:$('ja').value.trim(),edited:Date.now()}).then(function(){jbReset();m.textContent='Changes saved.'},function(er){m.className='msg err';m.textContent='Couldn\u2019t save the changes'+(er&&er.code==='permission-denied'?'. Your Firebase rules don\u2019t allow editing job openings yet.':'. Try again.')});return}
     send('jbF','jm','jobs',{uid:uid,name:me.name,title:t,company:c,place:$('jl').value.trim(),text:$('jd').value.trim(),apply:$('ja').value.trim(),ts:Date.now()});
   });
+  $('jbCancel').onclick=function(){jbReset();$('jm').textContent=''};
   var HM={ov:'admin',an:'admin-announcements',sp:'admin-spotlight',rq:'admin-requests',ms:'admin-messages',ce:'admin-certificates',ev:'admin-events',pa:'admin-participants',mb:'admin-members',rg:'admin-registrars',au:'admin-audit'},TN={ov:'Overview',an:'Post an announcement',sp:'Alumni spotlight',rq:'Document requests (view only)',ms:'Messages',ce:'Register a certificate',ev:'Events',pa:'Event participants',mb:'Members',rg:'Registrars',au:'Audit log'};
   function adminTab(t){
     $('admT').textContent='Admin: '+TN[t];
