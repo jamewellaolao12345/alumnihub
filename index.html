@@ -198,6 +198,51 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
 #home .newsh::after{margin-bottom:1.4rem}
 .formbar{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
 .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+/* Reactions, comments, jobs extras */
+.engs{font-size:.85rem;color:var(--muted);padding:0 1.2rem .5rem}
+.engs[hidden]{display:none}
+.annc .engs{order:4;padding:0 1.2rem .6rem}
+.ann:not(.annc) .engs{padding:.2rem 0}
+.eng{margin-top:1.2rem;border-top:1px solid var(--line);padding-top:.8rem;text-align:left}
+.eng-sum{display:flex;justify-content:space-between;gap:.6rem;font-size:.9rem;color:var(--muted)}
+.eng-cnt{border:0;background:none;padding:0;font:inherit;color:inherit;cursor:pointer}
+.eng-cnt:disabled{cursor:default}
+.eng-cnt:not(:disabled):hover{text-decoration:underline}
+.eng-who{border:1px solid var(--line);border-radius:.6rem;padding:.6rem;margin:.5rem 0;max-height:14rem;overflow:auto}
+.eng-chips{display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.5rem}
+.eng-who .wr{display:flex;align-items:center;gap:.6rem;padding:.25rem 0}
+.eng-who .wr b{flex:1;min-width:0;font-weight:600}
+.eng-bar{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;margin:.6rem 0;padding:.3rem 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.rxw{position:relative;display:flex}
+.rxmain,.rxcaret{border:0;background:none;font:600 .9rem var(--body);color:var(--muted);padding:.45rem .7rem;border-radius:.5rem;cursor:pointer}
+.rxmain:hover,.rxcaret:hover{background:#f6eeec}
+.rxmain.on{color:var(--maroon)}
+.rxmain:disabled,.rxcaret:disabled{opacity:.5;cursor:not-allowed}
+.rxcaret{padding-left:.2rem;padding-right:.4rem}
+.rxpick{position:absolute;bottom:100%;left:0;z-index:8;display:flex;gap:.15rem;padding:.3rem .5rem;background:var(--surface);border:1px solid var(--line);border-radius:999px;box-shadow:0 6px 20px rgba(0,0,0,.18)}
+.rxpick button{border:0;background:none;font-size:1.6rem;line-height:1;padding:.2rem;cursor:pointer;transition:transform .15s}
+.rxpick button:hover,.rxpick button:focus-visible{transform:scale(1.3) translateY(-3px)}
+.eng-sort{display:inline-block;width:auto;margin:0 0 0 auto;font:inherit;font-size:.85rem;padding:.3rem .5rem;border:1px solid var(--line);border-radius:.5rem;background:var(--bg);color:var(--ink)}
+.eng-form{display:flex;gap:.4rem;margin:.6rem 0 .2rem}
+.eng-form input{flex:1;min-width:0;font:400 .95rem var(--body);padding:.55rem .8rem;border:1px solid var(--line);border-radius:999px;background:var(--bg);color:var(--ink)}
+.eng-form .btn{padding:.5rem .9rem;font-size:.9rem}
+.eng-c{display:flex;gap:.6rem;padding:.55rem 0}
+.eng-cb{flex:1;min-width:0}
+.eng-ch{display:flex;gap:.5rem;align-items:baseline;flex-wrap:wrap}
+.eng-ch small{color:var(--muted)}
+.eng-ct{margin:.1rem 0 0!important;overflow-wrap:anywhere;white-space:pre-wrap}
+.eng-ca{margin-top:.2rem}
+.eng-ca button{border:0;background:none;color:var(--maroon);font:600 .8rem var(--body);cursor:pointer;padding:0 .8rem 0 0}
+.eng-ed{display:flex;gap:.4rem;margin-top:.3rem;flex-wrap:wrap}
+.eng-ed input{flex:1;min-width:10rem;font:400 .95rem var(--body);padding:.45rem .7rem;border:1px solid var(--line);border-radius:.5rem;background:var(--bg);color:var(--ink)}
+.eng-ed .btn{padding:.4rem .8rem;font-size:.85rem}
+.rmc .av img{margin:0;border-radius:0;max-height:none;object-fit:cover;background:none;height:100%}
+.shc{padding:1.1rem;background:linear-gradient(160deg,#f6eeec,#fff);border-bottom:1px solid var(--line)}
+.shc small{color:var(--muted);font-weight:600}
+.shc h4{margin:.2rem 0;font:600 1.15rem var(--head);color:var(--maroon)}
+.shc p{margin:0 0 .6rem;color:var(--muted)}
+.jbact{display:flex;flex-wrap:wrap;align-items:center}
+.jbact .shf{flex-basis:100%}
 /* Private messages */
 .msgr{display:grid;grid-template-columns:21rem 1fr;height:min(74vh,660px);min-height:26rem;background:var(--surface);border:1px solid var(--line);border-radius:.8rem;overflow:hidden}
 .msgr-side{display:flex;flex-direction:column;min-height:0;border-right:1px solid var(--line);padding:.8rem}
@@ -571,9 +616,11 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       <label>Location<input type="text" id="jl" maxlength="80"></label>
       <label>Description<textarea id="jd" maxlength="600"></textarea></label>
       <label>How to apply (email, phone or website)<input type="text" id="ja" maxlength="150"></label>
+      <label>Application deadline (optional)<input type="date" id="jdl"></label>
       <div class="formbar"><button class="btn m" type="submit" id="jbBtn">Post job</button><button class="btn ghost" type="button" id="jbCancel" hidden>Cancel editing</button></div><p class="msg" id="jm" role="status"></p>
     </form>
-    <ul class="ann" id="jbList" style="margin-top:1.5rem"></ul>
+    <div class="tabs" id="jbTabs" style="margin-top:1.5rem" hidden><button type="button" data-k="all" aria-current="true">All jobs</button><button type="button" data-k="saved" aria-current="false">Saved jobs<span class="nb" id="nbSv" hidden></span></button></div>
+    <ul class="ann" id="jbList"></ul>
   </div>
 </section>
 
@@ -675,7 +722,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   </div>
 </section>
 </main>
-<div id="rmod" hidden><div class="rmc"><button type="button" id="rmx" aria-label="Close">×</button><img id="rmi" alt="" hidden><h2 id="rmt"></h2><p id="rmd" class="lead" style="margin:0 0 1rem"></p><p id="rmb"></p><div id="rma"></div></div></div>
+<div id="rmod" hidden><div class="rmc"><button type="button" id="rmx" aria-label="Close">×</button><img id="rmi" alt="" hidden><h2 id="rmt"></h2><p id="rmd" class="lead" style="margin:0 0 1rem"></p><p id="rmb"></p><div id="rma"></div><div id="rme"></div></div></div>
 <div id="lb" hidden><img id="lbi" alt="Announcement picture"></div>
 <footer>
   <div class="fwrap">
@@ -722,7 +769,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   }
 
   function route(){
-    var h=location.hash.slice(1),vp=h.indexOf('verify-')===0?decodeURIComponent(h.slice(7)):'';if(vp)h='verify';var at='';if(h.indexOf('admin')===0){at={'admin':'ov','admin-announcements':'an','admin-office':'of','admin-spotlight':'sp','admin-requests':'rq','admin-messages':'ms','admin-certificates':'ce','admin-events':'ev','admin-participants':'pa','admin-members':'mb','admin-registrars':'rg','admin-audit':'au'}[h]||'ov';h='admin'}if(['home','events','post','account','requests','admin','verify','directory','contact','survey','jobs','community','announcements','services','profile','registrar','notices','messages'].indexOf(h)<0)h='home';
+    var h=location.hash.slice(1),vp=h.indexOf('verify-')===0?decodeURIComponent(h.slice(7)):'';if(vp)h='verify';if(h.indexOf('job-')===0){jobWant=h.slice(4);h='jobs'}var at='';if(h.indexOf('admin')===0){at={'admin':'ov','admin-announcements':'an','admin-office':'of','admin-spotlight':'sp','admin-requests':'rq','admin-messages':'ms','admin-certificates':'ce','admin-events':'ev','admin-participants':'pa','admin-members':'mb','admin-registrars':'rg','admin-audit':'au'}[h]||'ov';h='admin'}if(['home','events','post','account','requests','admin','verify','directory','contact','survey','jobs','community','announcements','services','profile','registrar','notices','messages'].indexOf(h)<0)h='home';
     ['home','events','post','account','requests','admin','verify','directory','contact','survey','jobs','community','announcements','services','profile','registrar','notices','messages'].forEach(function(id){document.getElementById(id).hidden=(id!==h)});
     var nh=['requests','verify','directory','jobs','survey','contact','post'].indexOf(h)>=0?'services':h;
     document.querySelectorAll('nav a').forEach(function(a){
@@ -732,7 +779,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     if(staffInfo&&staffInfo.active!==false&&!adm()&&['home','announcements','events','registrar','account','verify'].indexOf(h)<0){location.hash='registrar';return}
     if(h==='admin')adminTab(at||'ov');
     if(h==='community')render();
-    if(h==='messages')dmUi();else dmLeave();
+    if(h==='messages')dmUi();else dmLeave();if(h==='jobs'){tryJobWant();markJobsSeen()}
     if(h==='post'||h==='account'||h==='requests'||h==='admin'||h==='directory'||h==='contact'||h==='survey'||h==='jobs'||h==='profile')acct();
     window.scrollTo(0,0);
   }
@@ -925,10 +972,10 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       if(unM){unM();unM=null}msgs=[];showMsg();if(unU){unU();unU=null}memList=[];if(unRI){unRI();unRI=null}rinfo={};if(unSt2){unSt2();unSt2=null}stf=[];if(unAu){unAu();unAu=null}aud=[];if(unT){unT();unT=null}trs=[];
       if(unQ){unQ();unQ=null}mine=[];showMine();
       if(unE){unE();unE=null}regs=[];showEvents();
-      if(unNt){unNt();unNt=null}nts=[];showNt();dmStop();
+      if(unNt){unNt();unNt=null}nts=[];showNt();dmStop();engStop();if(u)engStart();
       if(u)unNt=fs.collection('notifications').where('to','==',uid).limit(50).onSnapshot(function(sn){nts=rows(sn).sort(function(a,b){return b.ts-a.ts});showNt()},function(){});
       if(unRx){unRx();unRx=null}rx=[];if(unJ){unJ();unJ=null}jobs=[];showJobs();showHJ();
-      if(u){unRx=fs.collection('reactions').limit(5000).onSnapshot(function(sn){rx=rows(sn);render()},function(){});unJ=fs.collection('jobs').orderBy('ts','desc').limit(100).onSnapshot(function(sn){jobs=rows(sn);showJobs();showHJ()},function(){})}
+      if(u){unRx=fs.collection('reactions').limit(5000).onSnapshot(function(sn){rx=rows(sn);render()},function(){});unJ=fs.collection('jobs').orderBy('ts','desc').limit(100).onSnapshot(function(sn){jobs=rows(sn);showJobs();showHJ();tryJobWant();jobRefresh();showNt();if(location.hash==='#jobs')markJobsSeen()},function(){})}
       if(u)unE=fs.collection('eventRegs').limit(2000).onSnapshot(function(sn){regs=rows(sn);showEvents();showEvAdm();showPa()},function(){});
       if(u)unQ=fs.collection('messages').where('uid','==',uid).onSnapshot(function(sn){mine=rows(sn).sort(function(a,b){return b.ts-a.ts});showMine()},function(){});if(unS){unS();unS=null}rs=[];
       if(u)unS=fs.collection('rsvps').limit(1000).onSnapshot(function(sn){rs=rows(sn);showAnn()},function(){});
@@ -959,6 +1006,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   function tools(col,x){return function(d){
     if(x.img){var im=document.createElement('img');im.onerror=function(){var li=im.closest('li');im.remove();if(li){li.classList.add('noimg');eqEv(li.parentNode)}};im.src=x.img;im.alt='';im.className='aimg';im.onclick=function(){$('lbi').src=x.img;$('lb').hidden=false};d.appendChild(im);im.onload=function(){var li=im.closest('li');if(li)eqEv(li.parentNode)}}
     if(col==='announcements'){
+      d.appendChild(engSumEl('ann',x.id));
       var ap=d.querySelector('p'),rx=document.createElement('button');rx.type='button';rx.className='rmx';rx.textContent='Read more';rx.hidden=true;
       rx.onclick=function(){var li=rx.closest('li'),o=li.classList.toggle('open');rx.textContent=o?'Show less':'Read more';eqEv(li.parentNode)};
       d.appendChild(rx);
@@ -999,7 +1047,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     var q=($('ds').value||'').toLowerCase();
     fill($('dirList'),dirs.filter(function(x){return (x.name+' '+x.batch+' '+(x.work||'')).toLowerCase().indexOf(q)>=0}).sort(function(a,b){return a.name<b.name?-1:1}),function(x){return item(x.batch,x.name,x.work)});
   }
-  function openAnn(x){var i=$('rmi');$('rma').textContent='';i.style.cssText='';i.onerror=function(){i.hidden=true};if(x.img){i.src=x.img;i.hidden=false}else{i.hidden=true;i.removeAttribute('src')}$('rmt').textContent=x.title;$('rmd').textContent=x.date||'';$('rmb').textContent=x.text||'';$('rmod').hidden=false}
+  function openAnn(x){var i=$('rmi');$('rma').textContent='';i.style.cssText='';i.onerror=function(){i.hidden=true};if(x.img){i.src=x.img;i.hidden=false}else{i.hidden=true;i.removeAttribute('src')}$('rmt').textContent=x.title;$('rmd').textContent=x.date||'';$('rmb').textContent=x.text||'';curJob='';$('rmod').hidden=false;engage('ann',x.id,$('rme'))}
   function showSp(){
     var w=$('spWrap'),l=$('spList');l.textContent='';w.hidden=!sps.length;
     sps.forEach(function(x){
@@ -1059,17 +1107,17 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     var t=rows.map(function(r){return r.map(function(c){c=String(c==null?'':c);if(/^[=+\-@]/.test(c))c="'"+c;return /[",\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c}).join(',')}).join('\r\n');
     var a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+t],{type:'text/csv'}));a.download=name;a.click();
   }
-  function showModal(img,t,m,b,round){var i=$('rmi');i.style.cssText=round?'width:96px;height:96px;border-radius:50%;object-fit:cover;max-height:none':'';if(img){i.src=img;i.hidden=false}else i.hidden=true;$('rmt').textContent=t;$('rmd').textContent=m||'';$('rmb').textContent=b||'';$('rma').textContent='';$('rmod').hidden=false;$('rmod').scrollTop=0}
+  function showModal(img,t,m,b,round){var i=$('rmi');i.style.cssText=round?'width:96px;height:96px;border-radius:50%;object-fit:cover;max-height:none':'';if(img){i.src=img;i.hidden=false}else i.hidden=true;$('rmt').textContent=t;$('rmd').textContent=m||'';$('rmb').textContent=b||'';$('rma').textContent='';$('rme').textContent='';curJob='';$('rmod').hidden=false;$('rmod').scrollTop=0}
   function openPost(p){var cm=coms.filter(function(c){return c.postId===p.id}).map(function(c){return c.name+': '+c.text}).join('\n');showModal(p.img,p.name,(p.batch?p.batch+' \u2022 ':'')+(p.date||''),(p.cap||'')+(cm?'\n\nComments\n'+cm:''))}
-  function openJob(j){showModal('',j.title,(j.company||'')+(j.place?' \u2022 '+j.place:''),(j.text||'')+(j.apply?'\n\nHow to apply: '+j.apply:'')+'\n\nPosted by '+j.name);
-    if(canJob(j)){var b=document.createElement('div');b.className='abar';mb(b,'Edit job',function(){editJob(j)});mb(b,'Delete job',function(){delJob(j)});$('rma').appendChild(b)}}
+  function openJob(j){showModal('',j.title,(j.company||'')+(j.place?' \u2022 '+j.place:'')+jobDl(j),(j.text||'')+'\n\nPosted by '+j.name);curJob=j.id;jobActions($('rma'),j);engage('job',j.id,$('rme'));
+  }
   function canJob(j){return adm()||(full()&&logged&&j.uid===uid)}
   var editJb='';
   function jbReset(){editJb='';$('jbF').reset();$('jbH').textContent='Post a job opening';$('jbBtn').textContent='Post job';$('jbCancel').hidden=true}
   function delJob(j){if(!canJob(j)||!confirm('Delete this job opening?'))return;fs.doc('jobs/'+j.id).delete().then(function(){$('rmod').hidden=true;if(editJb===j.id)jbReset()},function(){alert('Couldn\u2019t delete this job opening. Only the person who posted it or an admin can delete it.')})}
   function editJob(j){
     if(!canJob(j))return;$('rmod').hidden=true;location.hash='jobs';
-    setTimeout(function(){editJb=j.id;$('jt').value=j.title||'';$('jc').value=j.company||'';$('jl').value=j.place||'';$('jd').value=j.text||'';$('ja').value=j.apply||'';
+    setTimeout(function(){editJb=j.id;$('jt').value=j.title||'';$('jc').value=j.company||'';$('jl').value=j.place||'';$('jd').value=j.text||'';$('ja').value=j.apply||'';$('jdl').value=j.deadline||'';
       $('jbH').textContent='Edit job opening';$('jbBtn').textContent='Save changes';$('jbCancel').hidden=false;$('jm').textContent='';
       $('jbF').scrollIntoView({behavior:'smooth',block:'start'});$('jt').focus({preventScroll:true})},60);
   }
@@ -1083,11 +1131,10 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     });
   }
   function showJobs(){
-    fill($('jbList'),jobs,function(j){
+    fill($('jbList'),jobsView(),function(j){
       return item(j.ts?new Date(j.ts).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'',j.title,(j.company||'')+(j.place?' \u2022 '+j.place:''),function(d){
         function line(t,sm){var p=document.createElement('p');p.textContent=t;if(sm)p.style.cssText='font-size:.85rem;margin-top:.4rem';d.appendChild(p)}
-        if(j.text)line(j.text);if(j.apply)line('How to apply: '+j.apply);line('Posted by '+j.name,1);
-        if(canJob(j)){mb(d,'Edit',function(){editJob(j)});mb(d,'Delete',function(){delJob(j)})}
+        if(j.text)line(j.text);if(j.deadline)line(jobDl(j).slice(3),1);line('Posted by '+j.name,1);d.appendChild(engSumEl('job',j.id));jobActions(d,j,true);
       });
     });
   }
@@ -1133,7 +1180,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     x.className='ex';x.textContent=e.text||'';b.type='button';b.className='vd';b.textContent='View details';b.onclick=function(){openEvent(e)};
     var r=document.createElement('button');r.type='button';r.className='rmx';r.textContent='Read more';r.hidden=true;
     r.onclick=function(){var o=c.classList.toggle('open');r.textContent=o?'Show less':'Read more';eqEv(c.parentNode)};
-    c.appendChild(h);c.appendChild(m);c.appendChild(bd);c.appendChild(x);c.appendChild(r);c.appendChild(b);
+    c.appendChild(h);c.appendChild(m);c.appendChild(bd);c.appendChild(x);c.appendChild(r);c.appendChild(engSumEl('evt',e.id));c.appendChild(b);
     function chk(){if(!c.classList.contains('open')&&x.clientHeight)r.hidden=x.scrollHeight<=x.clientHeight+1;eqEv(c.parentNode)}
     if(window.ResizeObserver)new ResizeObserver(chk).observe(x);else setTimeout(chk,0);
     return c;
@@ -1153,7 +1200,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     var st=evState(e),mine=logged?regs.filter(function(r){return r.id===e.id+'_'+uid})[0]:null,a;
     if(forced&&logged)mine=Object.assign({},mine||{},{status:forced});
     showModal(e.img,e.title,fmtEv(e)+' \u2022 '+st+(full()?' \u2022 '+evCount(e)+' registered':''),e.text||'');
-    a=$('rma');
+    a=$('rma');engage('evt',e.id,$('rme'));
     if(adm()){return}
     if(!full()){
       if(!logged){var l=document.createElement('a');l.href='#account';l.className='btn m';l.textContent='Log in to register';l.onclick=function(){$('rmod').hidden=true};a.appendChild(l)}
@@ -1225,7 +1272,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   }
   function beat(){if(uid&&me&&!document.hidden)fs.doc('presence/'+uid).set({ts:Date.now()}).catch(function(){})}
   function calcOn(){var n=Date.now();$('s4').textContent=pres.filter(function(p){return n-p.ts<150000}).length}
-  function role(){return adm()?'admin':(!logged?'none':((me.status||'approved')!=='approved'?'pending':(me.type==='student'?'student':'alumni')))}
+  function role(){return adm()?'admin':(!logged||!me?'none':((me.status||'approved')!=='approved'?'pending':(me.type==='student'?'student':'alumni')))}
   function full(){var r=role();return r==='admin'||r==='alumni'}
   function canFull(){return role()==='alumni'}
   function canReply(){var r=role();return r==='admin'||r==='alumni'||r==='student'}
@@ -1242,7 +1289,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     hide('joinWrap',inn);
     hide('legWrap',nr==='registrar');
     hide('hcDir',nr==='student');hide('hcReq',nr==='student');
-    ['svcReq','svcDir','svcJob','svcSur'].forEach(function(id){hide(id,nr==='student')});
+    ['svcReq','svcDir','svcSur'].forEach(function(id){hide(id,nr==='student')});
     var F={admin:[['home','Home'],['community','Alumni Community'],['events','Events'],['announcements','Announcements'],['verify','Verify a certificate']],
       registrar:[['home','Home'],['announcements','Announcements'],['events','Events'],['verify','Verify a certificate']],
       student:[['home','Home'],['community','Alumni Community'],['events','Events'],['announcements','Announcements'],['verify','Verify a certificate'],['contact','Contact us']]}[nr],fl=$('flk');
@@ -1269,7 +1316,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     $('rqGate').hidden=f;$('rqForm').hidden=r!=='alumni';$('rqAdm').hidden=r!=='admin';deny('rqGate','request your documents');
     $('dirMe').hidden=!f;$('dirOut').hidden=f;deny('dirOut','see and join the directory');$('dirForm').hidden=r!=='alumni';
     $('svGate').hidden=r==='alumni';$('svF').hidden=r!=='alumni';deny('svGate','answer the survey');
-    $('jbGate').hidden=f;$('jbF').hidden=!f;$('jbList').hidden=!f;deny('jbGate','see and post job openings');
+    $('jbGate').hidden=c;$('jbF').hidden=!f;$('jbList').hidden=!c;$('jbTabs').hidden=!c;deny('jbGate','see job openings');
     $('ctGate').hidden=c;$('ctF').hidden=!c||r==='admin';$('ctAdm').hidden=r!=='admin';$('myH').hidden=$('myMsg').hidden=!c||r==='admin';
     var ct=$('ctGate').querySelector('p');if(ct)ct.textContent=r==='none'?'Log in to send a message.':'Your account is waiting for admin approval.';
     var a2=$('ctGate').querySelector('a');if(a2)a2.hidden=r!=='none';
@@ -1488,8 +1535,8 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     e.preventDefault();var t=$('jt').value.trim(),c=$('jc').value.trim(),m=$('jm');if(!full())return;
     if(!t||!c){m.className='msg err';m.textContent='Enter the job title and the company.';return}
     if(editJb){m.className='msg';m.textContent='';
-      fs.doc('jobs/'+editJb).update({title:t,company:c,place:$('jl').value.trim(),text:$('jd').value.trim(),apply:$('ja').value.trim(),edited:Date.now()}).then(function(){jbReset();m.textContent='Changes saved.'},function(er){m.className='msg err';m.textContent='Couldn\u2019t save the changes'+(er&&er.code==='permission-denied'?'. Your Firebase rules don\u2019t allow editing job openings yet.':'. Try again.')});return}
-    send('jbF','jm','jobs',{uid:uid,name:me.name,title:t,company:c,place:$('jl').value.trim(),text:$('jd').value.trim(),apply:$('ja').value.trim(),ts:Date.now()});
+      fs.doc('jobs/'+editJb).update({title:t,company:c,place:$('jl').value.trim(),text:$('jd').value.trim(),apply:$('ja').value.trim(),deadline:$('jdl').value||'',edited:Date.now()}).then(function(){jbReset();m.textContent='Changes saved.'},function(er){m.className='msg err';m.textContent='Couldn\u2019t save the changes'+(er&&er.code==='permission-denied'?'. Your Firebase rules don\u2019t allow editing job openings yet.':'. Try again.')});return}
+    send('jbF','jm','jobs',{uid:uid,name:me.name,title:t,company:c,place:$('jl').value.trim(),text:$('jd').value.trim(),apply:$('ja').value.trim(),deadline:$('jdl').value||'',ts:Date.now()});
   });
   $('jbCancel').onclick=function(){jbReset();$('jm').textContent=''};
   var HM={ov:'admin',an:'admin-announcements',of:'admin-office',sp:'admin-spotlight',rq:'admin-requests',ms:'admin-messages',ce:'admin-certificates',ev:'admin-events',pa:'admin-participants',mb:'admin-members',rg:'admin-registrars',au:'admin-audit'},TN={ov:'Overview',an:'Post an announcement',of:'Alumni Office message',sp:'Alumni spotlight',rq:'Document requests (view only)',ms:'Messages',ce:'Register a certificate',ev:'Events',pa:'Event participants',mb:'Members',rg:'Registrars',au:'Audit log'};
