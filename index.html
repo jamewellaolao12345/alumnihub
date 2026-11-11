@@ -198,6 +198,46 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
 #home .newsh::after{margin-bottom:1.4rem}
 .formbar{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
 .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+/* Private messages */
+.msgr{display:grid;grid-template-columns:21rem 1fr;height:min(74vh,660px);min-height:26rem;background:var(--surface);border:1px solid var(--line);border-radius:.8rem;overflow:hidden}
+.msgr-side{display:flex;flex-direction:column;min-height:0;border-right:1px solid var(--line);padding:.8rem}
+.msgr-side .tabs{margin:0 0 .6rem}
+.msgr-side .tabs button{padding:.4rem .75rem;font-size:.85rem}
+.msgr-side input[type=text]{display:block;width:100%;font:400 .95rem var(--body);padding:.55rem .75rem;border:1px solid var(--line);border-radius:999px;background:var(--bg);color:var(--ink)}
+.dmlist{list-style:none;margin:.6rem 0 0;padding:0;overflow:auto;flex:1;min-height:0}
+.dmh{padding:.6rem .4rem .3rem;font-size:.8rem;font-weight:600;color:var(--muted)}
+.dmi{display:flex;gap:.7rem;align-items:center;width:100%;padding:.55rem .6rem;border:0;border-radius:.6rem;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.dmi:hover,.dmi.on{background:#f6eeec}
+.dmi .t{min-width:0;flex:1}
+.dmi b{display:block;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+.dmi small{display:block;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dmi.un b,.dmi.un small{font-weight:700;color:var(--ink)}
+.dmi .nb{margin:0}
+.dmrow{display:flex;align-items:center;gap:.4rem}
+.dmrow .dmi{flex:1;min-width:0}
+.av.lg2{width:2.6rem;height:2.6rem;font-size:1.05rem}
+.msgr-main{display:flex;flex-direction:column;min-height:0;min-width:0}
+.dm-empty{margin:auto;padding:2rem;text-align:center;color:var(--muted);max-width:22rem}
+.dm-empty b{display:block;font:600 1.15rem var(--head);color:var(--ink);margin-bottom:.3rem}
+#dmChat{display:flex;flex-direction:column;height:100%;min-height:0}
+.dm-head{display:flex;align-items:center;gap:.7rem;padding:.7rem 1rem;border-bottom:1px solid var(--line)}
+.dm-head b{flex:1;min-width:0;font:600 1.05rem var(--head);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dm-head .btn{padding:.35rem .8rem;font-size:.85rem}
+.dm-back{display:none;border:0;background:none;font-size:1.4rem;cursor:pointer;color:var(--ink);padding:0 .3rem}
+.dm-body{flex:1;min-height:0;overflow:auto;padding:1rem;display:flex;flex-direction:column;gap:.2rem;background:var(--bg)}
+.bub{max-width:75%;padding:.5rem .85rem;border-radius:1.1rem;overflow-wrap:anywhere;white-space:pre-wrap;margin-top:.25rem}
+.bub.me{align-self:flex-end;background:var(--maroon);color:var(--maroon-ink);border-bottom-right-radius:.3rem}
+.bub.th{align-self:flex-start;background:#efe7e4;border-bottom-left-radius:.3rem}
+.bt{font-size:.72rem;color:var(--muted);margin:0 .5rem .3rem}
+.bt.me{align-self:flex-end}
+.dm-bar{padding:.8rem 1rem;border-top:1px solid var(--line);background:var(--surface)}
+.dm-bar p{margin:0}
+.dm-form{display:flex;gap:.5rem;padding:.7rem 1rem;border-top:1px solid var(--line)}
+.dm-form input{flex:1;min-width:0;font:400 1rem var(--body);padding:.6rem .9rem;border:1px solid var(--line);border-radius:999px;background:var(--bg);color:var(--ink)}
+.dm-err{margin:0;padding:0 1rem .5rem}
+.dmreq{margin-top:.8rem}
+.dmreq textarea{min-height:5rem}
+@media(max-width:760px){.msgr{grid-template-columns:1fr;height:78vh}.msgr.open .msgr-side{display:none}.msgr:not(.open) .msgr-main{display:none}.dm-back{display:inline-block}.bub{max-width:88%}}
 @media (prefers-reduced-motion:no-preference){.hero-text{animation:rise .7s ease-out both}@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}}
 </style>
 </head>
@@ -212,6 +252,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     <a href="#services" data-p="services" id="navSvc">Alumni ID &amp; Services</a>
     <a href="#profile" data-p="profile" id="navPf">My Profile</a>
     <a href="#notices" data-p="notices" id="navNt" hidden>Notifications<span id="ntN"></span></a>
+    <a href="#messages" data-p="messages" id="navMsg" hidden>Private Messages<span class="nb" id="nbDm" hidden></span></a>
     <a href="#registrar" data-p="registrar" id="navRg" hidden>Registrar</a>
     <a href="#admin" data-p="admin" id="navAdm" hidden>Admin<span class="nb" id="nbAdm" hidden></span></a>
     <a href="#account" data-p="account" id="navAcc">Log in</a>
@@ -262,7 +303,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   </div>
   <div class="wrap">
     <div class="msg-panel"><div class="art2" aria-hidden="true"></div>
-      <div class="mp"><h2>Message from the Alumni Office</h2>
+      <div class="mp"><h2 id="msgH">Message from the Alumni Office</h2>
         <p id="msgT">Welcome, CTU alumni. This is your space to stay in touch with the school and with each other. Check the announcements, share your news, and request your documents online.</p>
         <button class="btn" id="msgBtn" type="button" hidden>Edit message</button></div></div>
   </div>
@@ -409,7 +450,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   <div class="wrap">
     <h2 id="admT">Admin</h2>
     <div id="atabs" class="tabs" role="tablist">
-      <button type="button" data-t="ov">Overview</button><button type="button" data-t="mb">Members</button><button type="button" data-t="an">Announcements</button><button type="button" data-t="sp">Spotlight</button><button type="button" data-t="rq">Requests</button><button type="button" data-t="ms">Messages<span class="nb" id="nbMs" hidden></span></button><button type="button" data-t="ev">Events</button><button type="button" data-t="pa">Participants</button><button type="button" data-t="rg">Registrars</button><button type="button" data-t="au">Audit log</button>
+      <button type="button" data-t="ov">Overview</button><button type="button" data-t="mb">Members</button><button type="button" data-t="an">Announcements</button><button type="button" data-t="of">Office message</button><button type="button" data-t="sp">Spotlight</button><button type="button" data-t="rq">Requests</button><button type="button" data-t="ms">Messages<span class="nb" id="nbMs" hidden></span></button><button type="button" data-t="ev">Events</button><button type="button" data-t="pa">Participants</button><button type="button" data-t="rg">Registrars</button><button type="button" data-t="au">Audit log</button>
     </div>
     <div class="card" id="dash" data-tab="ov"><h3>Overview</h3>
       <div class="ostats"><div class="ob"><b id="o1">0</b><span>Pending requests</span></div><div class="ob"><b id="o2">0</b><span>Total requests</span></div><div class="ob"><b id="o3">0</b><span>Released documents</span></div><div class="ob"><b id="o4">0</b><span>Alumni posts</span></div><div class="ob"><b id="o5">0</b><span>Comments</span></div><div class="ob"><b id="o6">0</b><span>Announcements</span></div><div class="ob"><b id="o7">0</b><span>Directory listings</span></div><div class="ob"><b id="o8">0</b><span>Survey responses</span></div><div class="ob"><b id="o9">0</b><span>Messages</span></div><div class="ob"><b id="o10">0</b><span>Unanswered messages</span></div><div class="ob"><b id="o11">0</b><span>Accounts awaiting approval</span></div></div>
@@ -417,6 +458,11 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       <div class="exrow"><div><b>Student requests</b><span id="cReq">0 records</span></div><button class="btn m" type="button" id="exReq">Download CSV</button></div>
       <div class="exrow"><div><b>Alumni directory</b><span id="cDir">0 records</span></div><button class="btn m" type="button" id="exDir">Download CSV</button></div>
       <div class="exrow"><div><b>Graduate tracer survey</b><span id="cTr">0 records</span></div><button class="btn m" type="button" id="exTr">Download CSV</button></div></div>
+    <form class="card" id="ofF" data-tab="of" novalidate><h3>Message from the Alumni Office</h3><p class="reqn"><span class="req">*</span> Required. This is the message shown on the Home page.</p>
+      <label>Heading <span class="req" aria-hidden="true">*</span><input type="text" id="oft" maxlength="80" required aria-required="true"></label>
+      <label>Message <span class="req" aria-hidden="true">*</span><textarea id="ofx" maxlength="600" required aria-required="true" style="min-height:9rem"></textarea></label>
+      <p class="reqn" id="ofCt" style="margin-top:-.4rem">0 / 600</p>
+      <div class="formbar"><button class="btn m" type="submit" id="ofBtn">Save message</button><button class="btn ghost" type="button" id="ofReset">Discard changes</button><a class="btn ghost" href="#home">View on Home page</a></div><p class="msg" id="ofm" role="status"></p></form>
     <form class="card" id="anF" data-tab="an" novalidate><h3 id="anH">Add Announcement</h3><p class="reqn"><span class="req">*</span> Required. Pictures are optional.</p>
       <label>Title <span class="req" aria-hidden="true">*</span><input type="text" id="at" maxlength="100" required aria-required="true"></label>
       <label>Date<input type="date" id="ad"></label>
@@ -468,6 +514,32 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     <ul class="ann" id="admReq" data-tab="rq"></ul>
     <h2 data-tab="ms" style="margin-top:0">Messages</h2>
     <ul class="ann" id="admMsg" data-tab="ms"></ul>
+  </div>
+</section>
+
+<!-- PRIVATE MESSAGES -->
+<section id="messages" hidden>
+  <div class="wrap">
+    <h2>Private Messages</h2>
+    <p class="lead">Message fellow alumni and current students. A first message is sent as a request, and you can chat once it is accepted.</p>
+    <div class="card" id="dmGate" hidden><p>Log in to use private messages.</p><a class="btn m" href="#account">Log in</a></div>
+    <div class="msgr" id="dmApp" hidden>
+      <aside class="msgr-side">
+        <div class="tabs" id="dmTabs"><button type="button" data-k="chats" aria-current="true">Chats<span class="nb" id="nbT1" hidden></span></button><button type="button" data-k="req">Requests<span class="nb m" id="nbT2" hidden></span></button><button type="button" data-k="other">Declined &amp; blocked</button></div>
+        <input type="text" id="dmQ" placeholder="Search people" aria-label="Search people">
+        <ul class="dmlist" id="dmList"></ul>
+      </aside>
+      <div class="msgr-main">
+        <div class="dm-empty" id="dmNone"><b>Your messages</b>Select a conversation, or open the Alumni Community, click a profile picture and choose Message to send a request.</div>
+        <div id="dmChat" hidden>
+          <div class="dm-head"><button type="button" class="dm-back" id="dmBack" aria-label="Back to conversations">&larr;</button><span id="dmHAv"></span><b id="dmHName"></b><button type="button" class="btn ghost" id="dmBlk">Block</button></div>
+          <div class="dm-body" id="dmBody" aria-live="polite"></div>
+          <div class="dm-bar" id="dmBar" hidden></div>
+          <p class="msg err dm-err" id="dmErr" role="status"></p>
+          <form class="dm-form" id="dmForm" novalidate><input type="text" id="dmIn" maxlength="500" placeholder="Write a message" aria-label="Write a message" autocomplete="off"><button class="btn m" type="submit">Send</button></form>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -635,7 +707,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       var c=document.createElement('article');c.className='post';
       var im=document.createElement('img');im.src=p.img;im.alt='Photo posted by '+p.name;im.loading='lazy';im.style.cursor='zoom-in';im.onclick=function(){openPost(p)};
       var b=document.createElement('div');b.className='body';
-      var w=document.createElement('div');w.className='who';w.style.cursor='pointer';w.title='View profile';w.onclick=function(){openProfile(p)};
+      var w=document.createElement('div');w.className='who';w.style.cursor='pointer';w.title='View profile';w.onclick=function(){openProfile(p)};w.tabIndex=0;w.setAttribute('role','button');w.onkeydown=function(e){if(e.key==='Enter')openProfile(p)};
       var av=document.createElement('span'),L=(p.name||'?').trim().charAt(0).toUpperCase();av.className='av';av.textContent=L;
       if(p.photo){var ph=document.createElement('img');ph.referrerPolicy='no-referrer';ph.alt='';ph.onerror=function(){av.textContent=L};ph.src=p.photo;av.textContent='';av.appendChild(ph)}
       var t=document.createElement('div');var n=document.createElement('b');n.textContent=p.name;
@@ -650,8 +722,8 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   }
 
   function route(){
-    var h=location.hash.slice(1),vp=h.indexOf('verify-')===0?decodeURIComponent(h.slice(7)):'';if(vp)h='verify';var at='';if(h.indexOf('admin')===0){at={'admin':'ov','admin-announcements':'an','admin-spotlight':'sp','admin-requests':'rq','admin-messages':'ms','admin-certificates':'ce','admin-events':'ev','admin-participants':'pa','admin-members':'mb','admin-registrars':'rg','admin-audit':'au'}[h]||'ov';h='admin'}if(['home','events','post','account','requests','admin','verify','directory','contact','survey','jobs','community','announcements','services','profile','registrar','notices'].indexOf(h)<0)h='home';
-    ['home','events','post','account','requests','admin','verify','directory','contact','survey','jobs','community','announcements','services','profile','registrar','notices'].forEach(function(id){document.getElementById(id).hidden=(id!==h)});
+    var h=location.hash.slice(1),vp=h.indexOf('verify-')===0?decodeURIComponent(h.slice(7)):'';if(vp)h='verify';var at='';if(h.indexOf('admin')===0){at={'admin':'ov','admin-announcements':'an','admin-office':'of','admin-spotlight':'sp','admin-requests':'rq','admin-messages':'ms','admin-certificates':'ce','admin-events':'ev','admin-participants':'pa','admin-members':'mb','admin-registrars':'rg','admin-audit':'au'}[h]||'ov';h='admin'}if(['home','events','post','account','requests','admin','verify','directory','contact','survey','jobs','community','announcements','services','profile','registrar','notices','messages'].indexOf(h)<0)h='home';
+    ['home','events','post','account','requests','admin','verify','directory','contact','survey','jobs','community','announcements','services','profile','registrar','notices','messages'].forEach(function(id){document.getElementById(id).hidden=(id!==h)});
     var nh=['requests','verify','directory','jobs','survey','contact','post'].indexOf(h)>=0?'services':h;
     document.querySelectorAll('nav a').forEach(function(a){
       if(a.dataset.p===nh)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');
@@ -660,6 +732,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     if(staffInfo&&staffInfo.active!==false&&!adm()&&['home','announcements','events','registrar','account','verify'].indexOf(h)<0){location.hash='registrar';return}
     if(h==='admin')adminTab(at||'ov');
     if(h==='community')render();
+    if(h==='messages')dmUi();else dmLeave();
     if(h==='post'||h==='account'||h==='requests'||h==='admin'||h==='directory'||h==='contact'||h==='survey'||h==='jobs'||h==='profile')acct();
     window.scrollTo(0,0);
   }
@@ -830,7 +903,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     fs.collection('spotlight').orderBy('ts','desc').limit(12).onSnapshot(function(sn){sps=rows(sn);showSp()},function(){});
     fs.collection('events').orderBy('date','desc').limit(200).onSnapshot(function(sn){evs=rows(sn);showEvents();showEvAdm();showPa()},function(){});
     fs.collection('presence').orderBy('ts','desc').limit(300).onSnapshot(function(sn){pres=rows(sn);calcOn()},function(){});
-    fs.doc('site/msg').onSnapshot(function(d){if(d.exists&&d.data().text)$('msgT').textContent=d.data().text},function(){});
+    fs.doc('site/msg').onSnapshot(function(d){if(d.exists)ofSet(d.data())},function(){});
     fs.doc('site/hero').onSnapshot(function(d){if(d.exists&&d.data().img)setHero(d.data().img)},function(){});
     auth.onAuthStateChanged(function(u){
       user=u;uid=u?u.uid:'';me=null;lastR='';
@@ -852,7 +925,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       if(unM){unM();unM=null}msgs=[];showMsg();if(unU){unU();unU=null}memList=[];if(unRI){unRI();unRI=null}rinfo={};if(unSt2){unSt2();unSt2=null}stf=[];if(unAu){unAu();unAu=null}aud=[];if(unT){unT();unT=null}trs=[];
       if(unQ){unQ();unQ=null}mine=[];showMine();
       if(unE){unE();unE=null}regs=[];showEvents();
-      if(unNt){unNt();unNt=null}nts=[];showNt();
+      if(unNt){unNt();unNt=null}nts=[];showNt();dmStop();
       if(u)unNt=fs.collection('notifications').where('to','==',uid).limit(50).onSnapshot(function(sn){nts=rows(sn).sort(function(a,b){return b.ts-a.ts});showNt()},function(){});
       if(unRx){unRx();unRx=null}rx=[];if(unJ){unJ();unJ=null}jobs=[];showJobs();showHJ();
       if(u){unRx=fs.collection('reactions').limit(5000).onSnapshot(function(sn){rx=rows(sn);render()},function(){});unJ=fs.collection('jobs').orderBy('ts','desc').limit(100).onSnapshot(function(sn){jobs=rows(sn);showJobs();showHJ()},function(){})}
@@ -1129,10 +1202,10 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     });
   }
   function openProfile(p){
-    if(!full()){showModal('',p.name,'Alumni profile','Profile details are available to approved alumni only.');return}
+    if(!full()){showModal('',p.name,'Alumni profile','Profile details are available to approved alumni only.');dmProfileBtn(p);return}
     function show(q){
       var b=q.batch||'',y=q.year||(b.match(/\b(?:19|20)\d{2}\b/)||[''])[0],c=q.course||b.replace(y,'').replace(/^[\s,\-\u2013]+|[\s,\-\u2013]+$/g,'');
-      showModal(q.photo||'',q.name,'Alumni profile','Course: '+(c||'Not shared')+'\nGraduation year: '+(y||'Not shared')+'\nDate posted: '+(p.date||''),true);
+      showModal(q.photo||'',q.name,'Alumni profile','Course: '+(c||'Not shared')+'\nGraduation year: '+(y||'Not shared')+'\nDate posted: '+(p.date||''),true);dmProfileBtn(p);
     }
     show(p);
     if(full()&&p.uid&&fs)fs.doc('users/'+p.uid).get().then(function(d){
@@ -1158,7 +1231,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   function canReply(){var r=role();return r==='admin'||r==='alumni'||r==='student'}
   function navRole(){return adm()?'admin':((staffInfo&&staffInfo.active!==false)?'registrar':role())}
   function roleUi(){
-    var nr=navRole(),inn=!!user;
+    var nr=navRole(),inn=!!user;dmNav();
     function hide(id,h){var e=$(id);if(e)e.hidden=h}
     hide('navCm',nr==='registrar');
     hide('navSvc',nr==='admin'||nr==='registrar');
@@ -1419,7 +1492,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     send('jbF','jm','jobs',{uid:uid,name:me.name,title:t,company:c,place:$('jl').value.trim(),text:$('jd').value.trim(),apply:$('ja').value.trim(),ts:Date.now()});
   });
   $('jbCancel').onclick=function(){jbReset();$('jm').textContent=''};
-  var HM={ov:'admin',an:'admin-announcements',sp:'admin-spotlight',rq:'admin-requests',ms:'admin-messages',ce:'admin-certificates',ev:'admin-events',pa:'admin-participants',mb:'admin-members',rg:'admin-registrars',au:'admin-audit'},TN={ov:'Overview',an:'Post an announcement',sp:'Alumni spotlight',rq:'Document requests (view only)',ms:'Messages',ce:'Register a certificate',ev:'Events',pa:'Event participants',mb:'Members',rg:'Registrars',au:'Audit log'};
+  var HM={ov:'admin',an:'admin-announcements',of:'admin-office',sp:'admin-spotlight',rq:'admin-requests',ms:'admin-messages',ce:'admin-certificates',ev:'admin-events',pa:'admin-participants',mb:'admin-members',rg:'admin-registrars',au:'admin-audit'},TN={ov:'Overview',an:'Post an announcement',of:'Alumni Office message',sp:'Alumni spotlight',rq:'Document requests (view only)',ms:'Messages',ce:'Register a certificate',ev:'Events',pa:'Event participants',mb:'Members',rg:'Registrars',au:'Audit log'};
   function adminTab(t){
     $('admT').textContent='Admin: '+TN[t];
     document.querySelectorAll('#admin [data-tab]').forEach(function(el){el.hidden=el.getAttribute('data-tab')!==t});
@@ -1479,7 +1552,219 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   $('rtype').onchange=function(){var st=this.value==='student';$('rsidT').textContent=st?'Student ID number':'Former student ID number';$('rlvL').hidden=!st;$('ryrL').hidden=st};
   $('rmx').onclick=function(){$('rmod').hidden=true};
   $('rmod').onclick=function(e){if(e.target===this)this.hidden=true};
-  $('msgBtn').onclick=function(){var t=prompt('Message text',$('msgT').textContent);if(t===null||!adm())return;fs.doc('site/msg').set({text:t.trim()}).catch(function(){alert('Couldn\u2019t save.')})};
+  $('msgBtn').onclick=function(){if(adm())location.hash='admin-office'};
+  /* ===== Alumni Office message editor ===== */
+  var ofc={title:$('msgH').textContent,text:$('msgT').textContent};
+  function ofCount(){$('ofCt').textContent=$('ofx').value.length+' / 600'}
+  function ofFill(){$('oft').value=ofc.title;$('ofx').value=ofc.text;ofCount();clrErr($('ofF'))}
+  function ofSet(x){
+    ofc={title:(x&&x.title)||ofc.title,text:(x&&x.text)||ofc.text};
+    $('msgH').textContent=ofc.title;$('msgT').textContent=ofc.text;
+    var ae=document.activeElement;if(!(ae&&ae.closest&&ae.closest('#ofF')))ofFill();
+  }
+  ['oft','ofx'].forEach(function(id){$(id).addEventListener('input',function(){if($(id).getAttribute('aria-invalid'))fErr(id,'');ofCount()})});
+  $('ofReset').onclick=function(){ofFill();$('ofm').className='msg';$('ofm').textContent=''};
+  $('ofF').addEventListener('submit',function(e){
+    e.preventDefault();if(!adm())return;var m=$('ofm'),btn=$('ofBtn');m.className='msg';m.textContent='';
+    if(!vForm($('ofF'),[['oft',need('Enter a heading.')],['ofx',need('Enter the message.')]],m))return;
+    btn.disabled=true;
+    fs.doc('site/msg').set({title:$('oft').value.trim(),text:$('ofx').value.trim()}).then(function(){btn.disabled=false;m.textContent='Message saved. It is now live on the Home page.'},function(er){btn.disabled=false;m.className='msg err';m.textContent='Couldn\u2019t save the message'+(er&&er.code==='permission-denied'?'. Make sure you are logged in as admin and your Firestore rules allow the site/msg document.':'. Try again.')});
+  });
+  ofFill();
+
+  /* ===== Private messages (request, accept, block; rules are enforced in firestore.rules) ===== */
+  var chats=[],blks=[],unCh=null,unBk=null,unMs=null,dmTab='chats',dmOpen='',dmMsgs=[],dmBusy=false;
+  function canDm(){var r=role();return r==='alumni'||r==='student'}
+  function dmId(a,b){return a<b?a+'_'+b:b+'_'+a}
+  function dmOther(c){return c.members[0]===uid?c.members[1]:c.members[0]}
+  function dmBlk(w){return blks.some(function(b){return b.who===w})}
+  function dmChat(id){return chats.filter(function(c){return c.id===id})[0]}
+  function dmWith(o){return dmChat(dmId(uid,o))}
+  function dmName(c){return(c.names&&c.names[dmOther(c)])||'Member'}
+  function dmPh(c){return(c.photos&&c.photos[dmOther(c)])||''}
+  function okPh(u){return /^https:\/\/lh[0-9]\.googleusercontent\.com\//.test(u||'')?u:''}
+  function dmState(c){
+    if(dmBlk(dmOther(c)))return'blocked';
+    if(c.status==='accepted')return'ok';
+    if(c.status==='pending')return c.from===uid?'reqOut':'reqIn';
+    return c.from===uid?'decOut':'decIn';
+  }
+  function dmTime(ts){var d=new Date(ts),t=d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});return d.toDateString()===new Date().toDateString()?t:d.toLocaleDateString('en-US',{month:'short',day:'numeric'})+', '+t}
+  function dmAv(name,photo,big){
+    var s=document.createElement('span'),L=(name||'?').trim().charAt(0).toUpperCase();s.className='av'+(big?' lg2':'');s.textContent=L;
+    if(photo){var i=document.createElement('img');i.referrerPolicy='no-referrer';i.alt='';i.onerror=function(){i.remove();s.textContent=L};i.src=photo;s.textContent='';s.appendChild(i)}
+    return s;
+  }
+  function dmCounts(){
+    var un=0,rq=0;
+    chats.forEach(function(c){if(dmBlk(dmOther(c)))return;if(c.status==='accepted')un+=(c.unread&&c.unread[uid])||0;else if(c.status==='pending'&&c.to===uid)rq++});
+    return{un:un,rq:rq};
+  }
+  function dmStart(){
+    if(unCh||!fs||!uid)return;
+    unCh=fs.collection('chats').where('members','array-contains',uid).limit(200).onSnapshot(function(sn){chats=rows(sn).filter(function(c){return c.members&&c.members.length===2});dmUi()},function(){});
+    unBk=fs.collection('blocks').where('by','==',uid).onSnapshot(function(sn){blks=rows(sn);dmUi()},function(){});
+  }
+  function dmLeave(){if(unMs){unMs();unMs=null}dmMsgs=[];dmOpen=''}
+  function dmStop(){if(unCh){unCh();unCh=null}if(unBk){unBk();unBk=null}dmLeave();chats=[];blks=[];$('nbDm').hidden=true;$('navMsg').hidden=true}
+  function setNb(id,n){var e=$(id);e.hidden=!n;e.textContent=n>99?'99+':n}
+  function dmNav(){
+    var ok=canDm();$('navMsg').hidden=!ok;
+    if(!ok){$('nbDm').hidden=true;return}
+    dmStart();
+    var k=dmCounts(),n=k.un+k.rq,b=$('nbDm');setNb('nbDm',n);b.className='nb'+(n>=6?' h':n>=3?' m':'');
+  }
+  function dmUi(){
+    dmNav();
+    if($('messages').hidden)return;
+    var ok=canDm();$('dmGate').hidden=ok;$('dmApp').hidden=!ok;
+    if(!ok){
+      var r=role(),p=$('dmGate').querySelector('p'),a=$('dmGate').querySelector('a');
+      p.textContent=r==='none'?'Log in to use private messages.':r==='pending'?'Your account is waiting for admin approval.':'Private messages are for approved alumni and current students.';a.hidden=r!=='none';return;
+    }
+    var k=dmCounts();setNb('nbT1',k.un);setNb('nbT2',k.rq);
+    dmSide();dmThread();
+  }
+  function dmSide(){
+    var l=$('dmList'),q=($('dmQ').value||'').toLowerCase(),vis=chats.filter(function(c){return dmName(c).toLowerCase().indexOf(q)>=0}).sort(function(a,b){return(b.lastTs||0)-(a.lastTs||0)});
+    l.textContent='';
+    document.querySelectorAll('#dmTabs button').forEach(function(b){b.setAttribute('aria-current',b.getAttribute('data-k')===dmTab?'true':'false')});
+    function lab(t){var h=document.createElement('li');h.className='dmh';h.textContent=t;l.appendChild(h)}
+    function row(c,sub,n){
+      var li=document.createElement('li'),b=document.createElement('button'),t=document.createElement('span'),nm=document.createElement('b'),sm=document.createElement('small');
+      b.type='button';b.className='dmi'+(c.id===dmOpen?' on':'')+(n?' un':'');nm.textContent=dmName(c);sm.textContent=sub;t.className='t';t.appendChild(nm);t.appendChild(sm);
+      b.appendChild(dmAv(dmName(c),dmPh(c)));b.appendChild(t);
+      if(n){var nb=document.createElement('span');nb.className='nb';nb.textContent=n;b.appendChild(nb)}
+      b.onclick=function(){dmOpenChat(c.id)};li.appendChild(b);l.appendChild(li);
+    }
+    function prev(c){return(c.lastFrom===uid?'You: ':'')+(c.lastText||'')}
+    var st=function(c){return dmState(c)};
+    if(dmTab==='chats'){
+      var a=vis.filter(function(c){return st(c)==='ok'});
+      if(!a.length)lab(q?'No matches.':'No conversations yet. Open the Alumni Community, click a profile picture and choose Message.');
+      a.forEach(function(c){row(c,prev(c),(c.unread&&c.unread[uid])||0)});
+    }else if(dmTab==='req'){
+      var rin=vis.filter(function(c){return st(c)==='reqIn'}),rout=vis.filter(function(c){return st(c)==='reqOut'});
+      lab('Received ('+rin.length+')');if(!rin.length)lab('No message requests right now.');
+      rin.forEach(function(c){row(c,prev(c),1)});
+      lab('Sent ('+rout.length+')');if(!rout.length)lab('You have no pending requests.');
+      rout.forEach(function(c){row(c,'Waiting for a reply',0)});
+    }else{
+      var dec=vis.filter(function(c){var s=st(c);return s==='decIn'||s==='decOut'});
+      lab('Declined');if(!dec.length)lab('Nothing declined.');
+      dec.forEach(function(c){row(c,st(c)==='decIn'?'You declined this request':'Did not accept your request',0)});
+      lab('Blocked');if(!blks.length)lab('You have not blocked anyone.');
+      blks.forEach(function(x){
+        var li=document.createElement('li'),w=document.createElement('div'),nm=document.createElement('b'),ub=document.createElement('button'),c=dmWith(x.who);
+        li.className='dmrow';li.style.padding='.4rem .6rem';nm.textContent=x.name||'Member';nm.style.flex='1';
+        ub.type='button';ub.className='btn m';ub.style.cssText='padding:.3rem .7rem;font-size:.85rem';ub.textContent='Unblock';ub.onclick=function(){dmUnblock(x.who)};
+        li.appendChild(dmAv(x.name,c?dmPh(c):''));li.appendChild(nm);li.appendChild(ub);l.appendChild(li);
+      });
+    }
+  }
+  function dmOpenChat(id){
+    if(unMs){unMs();unMs=null}
+    dmOpen=id;dmMsgs=[];var c=dmChat(id);
+    if(c){var s=dmState(c);dmTab=s==='ok'?'chats':(s==='reqIn'||s==='reqOut')?'req':'other'}
+    unMs=fs.collection('chats/'+id+'/msgs').orderBy('ts','asc').limitToLast(200).onSnapshot(function(sn){dmMsgs=rows(sn);dmThread()},function(){});
+    $('dmErr').textContent='';dmUi();
+  }
+  function dmThread(){
+    var c=dmOpen&&dmChat(dmOpen);
+    $('dmApp').classList.toggle('open',!!c);$('dmNone').hidden=!!c;$('dmChat').hidden=!c;
+    if(!c)return;
+    var s=dmState(c),nm=dmName(c),hv=$('dmHAv'),body=$('dmBody'),bar=$('dmBar'),near=!body.childNodes.length||body.scrollHeight-body.scrollTop-body.clientHeight<90;
+    hv.textContent='';hv.appendChild(dmAv(nm,dmPh(c),1));$('dmHName').textContent=nm;
+    $('dmBlk').hidden=s==='blocked';$('dmBlk').onclick=function(){dmBlock(c)};
+    body.textContent='';
+    dmMsgs.forEach(function(m){
+      var me=m.from===uid,d=document.createElement('div'),t=document.createElement('div');
+      d.className='bub '+(me?'me':'th');d.textContent=m.text;
+      t.className='bt'+(me?' me':'');t.textContent=dmTime(m.ts)+(me?' \u2022 '+(m.read?'Seen':'Sent'):'');
+      body.appendChild(d);body.appendChild(t);
+    });
+    if(near)body.scrollTop=body.scrollHeight;
+    bar.textContent='';
+    function say(t){var p=document.createElement('p');p.textContent=t;bar.appendChild(p)}
+    if(s==='blocked'){say('You blocked '+nm+'. Neither of you can send messages while the block is on.');mb(bar,'Unblock',function(){dmUnblock(dmOther(c))})}
+    else if(s==='reqIn'){say(nm+' wants to send you a message. If you accept, you can chat normally. Until then they cannot send you anything else.');mb(bar,'Accept',function(){dmAnswer(c,'accepted')});mb(bar,'Decline',function(){dmAnswer(c,'declined')});mb(bar,'Block',function(){dmBlock(c)})}
+    else if(s==='reqOut')say('Your message request was sent. You can keep chatting after '+nm+' accepts it.');
+    else if(s==='decIn'){say('You declined this request. '+nm+' cannot message you.');mb(bar,'Accept instead',function(){dmAnswer(c,'accepted')})}
+    else if(s==='decOut')say(nm+' did not accept your message request, so you cannot send more messages.');
+    bar.hidden=!bar.childNodes.length;
+    $('dmForm').hidden=s!=='ok';
+    if(s==='ok')dmRead(c);
+  }
+  function dmRead(c){
+    if(document.hidden||location.hash!=='#messages'||dmState(c)!=='ok')return;
+    var un=dmMsgs.filter(function(m){return m.from!==uid&&!m.read});
+    if(!un.length&&!((c.unread&&c.unread[uid])>0))return;
+    var b=fs.batch(),u={};
+    un.slice(0,400).forEach(function(m){b.update(fs.doc('chats/'+c.id+'/msgs/'+m.id),{read:true})});
+    u['unread.'+uid]=0;b.update(fs.doc('chats/'+c.id),u);b.commit().catch(function(){});
+  }
+  document.addEventListener('visibilitychange',function(){var c=dmOpen&&dmChat(dmOpen);if(c)dmRead(c)});
+  function dmSend(c,text,cb){
+    var o=dmOther(c),ref=fs.collection('chats/'+c.id+'/msgs').doc(),ts=Date.now(),b=fs.batch(),u={lastText:text,lastTs:ts,lastFrom:uid,lastMsgId:ref.id};
+    u['unread.'+o]=firebase.firestore.FieldValue.increment(1);
+    b.set(ref,{from:uid,text:text,ts:ts,read:false});b.update(fs.doc('chats/'+c.id),u);
+    b.commit().then(function(){cb(true)},function(){cb(false)});
+  }
+  function dmRequest(p,text,cb){
+    var o=p.uid,cid=dmId(uid,o),ts=Date.now(),first=cid+'_first',nm={},ph={},un={},b=fs.batch();
+    nm[uid]=me.name;nm[o]=(p.name||'Member').slice(0,80);ph[uid]=okPh(user&&user.photoURL);ph[o]=okPh(p.photo);un[uid]=0;un[o]=1;
+    b.set(fs.doc('chats/'+cid),{members:[uid,o].sort(),from:uid,to:o,status:'pending',names:nm,photos:ph,unread:un,lastText:text,lastTs:ts,lastFrom:uid,lastMsgId:first,ts:ts});
+    b.set(fs.doc('chats/'+cid+'/msgs/'+first),{from:uid,text:text,ts:ts,read:false});
+    b.commit().then(function(){cb(true)},function(){cb(false,'Couldn\u2019t send the request. This person may not accept messages, or you may not be allowed to message them.')});
+  }
+  function dmAnswer(c,to){fs.doc('chats/'+c.id).update({status:to}).catch(function(){alert('Couldn\u2019t update this request. Try again.')})}
+  function dmBlock(c){
+    var o=dmOther(c);if(!confirm('Block '+dmName(c)+'? Neither of you will be able to send messages until you unblock.'))return;
+    fs.doc('blocks/'+uid+'_'+o).set({by:uid,who:o,name:dmName(c).slice(0,80),ts:Date.now()}).then(function(){if(c.to===uid&&c.status!=='declined')return fs.doc('chats/'+c.id).update({status:'declined'})}).catch(function(){alert('Couldn\u2019t block this person. Try again.')});
+  }
+  function dmUnblock(w){fs.doc('blocks/'+uid+'_'+w).delete().catch(function(){alert('Couldn\u2019t unblock. Try again.')})}
+  function dmRequestForm(p,w){
+    w.textContent='';
+    var f=document.createElement('form'),t=document.createElement('textarea'),n=document.createElement('p'),er=document.createElement('p'),bar=document.createElement('div'),sb=document.createElement('button'),cb=document.createElement('button');
+    f.className='dmreq';f.noValidate=true;t.maxLength=500;t.placeholder='Write your first message to '+(p.name||'this person');t.setAttribute('aria-label','Your first message');
+    n.className='reqn';n.style.margin='.4rem 0';n.textContent='This sends a message request. '+(p.name||'They')+' must accept it before you can chat.';
+    er.className='msg err';er.setAttribute('role','status');bar.className='formbar';
+    sb.type='submit';sb.className='btn m';sb.textContent='Send message request';cb.type='button';cb.className='btn ghost';cb.textContent='Cancel';cb.onclick=function(){dmProfileBtn(p,w)};
+    bar.appendChild(sb);bar.appendChild(cb);f.appendChild(t);f.appendChild(n);f.appendChild(bar);f.appendChild(er);w.appendChild(f);t.focus();
+    f.onsubmit=function(e){
+      e.preventDefault();var v=t.value.trim();er.textContent='';if(!v){er.textContent='Write a message first.';return}
+      sb.disabled=true;
+      dmRequest(p,v,function(ok,msg){
+        if(!ok){sb.disabled=false;er.textContent=msg;return}
+        $('rmod').hidden=true;dmOpenChat(dmId(uid,p.uid));location.hash='messages';
+      });
+    };
+  }
+  function dmProfileBtn(p,box){
+    if(!canDm()||!p.uid||p.uid===uid||!fs)return;
+    var w=box;if(!w){w=document.createElement('div');w.style.marginTop='.8rem';$('rma').appendChild(w)}
+    w.textContent='';
+    function note(t){var n=document.createElement('p');n.className='msg';n.style.margin='0';n.textContent=t;w.appendChild(n)}
+    if(dmBlk(p.uid)){note('You blocked this person. You can unblock them in Private Messages.');return}
+    var c=dmWith(p.uid);
+    if(c){
+      var s=dmState(c);
+      if(s==='decOut'){note('This person did not accept your message request.');return}
+      if(s!=='ok')note(s==='reqOut'?'Your message request is waiting for a reply.':'This person sent you a message request.');
+      mb(w,s==='ok'?'Open conversation':'View request',function(){$('rmod').hidden=true;dmOpenChat(c.id);location.hash='messages'});
+      return;
+    }
+    mb(w,'Message',function(){dmRequestForm(p,w)});
+  }
+  document.querySelectorAll('#dmTabs button').forEach(function(b){b.onclick=function(){dmTab=b.getAttribute('data-k');dmSide()}});
+  $('dmQ').addEventListener('input',dmSide);
+  $('dmBack').onclick=function(){if(unMs){unMs();unMs=null}dmOpen='';dmMsgs=[];dmUi()};
+  $('dmForm').addEventListener('submit',function(e){
+    e.preventDefault();var c=dmOpen&&dmChat(dmOpen),i=$('dmIn'),v=i.value.trim(),er=$('dmErr');er.textContent='';
+    if(!c||!v||dmBusy||dmState(c)!=='ok')return;
+    dmBusy=true;i.value='';
+    dmSend(c,v,function(ok){dmBusy=false;if(!ok){i.value=v;er.textContent='Couldn\u2019t send. You may no longer be allowed to message this person.'}});
+  });
   route();init();
 })();
 </script>
