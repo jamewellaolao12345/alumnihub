@@ -1812,6 +1812,43 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     dmBusy=true;i.value='';
     dmSend(c,v,function(ok){dmBusy=false;if(!ok){i.value=v;er.textContent='Couldn\u2019t send. You may no longer be allowed to message this person.'}});
   });
+  /* ===== Restored helpers (jobs + engagement placeholders) ===== */
+  var jbTab='all',savedJ=[];
+  try{savedJ=JSON.parse(localStorage.getItem('ah-saved-jobs')||'[]')}catch(e){}
+  function saveSaved(){try{localStorage.setItem('ah-saved-jobs',JSON.stringify(savedJ))}catch(e){}}
+  function jobDl(j){return j.deadline?' • Apply by '+fmt(j.deadline):''}
+  function jobsView(){
+    var n=$('nbSv');if(n){n.hidden=!savedJ.length;n.textContent=savedJ.length}
+    return jbTab==='saved'?jobs.filter(function(j){return savedJ.indexOf(j.id)>=0}):jobs;
+  }
+  function jobActions(d,j,inList){
+    var b=document.createElement('div');b.className='jbact';
+    var sv=savedJ.indexOf(j.id)>=0;
+    if(inList)mb(b,'View details',function(){openJob(j)});
+    mb(b,sv?'Unsave':'Save job',function(){
+      var i=savedJ.indexOf(j.id);if(i>=0)savedJ.splice(i,1);else savedJ.push(j.id);
+      saveSaved();showJobs();if(!inList){$('rmod').hidden=true;openJob(j)}
+    });
+    if(canJob(j)){mb(b,'Edit',function(){editJob(j)});mb(b,'Delete',function(){delJob(j)})}
+    d.appendChild(b);
+  }
+  function tryJobWant(){
+    if(!jobWant)return;
+    var j=jobs.filter(function(x){return x.id===jobWant})[0];
+    if(j){jobWant='';openJob(j)}
+  }
+  function markJobsSeen(){}
+  function jobRefresh(){showJobs()}
+  document.querySelectorAll('#jbTabs button').forEach(function(b){b.onclick=function(){
+    jbTab=b.getAttribute('data-k');
+    document.querySelectorAll('#jbTabs button').forEach(function(x){x.setAttribute('aria-current',x===b?'true':'false')});
+    showJobs();
+  }});
+  /* Reactions/comments on announcements, events and jobs: placeholders so the page runs */
+  function engSumEl(){var e=document.createElement('div');e.className='engs';e.hidden=true;return e}
+  function engage(){}
+  function engStart(){}
+  function engStop(){}
   route();init();
 })();
 </script>
