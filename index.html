@@ -296,6 +296,36 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
 .eng-list{margin-top:.4rem}
 .eng-ca button:disabled{opacity:.5;cursor:default}
 .eng-ed .btn.ghost{padding:.4rem .8rem;font-size:.85rem}
+
+/* Facebook-style Like / Comment / Share bar on every card */
+.pbox{order:0;width:100%;box-sizing:border-box;padding:0 1.2rem;margin-top:auto}
+.annc .pbox{order:5}
+.ann:not(.annc) .pbox{padding:0;order:0;margin:.6rem 0 0}
+.annc .rm{order:6;margin-top:0}
+.hj .pbox~.vd{margin-top:0}
+.pstat{display:flex;justify-content:space-between;align-items:center;gap:.6rem;font-size:.85rem;color:var(--muted);padding:.3rem 0 .4rem;min-height:1.4rem}
+.pcnt{border:0;background:none;padding:0;font:inherit;color:inherit;cursor:pointer}
+.pcnt:hover{text-decoration:underline}
+.hj .pcnt{background:none;color:inherit;padding:0;font:inherit}
+.pbar{display:flex;gap:.2rem;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:.15rem 0;margin-bottom:.7rem}
+.pbw{position:relative;flex:1;min-width:0;display:flex}
+.pb{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;gap:.35rem;border:0;background:none;color:var(--muted);font:600 .9rem var(--body);padding:.6rem .3rem;border-radius:.4rem;cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent}
+.pb:hover{background:#f6eeec}
+.pb.on{color:var(--maroon)}
+.hj .pb{background:none;color:var(--muted);padding:.6rem .3rem;font:600 .9rem var(--body)}
+.hj .pb:hover{background:#f6eeec}
+.hj .pb.on{color:var(--maroon)}
+.pbw .rxpick{left:50%;transform:translateX(-50%)}
+.pcom{order:9;grid-column:1/-1;width:100%;box-sizing:border-box;padding:0 1.2rem 1rem;animation:pcIn .22s ease}
+.ann:not(.annc) .pcom{padding:0}
+.pcom .eng{margin-top:0;border-top:0;padding-top:0}
+.pcom .eng-form{flex-wrap:wrap}
+@keyframes pcIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.pflash{animation:pFl 1.6s ease}
+@keyframes pFl{0%,60%{box-shadow:0 0 0 3px var(--maroon)}100%{box-shadow:none}}
+.ptoast{position:fixed;left:50%;bottom:1.5rem;transform:translateX(-50%);background:var(--maroon);color:#fff;padding:.6rem 1.1rem;border-radius:999px;font:600 .9rem var(--body);z-index:60;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+@media(max-width:520px){.pb{font-size:.82rem;gap:.25rem}.pbox,.pcom{padding-left:.9rem;padding-right:.9rem}.ann:not(.annc) .pbox,.ann:not(.annc) .pcom{padding-left:0;padding-right:0}}
+@media(prefers-reduced-motion:reduce){.pcom,.pflash{animation:none}}
 .eng-cnt{font-weight:600}
 .eng-who .rxb{cursor:default}
 @media(max-width:520px){.eng-form{flex-wrap:wrap}.eng-form .btn{width:100%}.eng-sort{margin-left:0}}
@@ -792,7 +822,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   }
 
   function route(){
-    var h=location.hash.slice(1),vp=h.indexOf('verify-')===0?decodeURIComponent(h.slice(7)):'';if(vp)h='verify';if(h.indexOf('job-')===0){jobWant=h.slice(4);h='jobs'}var at='';if(h.indexOf('admin')===0){at={'admin':'ov','admin-announcements':'an','admin-office':'of','admin-spotlight':'sp','admin-requests':'rq','admin-messages':'ms','admin-certificates':'ce','admin-events':'ev','admin-participants':'pa','admin-members':'mb','admin-registrars':'rg','admin-audit':'au','admin-discussions':'dc'}[h]||'ov';h='admin'}if(['home','events','post','account','requests','admin','verify','directory','contact','survey','jobs','community','announcements','services','profile','registrar','notices','messages'].indexOf(h)<0)h='home';
+    var h=location.hash.slice(1),vp=h.indexOf('verify-')===0?decodeURIComponent(h.slice(7)):'';if(vp)h='verify';if(h.indexOf('job-')===0){jobWant=h.slice(4);h='jobs'}else if(h.indexOf('ann-')===0){engWant={kind:'ann',id:h.slice(4)};h='announcements'}else if(h.indexOf('evt-')===0){engWant={kind:'evt',id:h.slice(4)};h='events'}var at='';if(h.indexOf('admin')===0){at={'admin':'ov','admin-announcements':'an','admin-office':'of','admin-spotlight':'sp','admin-requests':'rq','admin-messages':'ms','admin-certificates':'ce','admin-events':'ev','admin-participants':'pa','admin-members':'mb','admin-registrars':'rg','admin-audit':'au','admin-discussions':'dc'}[h]||'ov';h='admin'}if(['home','events','post','account','requests','admin','verify','directory','contact','survey','jobs','community','announcements','services','profile','registrar','notices','messages'].indexOf(h)<0)h='home';
     ['home','events','post','account','requests','admin','verify','directory','contact','survey','jobs','community','announcements','services','profile','registrar','notices','messages'].forEach(function(id){document.getElementById(id).hidden=(id!==h)});
     var nh=['requests','verify','directory','jobs','survey','contact','post'].indexOf(h)>=0?'services':h;
     document.querySelectorAll('nav a').forEach(function(a){
@@ -805,6 +835,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     if(h==='messages')dmUi();else dmLeave();if(h==='jobs'){tryJobWant();markJobsSeen()}
     if(h==='post'||h==='account'||h==='requests'||h==='admin'||h==='directory'||h==='contact'||h==='survey'||h==='jobs'||h==='profile')acct();
     window.scrollTo(0,0);
+    if(engWant){var ew=engWant;engWant=null;engGoto(ew.kind,ew.id,false,true)}
   }
   window.addEventListener('hashchange',route);
 
@@ -1029,7 +1060,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   function tools(col,x){return function(d){
     if(x.img){var im=document.createElement('img');im.onerror=function(){var li=im.closest('li');im.remove();if(li){li.classList.add('noimg');eqEv(li.parentNode)}};im.src=x.img;im.alt='';im.className='aimg';im.onclick=function(){$('lbi').src=x.img;$('lb').hidden=false};d.appendChild(im);im.onload=function(){var li=im.closest('li');if(li)eqEv(li.parentNode)}}
     if(col==='announcements'){
-      d.appendChild(engSumEl('ann',x.id));
+      d.appendChild(engBarEl('ann',x.id,x.title));
       var ap=d.querySelector('p'),rx=document.createElement('button');rx.type='button';rx.className='rmx';rx.textContent='Read more';rx.hidden=true;
       rx.onclick=function(){var li=rx.closest('li'),o=li.classList.toggle('open');rx.textContent=o?'Show less':'Read more';eqEv(li.parentNode)};
       d.appendChild(rx);
@@ -1070,7 +1101,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     var q=($('ds').value||'').toLowerCase();
     fill($('dirList'),dirs.filter(function(x){return (x.name+' '+x.batch+' '+(x.work||'')).toLowerCase().indexOf(q)>=0}).sort(function(a,b){return a.name<b.name?-1:1}),function(x){return item(x.batch,x.name,x.work)});
   }
-  function openAnn(x){var i=$('rmi');$('rma').textContent='';i.style.cssText='';i.onerror=function(){i.hidden=true};if(x.img){i.src=x.img;i.hidden=false}else{i.hidden=true;i.removeAttribute('src')}$('rmt').textContent=x.title;$('rmd').textContent=x.date||'';$('rmb').textContent=x.text||'';curJob='';$('rmod').hidden=false;engage('ann',x.id,$('rme'))}
+  function openAnn(x){var i=$('rmi');$('rma').textContent='';i.style.cssText='';i.onerror=function(){i.hidden=true};if(x.img){i.src=x.img;i.hidden=false}else{i.hidden=true;i.removeAttribute('src')}$('rmt').textContent=x.title;$('rmd').textContent=x.date||'';$('rmb').textContent=x.text||'';curJob='';$('rmod').hidden=false}
   function showSp(){
     var w=$('spWrap'),l=$('spList');l.textContent='';w.hidden=!sps.length;
     sps.forEach(function(x){
@@ -1132,7 +1163,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   }
   function showModal(img,t,m,b,round){engCur=null;var i=$('rmi');i.style.cssText=round?'width:96px;height:96px;border-radius:50%;object-fit:cover;max-height:none':'';if(img){i.src=img;i.hidden=false}else i.hidden=true;$('rmt').textContent=t;$('rmd').textContent=m||'';$('rmb').textContent=b||'';$('rma').textContent='';$('rme').textContent='';curJob='';$('rmod').hidden=false;$('rmod').scrollTop=0}
   function openPost(p){var cm=coms.filter(function(c){return c.postId===p.id}).map(function(c){return c.name+': '+c.text}).join('\n');showModal(p.img,p.name,(p.batch?p.batch+' \u2022 ':'')+(p.date||''),(p.cap||'')+(cm?'\n\nComments\n'+cm:''))}
-  function openJob(j){showModal('',j.title,(j.company||'')+(j.place?' \u2022 '+j.place:'')+jobDl(j),(j.text||'')+'\n\nPosted by '+j.name);curJob=j.id;jobActions($('rma'),j);engage('job',j.id,$('rme'));
+  function openJob(j){showModal('',j.title,(j.company||'')+(j.place?' \u2022 '+j.place:'')+jobDl(j),(j.text||'')+'\n\nPosted by '+j.name);curJob=j.id;jobActions($('rma'),j);
   }
   function canJob(j){return adm()||(full()&&logged&&j.uid===uid)}
   var editJb='';
@@ -1150,14 +1181,14 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       var c=document.createElement('article'),h=document.createElement('h3'),m=document.createElement('p'),e=document.createElement('p'),b=document.createElement('button');
       c.className='hj';h.textContent=j.title;m.className='meta';m.textContent=(j.company||'')+(j.place?' \u2022 '+j.place:'');
       e.className='ex';e.textContent=j.text||'';b.type='button';b.textContent='View details';b.onclick=function(){openJob(j)};
-      c.appendChild(h);c.appendChild(m);c.appendChild(e);c.appendChild(b);l.appendChild(c);
+      c.appendChild(h);c.appendChild(m);c.appendChild(e);c.appendChild(engBarEl('job',j.id,j.title));c.appendChild(b);l.appendChild(c);
     });
   }
   function showJobs(){
     fill($('jbList'),jobsView(),function(j){
       return item(j.ts?new Date(j.ts).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'',j.title,(j.company||'')+(j.place?' \u2022 '+j.place:''),function(d){
         function line(t,sm){var p=document.createElement('p');p.textContent=t;if(sm)p.style.cssText='font-size:.85rem;margin-top:.4rem';d.appendChild(p)}
-        if(j.text)line(j.text);if(j.deadline)line(jobDl(j).slice(3),1);line('Posted by '+j.name,1);d.appendChild(engSumEl('job',j.id));jobActions(d,j,true);
+        if(j.text)line(j.text);if(j.deadline)line(jobDl(j).slice(3),1);line('Posted by '+j.name,1);d.appendChild(engBarEl('job',j.id,j.title));jobActions(d,j,true);
       });
     });
   }
@@ -1188,7 +1219,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       cs.forEach(function(c){c.style.minHeight=''});
       cs.forEach(function(c){var t=c.offsetTop;(rows[t]=rows[t]||[]).push(c)});
       Object.keys(rows).forEach(function(t){
-        var m=0;rows[t].forEach(function(c){if(!c.classList.contains('open')){c._ch=Math.ceil(c.getBoundingClientRect().height);m=Math.max(m,c._ch)}else if(c._ch)m=Math.max(m,c._ch)});
+        var m=0;rows[t].forEach(function(c){if(!c.classList.contains('open')&&!c.classList.contains('cmo')){c._ch=Math.ceil(c.getBoundingClientRect().height);m=Math.max(m,c._ch)}else if(c._ch)m=Math.max(m,c._ch)});
         rows[t].forEach(function(c){c.style.minHeight=m?m+'px':''});
       });
     });
@@ -1203,7 +1234,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     x.className='ex';x.textContent=e.text||'';b.type='button';b.className='vd';b.textContent='View details';b.onclick=function(){openEvent(e)};
     var r=document.createElement('button');r.type='button';r.className='rmx';r.textContent='Read more';r.hidden=true;
     r.onclick=function(){var o=c.classList.toggle('open');r.textContent=o?'Show less':'Read more';eqEv(c.parentNode)};
-    c.appendChild(h);c.appendChild(m);c.appendChild(bd);c.appendChild(x);c.appendChild(r);c.appendChild(engSumEl('evt',e.id));c.appendChild(b);
+    c.appendChild(h);c.appendChild(m);c.appendChild(bd);c.appendChild(x);c.appendChild(r);c.appendChild(engBarEl('evt',e.id,e.title));c.appendChild(b);
     function chk(){if(!c.classList.contains('open')&&x.clientHeight)r.hidden=x.scrollHeight<=x.clientHeight+1;eqEv(c.parentNode)}
     if(window.ResizeObserver)new ResizeObserver(chk).observe(x);else setTimeout(chk,0);
     return c;
@@ -1223,7 +1254,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     var st=evState(e),mine=logged?regs.filter(function(r){return r.id===e.id+'_'+uid})[0]:null,a;
     if(forced&&logged)mine=Object.assign({},mine||{},{status:forced});
     showModal(e.img,e.title,fmtEv(e)+' \u2022 '+st+(full()?' \u2022 '+evCount(e)+' registered':''),e.text||'');
-    a=$('rma');engage('evt',e.id,$('rme'));
+    a=$('rma');
     if(adm()){return}
     if(!full()){
       if(!logged){var l=document.createElement('a');l.href='#account';l.className='btn m';l.textContent='Log in to register';l.onclick=function(){$('rmod').hidden=true};a.appendChild(l)}
@@ -1844,7 +1875,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   /* ===== Community interaction: comments, replies, likes, reports, job reactions, saved jobs ===== */
   var discs=[],ereacts=[],saves=[],savedJ=[],myReps=[],allReps=[],engReady=false,
       unDc=null,unEr=null,unSv=null,unMyRp=null,unAllRp=null,
-      engCur=null,engPend=false,engSort='new',engLast=0,engT=null,engWho=false,engRxBusy=false,engFocus=false,engForm={id:'',mode:''},jbTab='all';
+      engCur=null,engPend=false,engSort='new',engLast=0,engT=null,engWho=false,engRxBusy=false,engFocus=false,engForm={id:'',mode:''},jbTab='all',engOpenIn={},engBars=[],engWant=null,engPendIn=false,jobWant='';
   var RX=[['like','👍','Like'],['love','❤️','Love'],['interested','🤩','Interested'],['support','🤝','Support']];
   var KINDN={ann:'Announcement',evt:'Event',job:'Job'};
 
@@ -1864,7 +1895,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   }
   function engPut(box,w){
     box.textContent='';box.appendChild(w);
-    if(engFocus){engFocus=false;var i=w.querySelector('.eng-ed input');if(i)i.focus()}
+    if(engFocus){var i=w.querySelector('.eng-ed input');if(i){engFocus=false;i.focus()}}
   }
 
   /* One-line summary shown on announcement, event and job cards */
@@ -1872,7 +1903,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     var e=engEl('div','engs'),n=engCount(kind,id),parts=[];
     if(kind==='job'){var r=engRx(id);if(r.length)parts.push(engTop(r)+' '+r.length)}
     if(n)parts.push('💬 '+n+' comment'+(n===1?'':'s'));
-    e.textContent=parts.join(' • ');e.hidden=!parts.length;return e;
+    e.hidden=true;return e;
   }
 
   /* Refresh every view that shows discussion data (coalesced) */
@@ -1880,7 +1911,9 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     if(engT)return;
     engT=setTimeout(function(){
       engT=null;
-      showAnn();showEvents();showJobs();showHJ();showSavedList();showDc();engRender();
+      var ia=document.activeElement;
+      if(ia&&ia.tagName==='INPUT'&&ia.value&&ia.closest&&ia.closest('.pcom')){engPendIn=true;return}
+      showSavedList();showDc();engRender();engBarsRefresh();
       if(engCur&&engCur.kind==='job'&&!$('rmod').hidden){
         var j=jobs.filter(function(x){return x.id===engCur.id})[0];
         if(j){$('rma').textContent='';jobActions($('rma'),j)}
@@ -2026,10 +2059,14 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
     return f;
   }
   function engRender(){
-    var c=engCur;if(!c||$('rmod').hidden)return;
-    var box=c.box,ae=document.activeElement;
-    if(ae&&box.contains(ae)&&ae.tagName==='INPUT'&&ae.type==='text'&&ae.value){engPend=true;return}
-    var kind=c.kind,id=c.id,w=engEl('div','eng');
+    var c=engCur;
+    if(c&&!$('rmod').hidden)engRenderBox(c.box,c.kind,c.id,false);
+    engBarsRefresh();
+  }
+  function engRenderBox(box,kind,id,inline){
+    var ae=document.activeElement;
+    if(ae&&box.contains(ae)&&ae.tagName==='INPUT'&&ae.type==='text'&&ae.value){if(inline)engPendIn=true;else engPend=true;return}
+    var w=engEl('div','eng'),isJob=kind==='job'&&!inline;
     if(!user){
       var p=engEl('p','eng-empty',''),a=engEl('a','lg','Log in to read and join the discussion');a.href='#account';a.onclick=function(){$('rmod').hidden=true};p.appendChild(a);w.appendChild(p);engPut(box,w);return;
     }
@@ -2037,7 +2074,7 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       w.appendChild(engEl('p','eng-empty',role()==='pending'?'Your account is waiting for admin approval. You can join discussions once you are approved.':'Discussions are for approved alumni and students.'));engPut(box,w);return;
     }
     var list=engList(kind,id),n=list.filter(engVisible).length,sum=engEl('div','eng-sum'),who=null;
-    if(kind==='job'){
+    if(isJob){
       var rl=engRx(id),cb=engEl('button','eng-cnt',rl.length?engTop(rl)+' '+rl.length+' reaction'+(rl.length===1?'':'s'):'No reactions yet');
       cb.type='button';cb.disabled=!rl.length;
       who=engEl('div','eng-who');who.hidden=!engWho||!rl.length;
@@ -2049,10 +2086,10 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
       sum.appendChild(cb);
     }
     sum.appendChild(engEl('span','',n+' comment'+(n===1?'':'s')));
-    w.appendChild(sum);if(who)w.appendChild(who);
+    if(!inline)w.appendChild(sum);if(who)w.appendChild(who);
 
     var bar=engEl('div','eng-bar');
-    if(kind==='job'){
+    if(isJob){
       var mine=ereacts.filter(function(r){return r.k===id&&r.uid===uid})[0],rxw=engEl('div','rxw'),
           mi=mine?engRxInfo(mine.type):null,
           mainb=engEl('button','rxmain'+(mine?' on':''),mine?mi[1]+' '+mi[2]:'👍 Like'),
@@ -2102,11 +2139,107 @@ footer{padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;borde
   $('rme').addEventListener('focusout',function(){if(engPend){engPend=false;setTimeout(engRender,300)}});
 
   /* ---- opening the item a comment or notification belongs to ---- */
-  function engOpenTarget(t,k){
-    if(t==='job'){location.hash='job-'+k;return}
-    if(t==='ann'){var a=anns.filter(function(x){return x.id===k})[0];location.hash='announcements';if(a)openAnn(a);return}
-    if(t==='evt'){var e=evs.filter(function(x){return x.id===k})[0];location.hash='events';if(e)openEvent(e)}
+
+  /* ===== Inline Like / Comment / Share bar (News & Announcements, Events, Job Openings) ===== */
+  function engToast(msg){
+    var o=document.querySelector('.ptoast');if(o)o.remove();
+    var t=engEl('div','ptoast',msg);t.setAttribute('role','status');document.body.appendChild(t);
+    setTimeout(function(){if(t.parentNode)t.remove()},2200);
   }
+  function engCopy(url){
+    var ok=function(){engToast('Link copied to clipboard')};
+    var old=function(){
+      var ta=document.createElement('textarea');ta.value=url;ta.setAttribute('readonly','');ta.style.cssText='position:fixed;left:-9999px;top:0';
+      document.body.appendChild(ta);ta.select();var done=false;
+      try{done=document.execCommand('copy')}catch(e){}
+      ta.remove();
+      if(done)ok();else prompt('Copy this link:',url);
+    };
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(url).then(ok,old);else old();
+  }
+  function engShare(kind,id,title){
+    var url=location.href.split('#')[0]+'#'+kind+'-'+id;
+    if(navigator.share){
+      navigator.share({title:title||'AlumniHub',text:(title?title+' \u2022 ':'')+'AlumniHub',url:url}).catch(function(e){if(e&&e.name==='AbortError')return;engCopy(url)});
+    }else engCopy(url);
+  }
+  document.addEventListener('click',function(e){
+    document.querySelectorAll('.pbw .rxpick').forEach(function(p){if(!p.parentNode.contains(e.target))p.hidden=true});
+  });
+  document.addEventListener('focusout',function(e){
+    if(engPendIn&&e.target&&e.target.closest&&e.target.closest('.pcom')){engPendIn=false;setTimeout(engRefresh,300)}
+  });
+  function engBarsRefresh(){
+    engBars=engBars.filter(function(b){return document.body.contains(b.el)});
+    engBars.forEach(function(b){b.render()});
+  }
+  function engBarEl(kind,id,title){
+    var key=kind+':'+id,el=engEl('div','pbox'),st=engEl('div','pstat'),cl=engEl('span',''),cc=engEl('button','pcnt'),
+        bar=engEl('div','pbar'),w=engEl('div','pbw'),lb=engEl('button','pb'),cb=engEl('button','pb'),sb=engEl('button','pb'),
+        pick=engEl('div','rxpick'),lp=null,lpd=false,ent={kind:kind,id:id,el:el,pane:null};
+    lb.type=cb.type=sb.type=cc.type='button';pick.hidden=true;
+    cb.textContent='\uD83D\uDCAC Comment';sb.textContent='\u2197 Share';
+    function mine(){return ereacts.filter(function(r){return r.k===id&&r.uid===uid})[0]}
+    function react(type){
+      if(!user){location.hash='account';return}
+      if(!canReply()){alert(role()==='pending'?'Your account is waiting for admin approval. You can like and comment once you are approved.':'Only approved alumni and students can like posts.');return}
+      var m=mine();
+      setReact(id,type?(m&&m.type===type?null:type):(m?null:'like'));
+    }
+    lb.onclick=function(){if(lpd){lpd=false;return}react(null)};
+    lb.addEventListener('touchstart',function(){clearTimeout(lp);lp=setTimeout(function(){if(canReply()){pick.hidden=false;lpd=true}},550)},{passive:true});
+    ['touchend','touchmove','touchcancel'].forEach(function(n){lb.addEventListener(n,function(){clearTimeout(lp)},{passive:true})});
+    lb.oncontextmenu=function(e){if(lpd)e.preventDefault()};
+    w.onmouseenter=function(){clearTimeout(lp);lp=setTimeout(function(){if(canReply())pick.hidden=false},500)};
+    w.onmouseleave=function(){clearTimeout(lp);lp=setTimeout(function(){pick.hidden=true},250)};
+    RX.forEach(function(x){var pb=engEl('button','',x[1]);pb.type='button';pb.title=x[2];pb.setAttribute('aria-label',x[2]);pb.onclick=function(){pick.hidden=true;react(x[0])};pick.appendChild(pb)});
+    cb.onclick=cc.onclick=function(){
+      engOpenIn[key]=!engOpenIn[key];ent.render();
+      if(engOpenIn[key]){var i=ent.pane&&ent.pane.querySelector('.eng-form input');if(i)i.focus({preventScroll:true})}
+      var c=el.closest('li,article');if(c&&c.parentNode)eqEv(c.parentNode);
+    };
+    sb.onclick=function(){engShare(kind,id,title)};
+    ent.render=function(){
+      var rl=engRx(id),n=engCount(kind,id),m=mine(),open=!!engOpenIn[key],mi=m?engRxInfo(m.type):null;
+      cl.textContent=rl.length?engTop(rl)+' '+rl.length+(rl.length===1?' like':' likes'):'0 likes';
+      cc.textContent=n+' comment'+(n===1?'':'s');
+      lb.textContent=m?(m.type==='like'?'\uD83D\uDC4D Liked':mi[1]+' '+mi[2]):'\uD83D\uDC4D Like';
+      lb.classList.toggle('on',!!m);lb.setAttribute('aria-pressed',m?'true':'false');
+      cb.classList.toggle('on',open);cb.setAttribute('aria-expanded',open?'true':'false');
+      var card=el.closest('li,article');
+      if(card){
+        card.classList.toggle('cmo',open);
+        if(open){
+          if(!ent.pane||ent.pane.parentNode!==card){ent.pane=engEl('section','pcom');card.appendChild(ent.pane)}
+          engRenderBox(ent.pane,kind,id,true);
+        }else if(ent.pane){ent.pane.remove();ent.pane=null}
+      }
+    };
+    st.appendChild(cl);st.appendChild(cc);
+    w.appendChild(lb);w.appendChild(pick);bar.appendChild(w);bar.appendChild(cb);bar.appendChild(sb);
+    el.appendChild(st);el.appendChild(bar);
+    engBars.push(ent);
+    setTimeout(ent.render,0);
+    return el;
+  }
+  /* Go to a post (card) on its page, optionally opening its comments */
+  function engGoto(kind,id,openC,keepHash){
+    var pg=kind==='job'?'jobs':kind==='evt'?'events':'announcements';
+    if(openC)engOpenIn[kind+':'+id]=true;
+    if(kind==='ann'&&acat){var ab=document.querySelector('#acats button[data-c=""]');if(ab)ab.click()}
+    if(!keepHash&&location.hash.slice(1)!==pg)location.hash=pg;
+    var tries=0;
+    (function look(){
+      var b=engBars.filter(function(x){return x.kind===kind&&x.id===id&&x.el.offsetParent})[0];
+      if(b){
+        b.render();
+        var c=b.el.closest('li,article')||b.el;
+        c.scrollIntoView({behavior:'smooth',block:'center'});
+        c.classList.remove('pflash');void c.offsetWidth;c.classList.add('pflash');
+      }else if(tries++<25)setTimeout(look,200);
+    })();
+  }
+  function engOpenTarget(t,k){engGoto(t,k,true)}
   function engTitle(c){
     var l=c.t==='ann'?anns:c.t==='evt'?evs:jobs,x=l.filter(function(y){return y.id===c.k})[0];
     return KINDN[c.t]+': '+(x?x.title:'(no longer available)');
